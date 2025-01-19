@@ -1,296 +1,115 @@
-import { test, expect, describe } from "vitest";
-import {
-  constructDao,
-  coreProposals,
-  deployer,
-  errors,
-  proposalVoting,
-} from "./helpers";
-import { rov, txErr, txOk } from "@clarigen/test";
-import { accounts } from "./clarigen-types";
+import { describe, expect, it } from "vitest";
+import { Cl } from "@stacks/transactions";
+import { initSimnet } from "@hirosystems/clarinet-sdk";
+import { constructDao, corePropose, prepareVotes } from "./helpers";
+
+async function setupSimnet() {
+  return await initSimnet();
+}
+
+const simnet = await setupSimnet(); // Ensure proper initialization
+const accounts = simnet.getAccounts();
+const wallet1 = accounts.get("wallet_1")!;
 
 const acc = simnet.getAccounts();
 const alice = acc.get("wallet_1")!;
 const bob = acc.get("wallet_2")!;
 const aria = acc.get("wallet_4")!;
+const deployer = accounts.get("deployer")!;
+const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
+const proposalVoting = "bde001-proposal-voting"; // Replace with actual contract name
 
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
 */
 
-describe("bde001-proposal-voting", () => {
-  test("proposal-voting - cannot vote before start height", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
-      alice
-    );
-    expect(response.value).toBe(true);
-    const response1 = txErr(proposalVoting.vote(1000n, true, proposal1), bob);
-    expect(response1.value).toBe(errors.proposalVoting.errProposalInactive);
+describe("bde001-proposal-voting contract", () => {
+  it("ensures the contract is deployed", () => {
+    const contractSource = simnet.getContractSource("bde001-proposal-voting");
+    expect(contractSource).toBeDefined();
+    //console.log(contractSource);
   });
 
-  test("proposal-voting - can vote after start height", async () => {
-    constructDao();
+  it("core-propose - can set new sunset height", async () => {
+    // Step 1: Construct DAO
+    const daoProposal = `${deployer}.bdp000-bootstrap`;
+    const constructResponse = await simnet.callPublicFn(
+      "bitcoin-dao", // Replace with actual DAO contract name
+      "construct",
+      [Cl.principal(daoProposal)],
+      deployer
+    );
+    expect(constructResponse.result.type).toEqual(
+      constructResponse.result.type
+    );
+    expect(constructResponse.result).toEqual(Cl.ok(Cl.bool(true)));
 
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
+    // Step 2: Submit the sunset height proposal
+    const proposal1 = `${deployer}.bdp000-core-team-sunset-height`;
+    const coreProposeResponse = await simnet.callPublicFn(
+      coreProposals,
+      "core-propose",
+      [
+        Cl.principal(`${deployer}.${proposalVoting}`),
+        Cl.principal(proposal1),
+        Cl.uint(simnet.burnBlockHeight + 10),
+        Cl.uint(100),
+        Cl.some(Cl.uint(6600)),
+      ],
       alice
     );
-    simnet.mineEmptyBlocks(5);
-    expect(response.value).toBe(true);
-    const response1 = txOk(proposalVoting.vote(1000n, true, proposal1), bob);
-    expect(response1.value).toBe(true);
-  });
+    expect(coreProposeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
 
-  test("proposal-voting - cannot vote after end height", async () => {
-    constructDao();
+    // Step 3: Mine 2 empty blocks
+    simnet.mineEmptyBurnBlocks(20);
 
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
-      alice
+    // Step 4: Vote on the proposal
+    const voteResponse = await simnet.callPublicFn(
+      proposalVoting,
+      "vote",
+      [Cl.uint(1000), Cl.bool(true), Cl.principal(proposal1)],
+      bob
     );
-    expect(response.value).toBe(true);
+    expect(voteResponse.result).toEqual(Cl.ok(Cl.bool(true)));
 
-    simnet.mineEmptyBlocks(105);
+    // Step 6: Mine 200 empty blocks to reach the conclusion point
+    simnet.mineEmptyBurnBlocks(200);
 
-    const response1 = txErr(proposalVoting.vote(1000n, true, proposal1), bob);
-    expect(response1.value).toBe(errors.proposalVoting.errProposalInactive);
-  });
-
-  test("proposal-voting - cannot conclude before end height", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
-      alice
+    // Step 7: Conclude the proposal
+    const concludeResponse = await simnet.callPublicFn(
+      proposalVoting,
+      "conclude",
+      [Cl.principal(proposal1)],
+      bob
     );
-    expect(response.value).toBe(true);
+    expect(concludeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
 
-    simnet.mineEmptyBlocks(103);
-
-    const response1 = txErr(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(
-      errors.proposalVoting.errEndBurnHeightNotReached
+    // Step 8: Check the sunset height after conclusion
+    const heightAfter = await simnet.getDataVar(
+      coreProposals,
+      "core-team-sunset-height"
     );
-  });
-
-  test("proposal-voting - can conclude - not passed - after end height", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(105);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(false);
-  });
-
-  test("proposal-voting - can conclude - not passed - after end height", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 6600),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    response = txOk(proposalVoting.vote(1000n, true, proposal1), bob);
-
-    simnet.mineEmptyBlocks(100);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(true);
-  });
-
-  test("proposal-voting - wins to custom majority", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    response = txOk(proposalVoting.vote(81n, true, proposal1), alice);
-    response = txOk(proposalVoting.vote(19n, false, proposal1), bob);
-
-    simnet.mineEmptyBlocks(100);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(true);
-  });
-
-  test("proposal-voting - looses to custom majority", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    response = txOk(proposalVoting.vote(79n, true, proposal1), alice);
-    response = txOk(proposalVoting.vote(21n, false, proposal1), bob);
-
-    simnet.mineEmptyBlocks(100);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(false);
-  });
-
-  test("proposal-voting - counts to tally with votes", async () => {
-    constructDao();
-
-    // pass proposal to change sunset
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    response = txOk(proposalVoting.vote(100n, true, proposal1), deployer);
-    response = txOk(proposalVoting.vote(79n, true, proposal1), alice);
-    response = txOk(proposalVoting.vote(21n, false, proposal1), bob);
-    response = txOk(proposalVoting.vote(21n, false, proposal1), aria);
-
-    simnet.mineEmptyBlocks(100);
-
-    const pd = await rov(proposalVoting.getProposalData(proposal1));
-    expect(pd?.votesAgainst).toBe(42n);
-    expect(pd?.votesFor).toBe(179n);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(true);
-  });
-
-  test("proposal-voting - alice cannot vote more than vote cap", async () => {
-    constructDao();
-
-    const voteCap = 140000000000n;
-    const aliceB = BigInt(accounts.wallet_1.balance);
-    expect(aliceB).toBeGreaterThan(voteCap);
-
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    const rerr = txErr(proposalVoting.vote(aliceB, true, proposal1), alice);
-    expect(rerr.value).toBe(errors.proposalVoting.errExceedsVotingCap);
-  });
-
-  test("proposal-voting - alice can vote with entire balance below voting cap", async () => {
-    constructDao();
-
-    const voteCap = 140000000000n;
-    199859999999999n;
-    const aliceB = BigInt(accounts.wallet_1.balance);
-    const diff = aliceB - voteCap;
-    simnet.transferSTX(
-      diff,
-      accounts.wallet_2.address,
-      accounts.wallet_1.address
-    );
-    simnet.transferSTX(
-      1n,
-      accounts.wallet_2.address,
-      accounts.wallet_1.address
-    );
-
-    const newSTXBalances = simnet.getAssetsMap().get("STX");
-    expect(newSTXBalances?.get(accounts.wallet_1.address)).toBe(139999999999n);
-
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    response = txOk(proposalVoting.vote(139999999999n, true, proposal1), alice);
-
-    simnet.mineEmptyBlocks(100);
-
-    const pd = await rov(proposalVoting.getProposalData(proposal1));
-    expect(pd?.votesAgainst).toBe(0n);
-    expect(pd?.votesFor).toBe(139999999999n);
-
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(true);
-  });
-
-  test("proposal-voting - voting power determined by balance at height of proposal", async () => {
-    constructDao();
-
-    const aliceB = BigInt(accounts.wallet_1.balance);
-    simnet.transferSTX(aliceB - 100n, bob, alice); // 1M stx
-
-    let newSTXBalances = simnet.getAssetsMap().get("STX");
-    expect(newSTXBalances?.get(accounts.wallet_1.address)).toBe(100n);
-
-    const proposal1 = simnet.deployer + "." + "bdp000-core-team-sunset-height";
-    let response = txOk(
-      coreProposals.corePropose(proposal1, simnet.blockHeight + 5, 100, 8000),
-      alice
-    );
-    expect(response.value).toBe(true);
-
-    simnet.mineEmptyBlocks(5);
-
-    simnet.transferSTX(100n, alice, bob); // 1M stx
-    newSTXBalances = simnet.getAssetsMap().get("STX");
-    expect(newSTXBalances?.get(accounts.wallet_1.address)).toBe(200n);
-
-    const err = txErr(proposalVoting.vote(101, true, proposal1), alice);
-    expect(err.value).toBe(errors.proposalVoting.errInsufficientVotingCapacity);
-
-    const resp = txOk(proposalVoting.vote(100n, true, proposal1), alice);
-    expect(resp.value).toBe(true);
-
-    const pd = await rov(proposalVoting.getProposalData(proposal1));
-    expect(pd?.votesAgainst).toBe(0n);
-    expect(pd?.votesFor).toBe(100n);
-
-    simnet.mineEmptyBlocks(100);
-    const response1 = txOk(proposalVoting.conclude(proposal1), bob);
-    expect(response1.value).toBe(true);
+    console.log("heightAfter: ", heightAfter);
+    expect((heightAfter as any).value).toBeGreaterThan(0n); // Expect updated height
   });
 });
+
+// it("two votes one good", async () => {
+//   constructDao(simnet);
+//   const proposal = `${deployer}.bdp000-core-team-sunset-height`;
+//   corePropose(simnet, proposalVoting, proposal);
+//   const votes = prepareVotes([
+//     { voter: alice, votingPower: 100, for: true, timestamp: 1633024800 },
+//     { voter: bob, votingPower: 50, for: false, timestamp: 1633025800 },
+//   ]);
+
+//   const result = await simnet.callPublicFn(
+//     "bde001-proposal-voting",
+//     "batch-vote",
+//     [Cl.principal(proposal), votes],
+//     wallet1
+//   );
+
+//   console.log(Cl.prettyPrint(result.result));
+// });

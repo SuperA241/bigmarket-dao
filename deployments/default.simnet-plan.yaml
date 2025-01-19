@@ -48,6 +48,9 @@ genesis:
 plan:
   batches:
     - id: 0
+      transactions: []
+      epoch: "2.05"
+    - id: 1
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
@@ -94,8 +97,32 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/resource-provider-trait.clar
             clarity-version: 1
-      epoch: "2.05"
-    - id: 1
+      epoch: "2.1"
+    - id: 2
+      transactions: []
+      epoch: "2.1"
+    - id: 3
+      transactions: []
+      epoch: "2.1"
+    - id: 4
+      transactions: []
+      epoch: "2.1"
+    - id: 5
+      transactions: []
+      epoch: "2.1"
+    - id: 6
+      transactions: []
+      epoch: "2.1"
+    - id: 7
+      transactions: []
+      epoch: "2.1"
+    - id: 8
+      transactions: []
+      epoch: "2.1"
+    - id: 9
+      transactions: []
+      epoch: "2.1"
+    - id: 10
       transactions:
         - emulated-contract-publish:
             contract-name: bitcoin-dao
@@ -162,4 +189,28 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/testnet/bdp021-opinion-polls.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 11
+      transactions: []
+      epoch: "3.0"
+    - id: 12
+      transactions: []
+      epoch: "3.0"
+    - id: 13
+      transactions: []
+      epoch: "3.0"
+    - id: 14
+      transactions: []
+      epoch: "3.0"
+    - id: 15
+      transactions: []
+      epoch: "3.0"
+    - id: 16
+      transactions: []
+      epoch: "3.0"
+    - id: 17
+      transactions: []
+      epoch: "3.0"
+    - id: 18
+      transactions: []
       epoch: "3.0"

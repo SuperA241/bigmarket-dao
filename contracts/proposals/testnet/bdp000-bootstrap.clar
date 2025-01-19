@@ -18,11 +18,9 @@
 			(list
 				{extension: .bde000-governance-token, enabled: true}
 				{extension: .bde001-proposal-voting, enabled: true}
-				{extension: .bde002-proposal-submission, enabled: true}
 				{extension: .bde003-core-proposals, enabled: true}
 				{extension: .bde004-core-execute, enabled: true}
 				{extension: .bde006-treasury, enabled: true}
-				{extension: .bde020-resource-manager, enabled: true}
 				{extension: .bde021-market-resolution-voting, enabled: true}
 				{extension: .bde022-market-gating, enabled: true}
 			)

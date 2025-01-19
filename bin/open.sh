@@ -6,7 +6,6 @@ urls=(
 
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao?chain=testnet&api=http://localhost:3999"
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde002-proposal-submission?chain=testnet&api=http://localhost:3999"
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals?chain=testnet&api=http://localhost:3999"
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde004-core-execute?chain=testnet&api=http://localhost:3999"
 

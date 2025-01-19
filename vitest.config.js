@@ -24,7 +24,7 @@ import {
 export default defineConfig({
   test: {
     reporters: ["default", "json", "junit"], // add or remove reporters as needed
-    include: ["./tests-clarinet/**/*.test.ts"], // Include only Clarinet tests
+    include: ["./tests/**/*.test.ts"], // Include only Clarinet tests
     outputFile: {
       json: "reports/report.json",
       junit: "reports/report.xml",

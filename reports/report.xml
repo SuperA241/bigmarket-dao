@@ -1,9 +1,309 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="2" failures="0" errors="0" time="250066.425">
-    <testsuite name="tests-clarinet/bde001-proposal-voting.test.ts" timestamp="2025-01-09T11:58:17.735Z" hostname="Mikes-MacBook-Pro.local" tests="2" failures="0" errors="0" skipped="0" time="0">
-        <testcase classname="tests-clarinet/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; ensures the contract is deployed" time="0">
+<testsuites name="vitest tests" tests="31" failures="12" errors="0" time="0.779">
+    <testsuite name="tests/bde001-proposal-voting.test.ts" timestamp="2025-01-19T10:15:45.427Z" hostname="Mikes-MacBook-Pro.local" tests="2" failures="0" errors="0" skipped="0" time="0.015">
+        <testcase classname="tests/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; ensures the contract is deployed" time="0.002">
         </testcase>
-        <testcase classname="tests-clarinet/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; core-propose - can set new sunset height" time="0">
+        <testcase classname="tests/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; core-propose - can set new sunset height" time="0.013">
+            <system-out>
+heightAfter:  { type: [33m1[39m, value: [33m242n[39m }
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/claims.test.ts" timestamp="2025-01-19T10:15:45.428Z" hostname="Mikes-MacBook-Pro.local" tests="7" failures="2" errors="0" skipped="0" time="0.028">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-market-not-found" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-user-balance-unknown" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-user-not-winner" time="0.005">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/claims.test.ts:104:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-winning-pool-is-zero" time="0.002">
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/claims.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.006">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/claims.test.ts:197:29
+
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/create-market.test.ts" timestamp="2025-01-19T10:15:45.430Z" hostname="Mikes-MacBook-Pro.local" tests="6" failures="0" errors="0" skipped="0" time="0.018">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensures the contract is deployed" time="0.002">
+        </testcase>
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market - unknown market type does not work" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market share type works" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market stake type works" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup two share type markets works" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensure market data is as expected" time="0.004">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/resolving.test.ts" timestamp="2025-01-19T10:15:45.430Z" hostname="Mikes-MacBook-Pro.local" tests="5" failures="4" errors="0" skipped="0" time="0.023">
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; only dev can resolve" time="0.006">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/resolving.test.ts:56:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; err-market-not-found" time="0.003">
+        </testcase>
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; err-already-concluded" time="0.004">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/resolving.test.ts:90:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market yes" time="0.006">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/resolving.test.ts:130:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market no bids" time="0.004">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/resolving.test.ts:167:29
+
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/scenarios.test.ts" timestamp="2025-01-19T10:15:45.431Z" hostname="Mikes-MacBook-Pro.local" tests="5" failures="5" errors="0" skipped="0" time="0.046">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stake 100STX on YES, market resolves yes" time="0.015">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/scenarios.test.ts:48:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100STX on yes, Bob 100STX on NO market resolves yes" time="0.006">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/scenarios.test.ts:86:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.007">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/scenarios.test.ts:147:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.007">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/scenarios.test.ts:233:27
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.01">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/scenarios.test.ts:353:27
+
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/staking.test.ts" timestamp="2025-01-19T10:15:45.432Z" hostname="Mikes-MacBook-Pro.local" tests="6" failures="1" errors="0" skipped="0" time="0.033">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; user can&apos;t commit more than their balance" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; err-wrong-market-type" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; err-already-concluded" time="0.004">
+            <failure message="expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }" type="AssertionError">
+AssertionError: expected { type: 8, …(1) } to deeply equal { type: 7, value: { type: 3 } }
+
+- Expected
++ Received
+
+  Object {
+-   &quot;type&quot;: 7,
++   &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+-     &quot;type&quot;: 3,
++     &quot;type&quot;: 1,
++     &quot;value&quot;: 10000n,
+    },
+  }
+
+ ❯ tests/predictions/staking.test.ts:81:29
+
+            </failure>
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; user transfers exact stake" time="0.007">
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; fees are collected up front from prediction stakes" time="0.004">
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; alice hedges yes and no" time="0.01">
         </testcase>
     </testsuite>
 </testsuites>

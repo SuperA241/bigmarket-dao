@@ -16,11 +16,9 @@ Bitcoin DAO will launch with the following additional features;
 
 - bde000-governance-token
 - bde001-proposal-voting
-- bde002-proposal-submission
 - bde003-core-proposals
 - bde004-core-execute
 - bde006-treasury
-- bde020-resource-manager
 
 ## Clarigen
 

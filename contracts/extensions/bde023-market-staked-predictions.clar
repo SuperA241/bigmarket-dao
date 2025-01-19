@@ -14,16 +14,14 @@
 (define-constant DEV-FEE-BIPS u200)           ;; 2% (200 basis points)
 (define-constant DAO-FEE-BIPS u200)           ;; 2% (200 basis points)
 
-;; For demonstration, set addresses for Dev & DAO recipients
-;; In production, replace with real mainnet principal addresses.
-(define-constant DEV-RECIPIENT 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP)
-(define-constant DAO-RECIPIENT 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6)
-;;(define-constant DEV-RECIPIENT 'ST3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNZN9J752)
-;;(define-constant DAO-RECIPIENT 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY)
-
 ;; Market Types (0 => Stake-based, 1 => Shares-based)
 (define-constant MARKET_TYPE_STAKE u0)
 (define-constant MARKET_TYPE_SHARES u1)
+
+(define-constant RESOLUTION_OPEN u0)
+(define-constant RESOLUTION_RESOLVING u1)
+(define-constant RESOLUTION_DISPUTED u2)
+(define-constant RESOLUTION_RESOLVED u3)
 
 (define-constant err-unauthorised (err u10000))
 (define-constant err-invalid-market-type (err u10001))
@@ -40,6 +38,18 @@
 (define-constant err-insufficient-contract-balance (err u10012))
 (define-constant err-user-share-is-zero (err u10013))
 (define-constant err-dao-fee-is-zero (err u10014))
+(define-constant err-disputer-must-have-stake (err u10015))
+(define-constant err-dispute-window-elapsed (err u10016))
+(define-constant err-market-not-resolving (err u10017))
+(define-constant err-market-not-open (err u10018))
+(define-constant err-dispute-window-not-elapsed (err u10019))
+(define-constant err-market-wrong-state (err u10020))
+
+(define-data-var market-counter uint u0)
+(define-data-var dispute-window-length uint u144)
+(define-data-var resolution-agent principal tx-sender)
+(define-data-var dev-fund principal tx-sender)
+(define-data-var dao-treasury principal tx-sender)
 
 ;; Data structure for each Market
 ;; market-id: internal numeric ID
@@ -57,7 +67,9 @@
     yes-pool: uint,
     no-pool: uint,
     concluded: bool,
-    outcome: bool
+    outcome: bool,
+    resolution-state: uint, ;; "open", "resolving", "disputed", "resolved"
+    resolution-timestamp: uint           ;; Block height when resolving started
   }
 )
 
@@ -70,11 +82,42 @@
     no-amount: uint
   }
 )
-(define-data-var market-counter uint u0)
 
 ;; ---------------- PUBLIC FUNCTIONS ----------------
 (define-public (is-dao-or-extension)
 	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+)
+
+(define-public (set-dispute-window-length (length uint))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set dispute-window-length length)
+    (ok true)
+  )
+)
+
+(define-public (set-resolution-agent (new-agent principal))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set resolution-agent new-agent)
+    (ok true)
+  )
+)
+
+(define-public (set-dev-fund (new-dev-fund principal))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set dev-fund new-dev-fund)
+    (ok true)
+  )
+)
+
+(define-public (set-dao-treasury (new-dao-treasury principal))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set dao-treasury new-dao-treasury)
+    (ok true)
+  )
 )
 
 ;; Creates a new Yes/No prediction market. `mtype` can be 0 (stake-based) 
@@ -93,7 +136,9 @@
           yes-pool: u0,
           no-pool: u0,
           concluded: false,
-          outcome: false
+          outcome: false,
+          resolution-state: RESOLUTION_OPEN, ;; "open", "resolving", "disputed", "resolved"
+          resolution-timestamp: u0           ;; Block height when resolving started
         }
       )
       ;; Increment the counter
@@ -169,27 +214,77 @@
   )
 )
 
-;; Resolve a market. This function is restricted to the contract owner for now.
+;; Resolve a market invoked by ai-agent.
 (define-public (resolve-market (market-id uint) (is-won bool))
   (let (
-        (owner DEV-RECIPIENT)
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
-		(try! (is-dao-or-extension))
-    (asserts! (is-eq tx-sender owner) err-unauthorised)
-    (asserts! (not (get concluded md)) err-already-concluded)
+    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-not-open)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, outcome: is-won }
+        { outcome: is-won, resolution-state: RESOLUTION_RESOLVING, resolution-timestamp: burn-block-height }
       )
     )
-    (print {event: "resolve", market-id: market-id, is-won: is-won, resolver: owner})
+    (print {event: "resolve-market", market-id: market-id, is-won: is-won, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVING})
     (ok true)
   )
 )
 
-;; Allows a user who participated in a stake-based market to claim their share
+(define-public (resolve-market-undisputed (market-id uint))
+  (let (
+        (md (unwrap! (map-get? markets market-id) err-market-not-found))
+    )
+    (asserts! (> burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-open)
+
+    (map-set markets market-id
+      (merge md
+        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-timestamp: burn-block-height }
+      )
+    )
+    (print {event: "resolve-market-undisputed", market-id: market-id, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVED})
+    (ok true)
+  )
+)
+
+(define-public (resolve-market-vote (market-id uint))
+  (let (
+        (md (unwrap! (map-get? markets market-id) err-market-not-found))
+    )
+    (try! (is-dao-or-extension))
+    (asserts! (> burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (or (is-eq (get resolution-state md) RESOLUTION_DISPUTED) (is-eq (get resolution-state md) RESOLUTION_RESOLVING)) err-market-wrong-state)
+
+    (map-set markets market-id
+      (merge md
+        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-timestamp: burn-block-height }
+      )
+    )
+    (print {event: "resolve-market-vote", market-id: market-id, resolver: contract-caller, resolution-state: RESOLUTION_RESOLVED})
+    (ok true)
+  )
+)
+
+;; Allows a user with a stake in market to contest the resolution
+(define-public (dispute-resolution (market-id uint))
+  (let (
+        (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
+        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) (err u105))) 
+        (caller-stake (+ (get yes-amount stake-data) (get no-amount stake-data)))
+      )
+    (asserts! (> caller-stake u0) err-disputer-must-have-stake) ;; Ensure the caller has a non-zero stake
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
+    (asserts! (<= burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-elapsed)
+    (map-set markets market-id
+      (merge md { resolution-state: RESOLUTION_DISPUTED }))
+    (print {event: "dispute-raised", market-id: market-id, user: tx-sender, resolution-state: RESOLUTION_DISPUTED})
+    (ok true)
+  )
+)
+
 ;; of the pot if they are on the winning side after resolution. 
 ;; Deducts a 2% DAO fee from the final pot.
 (define-public (claim-winnings (market-id uint))
@@ -199,7 +294,8 @@
           (user-bal (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) err-user-balance-unknown)))
 
       ;; Check if market is concluded
-      (asserts! (is-eq (get concluded market-data) true) err-market-not-concluded)
+      (asserts! (is-eq (get resolution-state market-data) RESOLUTION_RESOLVED) err-market-not-concluded)
+      (asserts! (get concluded market-data) err-market-not-concluded)
 
       ;; Determine user stake and winning pool
       (let ((yes-won (get outcome market-data))
@@ -246,7 +342,7 @@
       ;; Transfer STX to the contract
       (try! (stx-transfer? transfer-amount tx-sender .bde023-market-staked-predictions))
       ;; Transfer the fee to the dev fund
-      (try! (stx-transfer? fee tx-sender DEV-RECIPIENT))
+      (try! (stx-transfer? fee tx-sender (var-get dev-fund)))
       ;; Verify the contract received the correct amount
       (asserts! (>= (stx-get-balance .bde023-market-staked-predictions) transfer-amount) err-insufficient-contract-balance)
 
@@ -293,7 +389,7 @@
         (begin
           ;; Transfer user share, capped by initial contract balance
           (try! (stx-transfer? user-share-net tx-sender original-sender))
-          (try! (stx-transfer? dao-fee tx-sender DAO-RECIPIENT))
+          (try! (stx-transfer? dao-fee tx-sender (var-get dao-treasury)))
         )
       )
 
