@@ -35,9 +35,10 @@
 (define-constant structured-data-header (concat structured-data-prefix message-domain-hash))
 (define-constant custom-majority-upper u10000)
 
+(define-data-var custom-majority (optional uint) none)
 (define-data-var next-poll-id uint u1)
 
-(define-map opinion-polls
+(define-map resolution-polls
 	uint
 	{
 		market-data-hash: (buff 32),
@@ -50,7 +51,6 @@
     is-gated: bool,
 		concluded: bool,
 		passed: bool,
-		custom-majority: (optional uint), ;; u10000 = 100%
 	}
 )
 (define-map member-voted {poll-id: uint, voter: principal} bool)
@@ -61,27 +61,26 @@
 	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
 )
 
-(define-public (is-core-team-member)
-	(ok (asserts! (contract-call? .bitcoin-dao is-extension contract-caller) err-unauthorised))
-)
-
 ;; --- Internal DAO functions
 
 ;; Proposals
 
-(define-public (add-opinion-poll
+;; called by a staker in a market to begin dispute resolution process
+(define-public (add-proposal
     (market-data-hash (buff 32))               ;; market metadata hash
-    (data {market-id: uint, start-burn-height: uint, end-burn-height: uint, custom-majority: (optional uint)})
+    (data {market-id: uint, start-burn-height: uint, end-burn-height: uint})
     (merkle-root (optional (buff 32)))      ;; Optional Merkle root for gating
   )
   (let
     (
+      (original-sender tx-sender)
       (poll-id (var-get next-poll-id))
     )
-		(try! (is-core-team-member))
+		(try! (is-dao-or-extension))
+    (try! (as-contract (contract-call? .bde023-market-staked-predictions dispute-resolution (get market-id data) market-data-hash merkle-root original-sender)))
 
     ;; Ensure the poll does not already exist
-    (asserts! (is-none (map-get? opinion-polls poll-id)) err-poll-already-exists)
+    (asserts! (is-none (map-get? resolution-polls poll-id)) err-poll-already-exists)
 
     ;; Store the Merkle root if provided (gating enabled)
     (if (is-some merkle-root)
@@ -89,14 +88,13 @@
         true)
 
     ;; Register the poll
-    (map-set opinion-polls poll-id
+    (map-set resolution-polls poll-id
       {market-data-hash: market-data-hash,
       market-id: (get market-id data),
       votes-for: u0,
       votes-against: u0,
       start-burn-height: (get start-burn-height data),
       end-burn-height: (get end-burn-height data),
-      custom-majority: (get custom-majority data),
       proposer: tx-sender,
       concluded: false,
       passed: false,
@@ -112,7 +110,7 @@
 ;; --- Public functions
 
 (define-read-only (get-poll-data (poll-id uint))
-	(map-get? opinion-polls poll-id)
+	(map-get? resolution-polls poll-id)
 )
 
 
@@ -216,7 +214,7 @@
   )
   (if is-gated
       (ok (try! (contract-call? .bde022-market-gating
-              can-access
+              can-access-by-ownership
               market-data-hash
               nft-contract
               ft-contract
@@ -239,7 +237,7 @@
   (let
       (
         ;; Fetch the poll data
-        (poll-data (unwrap! (map-get? opinion-polls poll-id) err-unknown-proposal))
+        (poll-data (unwrap! (map-get? resolution-polls poll-id) err-unknown-proposal))
 
         ;; Check if the poll is gated
         (is-gated (get is-gated poll-data))
@@ -256,7 +254,7 @@
       (asserts! (< burn-block-height (get end-burn-height poll-data)) err-proposal-inactive)
 
       ;; Record the vote
-      (map-set opinion-polls poll-id
+      (map-set resolution-polls poll-id
           (if for
               (merge poll-data {votes-for: (+ (get votes-for poll-data) u1)})
               (merge poll-data {votes-against: (+ (get votes-against poll-data) u1)})))
@@ -284,21 +282,21 @@
 (define-read-only (get-poll-status (poll-id uint))
     (let
         (
-            (poll-data (unwrap! (map-get? opinion-polls poll-id) err-unknown-proposal))
+            (poll-data (unwrap! (map-get? resolution-polls poll-id) err-unknown-proposal))
             (is-active (< burn-block-height (get end-burn-height poll-data)))
             (passed (> (get votes-for poll-data) (get votes-against poll-data)))
         )
         (ok {active: is-active, passed: passed})
     )
-)
+) 
 
 (define-public (conclude (poll-id uint) (market-id uint))
 	(let
 		(
-      (poll-data (unwrap! (map-get? opinion-polls poll-id) err-unknown-proposal))
+      (poll-data (unwrap! (map-get? resolution-polls poll-id) err-unknown-proposal))
       (is-active (< burn-block-height (get end-burn-height poll-data)))
 			(passed
-				(match (get custom-majority poll-data)
+				(match (var-get custom-majority)
 					majority (> (* (get votes-for poll-data) custom-majority-upper) (* (+ (get votes-for poll-data) (get votes-against poll-data)) majority))
 					(> (get votes-for poll-data) (get votes-against poll-data))
 				)
@@ -306,9 +304,9 @@
 		)
 		(asserts! (not (get concluded poll-data)) err-proposal-already-concluded)
 		(asserts! (>= burn-block-height (get end-burn-height poll-data)) err-end-burn-height-not-reached)
-		(map-set opinion-polls poll-id (merge poll-data {concluded: true, passed: passed}))
+		(map-set resolution-polls poll-id (merge poll-data {concluded: true, passed: passed}))
 		(print {event: "conclude", poll-id: poll-id, market-id: market-id, passed: passed})
-		(and passed (try! (contract-call? .bde023-market-staked-predictions resolve-market market-id passed)))
+		(and passed (try! (contract-call? .bde023-market-staked-predictions resolve-market-vote market-id passed)))
 		(ok passed)
 	)
 )

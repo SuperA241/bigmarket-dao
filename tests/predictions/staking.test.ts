@@ -130,7 +130,7 @@ describe("prediction fees and stakes", () => {
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
-          "metadata-hash": bufferFromHex(metadataHash()),
+          "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
           "no-pool": uintCV(10000000 - (2 * 10000000) / 100),
           concluded: boolCV(false),
@@ -173,7 +173,7 @@ describe("prediction fees and stakes", () => {
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
-          "metadata-hash": bufferFromHex(metadataHash()),
+          "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
           "no-pool": uintCV(10000000 - (2 * 10000000) / 100),
           concluded: boolCV(false),

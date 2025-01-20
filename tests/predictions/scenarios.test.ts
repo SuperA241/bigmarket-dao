@@ -434,7 +434,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
       Cl.tuple({
         creator: principalCV(deployer),
         "market-type": uintCV(0),
-        "metadata-hash": bufferFromHex(metadataHash()),
+        "market-data-hash": bufferFromHex(metadataHash()),
         "yes-pool": uintCV(0n),
         "no-pool": uintCV(44198000000000n),
         concluded: boolCV(true),

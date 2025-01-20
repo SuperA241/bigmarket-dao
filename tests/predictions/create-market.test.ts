@@ -103,7 +103,7 @@ describe("prediction contract", () => {
         Cl.tuple({
           creator: principalCV(alice),
           "market-type": uintCV(0),
-          "metadata-hash": bufferFromHex(metadataHash()),
+          "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(0),
           "no-pool": uintCV(0),
           concluded: boolCV(false),

@@ -140,7 +140,7 @@ describe("resolve market", () => {
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
-          "metadata-hash": bufferFromHex(metadataHash()),
+          "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
           "no-pool": uintCV(2000000 - (2 * 2000000) / 100),
           concluded: boolCV(true),
@@ -177,7 +177,7 @@ describe("resolve market", () => {
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
-          "metadata-hash": bufferFromHex(metadataHash()),
+          "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(0),
           "no-pool": uintCV(0),
           concluded: boolCV(true),

@@ -45,8 +45,9 @@
 (define-constant err-dispute-window-not-elapsed (err u10019))
 (define-constant err-market-wrong-state (err u10020))
 
-(define-data-var market-counter uint u0)
+(define-data-var market-counter uint u1)
 (define-data-var dispute-window-length uint u144)
+(define-data-var market-gating bool false)
 (define-data-var resolution-agent principal tx-sender)
 (define-data-var dev-fund principal tx-sender)
 (define-data-var dao-treasury principal tx-sender)
@@ -61,15 +62,15 @@
 (define-map markets
   uint
   {
-		metadata-hash: (buff 32),
+		market-data-hash: (buff 32),
     creator: principal,
     market-type: uint,
     yes-pool: uint,
     no-pool: uint,
     concluded: bool,
     outcome: bool,
-    resolution-state: uint, ;; "open", "resolving", "disputed", "resolved"
-    resolution-timestamp: uint           ;; Block height when resolving started
+    resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
+    resolution-burn-height: uint
   }
 )
 
@@ -92,6 +93,14 @@
   (begin
     (try! (is-dao-or-extension))
     (var-set dispute-window-length length)
+    (ok true)
+  )
+)
+
+(define-public (set-market-gating (gated bool))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set market-gating gated)
     (ok true)
   )
 )
@@ -122,27 +131,34 @@
 
 ;; Creates a new Yes/No prediction market. `mtype` can be 0 (stake-based) 
 ;; or 1 (shares-based). Returns the new market-id.
-(define-public (create-market (mtype uint) (metadata-hash (buff 32)))
+(define-public (create-market (mtype uint) (market-data-hash (buff 32)) (proof (list 10 (buff 32))))
   (begin
     (asserts! (or (is-eq mtype MARKET_TYPE_STAKE) (is-eq mtype MARKET_TYPE_SHARES)) err-invalid-market-type)
 
-    (let ((new-id (var-get market-counter)))
+    (let (
+        (new-id (var-get market-counter))
+        (is-gated (var-get market-gating))
+      )
       (map-set markets
         new-id
         {
-          metadata-hash: metadata-hash,
+          market-data-hash: market-data-hash,
           creator: tx-sender,
           market-type: mtype,
           yes-pool: u0,
           no-pool: u0,
           concluded: false,
           outcome: false,
-          resolution-state: RESOLUTION_OPEN, ;; "open", "resolving", "disputed", "resolved"
-          resolution-timestamp: u0           ;; Block height when resolving started
+          resolution-state: RESOLUTION_OPEN,
+          resolution-burn-height: u0
         }
       )
+      (if is-gated
+        (try! (contract-call? .bde022-market-gating can-access-by-address market-data-hash proof))
+        true
+      )
       ;; Increment the counter
-      (print {event: "create", market-id: new-id, metadata-hash: metadata-hash, market-type: mtype, creator: tx-sender})
+      (print {event: "create-market", market-id: new-id, market-data-hash: market-data-hash, market-type: mtype, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
       (ok new-id)
     )
@@ -209,13 +225,13 @@
         )
       )
     )
-    (print {event: "stake", market-id: market-id, amount: amount, yes: yes, voter: tx-sender})
+    (print {event: "market-stake", market-id: market-id, amount: amount, yes: yes, voter: tx-sender})
     (ok true)
   )
 )
 
 ;; Resolve a market invoked by ai-agent.
-(define-public (resolve-market (market-id uint) (is-won bool))
+(define-public (resolve-market (market-id uint) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
@@ -224,10 +240,10 @@
 
     (map-set markets market-id
       (merge md
-        { outcome: is-won, resolution-state: RESOLUTION_RESOLVING, resolution-timestamp: burn-block-height }
+        { outcome: outcome, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market", market-id: market-id, is-won: is-won, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVING})
+    (print {event: "resolve-market", market-id: market-id, outcome: outcome, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVING})
     (ok true)
   )
 )
@@ -236,51 +252,58 @@
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
-    (asserts! (> burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
     (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-open)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-timestamp: burn-block-height }
+        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market-undisputed", market-id: market-id, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVED})
+    (print {event: "resolve-market-undisputed", market-id: market-id, resolution-burn-height: burn-block-height, resolution-state: RESOLUTION_RESOLVED})
     (ok true)
   )
 )
 
-(define-public (resolve-market-vote (market-id uint))
+(define-public (resolve-market-vote (market-id uint) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
     (try! (is-dao-or-extension))
-    (asserts! (> burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
     (asserts! (or (is-eq (get resolution-state md) RESOLUTION_DISPUTED) (is-eq (get resolution-state md) RESOLUTION_RESOLVING)) err-market-wrong-state)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-timestamp: burn-block-height }
+        { concluded: true, outcome: outcome, resolution-state: RESOLUTION_RESOLVED, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market-vote", market-id: market-id, resolver: contract-caller, resolution-state: RESOLUTION_RESOLVED})
+    (print {event: "resolve-market-vote", market-id: market-id, resolver: contract-caller, outcome: outcome, resolution-state: RESOLUTION_RESOLVED})
     (ok true)
   )
 )
 
 ;; Allows a user with a stake in market to contest the resolution
-(define-public (dispute-resolution (market-id uint))
+;; the call is made via the voting contract 'add-proposal' function
+(define-public (dispute-resolution (market-id uint) (data-hash (buff 32)) (merkle-root (optional (buff 32))) (disputer principal))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
-        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) (err u105))) 
+        (market-data-hash (get market-data-hash md)) 
+        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) (err u105))) 
         (caller-stake (+ (get yes-amount stake-data) (get no-amount stake-data)))
-      )
+    )
+    ;; user call add-proposal in the voting contract to start a dispute
+    (try! (is-dao-or-extension))
+
     (asserts! (> caller-stake u0) err-disputer-must-have-stake) ;; Ensure the caller has a non-zero stake
+    (asserts! (is-eq data-hash market-data-hash) err-market-not-found) 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
-    (asserts! (<= burn-block-height (+ (get resolution-timestamp md) (var-get dispute-window-length))) err-dispute-window-elapsed)
+    (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
+
     (map-set markets market-id
       (merge md { resolution-state: RESOLUTION_DISPUTED }))
-    (print {event: "dispute-raised", market-id: market-id, user: tx-sender, resolution-state: RESOLUTION_DISPUTED})
+    (print {event: "dispute-resolution", market-id: market-id, disputer: disputer, resolution-state: RESOLUTION_DISPUTED})
     (ok true)
   )
 )
@@ -372,7 +395,7 @@
   (user-stake uint) 
   (winning-pool uint) 
   (total-pool uint) 
-  (yes-won bool))
+  (yes bool))
   (let (
         (original-sender tx-sender)
         (user-share (/ (* user-stake total-pool) winning-pool))
@@ -401,7 +424,7 @@
         })
 
       ;; Log and return user share
-      (print {event: "claim", market-id: market-id, is-won: yes-won, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, dao-fee: dao-fee, winning-pool: winning-pool, total-pool: total-pool})
+      (print {event: "claim-winnings", market-id: market-id, yes: yes, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, dao-fee: dao-fee, winning-pool: winning-pool, total-pool: total-pool})
       (ok user-share-net)
     )
   )

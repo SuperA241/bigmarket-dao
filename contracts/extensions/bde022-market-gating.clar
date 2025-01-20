@@ -100,8 +100,8 @@
 
 
 ;; Validate proof of access
-(define-public (can-access
-    (metadata-hash (buff 32))                ;; The poll ID
+(define-public (can-access-by-ownership
+    (market-data-hash (buff 32))                ;; The poll ID
     (nft-contract (optional <nft-trait>)) ;; Optional NFT contract
     (ft-contract (optional <ft-trait>))   ;; Optional FT contract
     (token-id (optional uint))         ;; Token ID for NFTs
@@ -114,7 +114,7 @@
         (is-nft-contract (is-some nft-contract))
 
         ;; Fetch the Merkle root for the poll
-        (root (unwrap! (map-get? merkle-roots metadata-hash) err-expecting-merkel-root-for-poll))
+        (root (unwrap! (map-get? merkle-roots market-data-hash) err-expecting-merkel-root-for-poll))
 
         ;; Compute the Merkle proof leaf
         (contract-id (if is-nft-contract
@@ -134,6 +134,28 @@
     ;; Ensure both conditions are satisfied
     (asserts! proof-valid err-token-contract-invalid)
     (asserts! ownership-valid err-token-ownership-invalid)
+    (ok true)
+  ))
+
+(define-public (can-access-by-address
+    (market-data-hash (buff 32))                ;; The poll ID
+    (proof (list 10 (buff 32)))        ;; The Merkle proof
+  )
+  (let
+      (
+        ;; Fetch the Merkle root for the poll
+        (root (unwrap! (map-get? merkle-roots market-data-hash) err-expecting-merkel-root-for-poll))
+
+        ;; Compute the Merkle proof leaf
+        (principal-data (unwrap! (principal-destruct? tx-sender) (err u1001)))
+        (leaf (sha256 (get hash-bytes principal-data)))
+
+
+        ;; Verify the Merkle proof
+        (proof-valid (unwrap! (verify-merkle-proof leaf proof root) err-expecting-valid-merkel-proof))
+    )
+    ;; Ensure both conditions are satisfied
+    (asserts! proof-valid err-token-contract-invalid)
     (ok true)
   ))
 
