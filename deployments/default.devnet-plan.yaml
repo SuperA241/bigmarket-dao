@@ -50,27 +50,6 @@ plan:
             path: contracts/traits/sip009-nft-trait.clar
             anchor-block-only: true
             clarity-version: 1
-        - contract-publish:
-            contract-name: ownable-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 1440
-            path: contracts/traits/ownable-trait.clar
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: payment-gateway-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3370
-            path: contracts/traits/payment-gateway-trait.clar
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: resource-provider-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3830
-            path: contracts/traits/resource-provider-trait.clar
-            anchor-block-only: true
-            clarity-version: 1
       epoch: "2.05"
     - id: 1
       transactions:
@@ -119,50 +98,57 @@ plan:
         - contract-publish:
             contract-name: bde022-market-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 60500
+            cost: 90010
             path: contracts/extensions/bde022-market-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde023-market-staked-predictions
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 156200
+            cost: 173190
             path: contracts/extensions/bde023-market-staked-predictions.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde021-market-resolution-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 126020
+            cost: 126520
             path: contracts/extensions/bde021-market-resolution-voting.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: sbtc
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 25790
+            path: contracts/external/sbtc.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 30630
-            path: contracts/proposals/testnet/bdp000-bootstrap.clar
+            cost: 39820
+            path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp000-core-team-sunset-height
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 5160
-            path: contracts/proposals/testnet/bdp000-core-team-sunset-height.clar
+            cost: 3260
+            path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bdp000-executive-team-sunset-height
+            contract-name: bdp001-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3270
-            path: contracts/proposals/testnet/bdp000-executive-team-sunset-height.clar
+            cost: 4360
+            path: contracts/proposals/devnet/bdp001-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bdp021-opinion-polls
+            contract-name: wrapped-stx
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 6470
-            path: contracts/proposals/testnet/bdp021-opinion-polls.clar
+            cost: 6800
+            path: contracts/external/wrapped-stx.clar
             anchor-block-only: true
             clarity-version: 3
       epoch: "3.0"

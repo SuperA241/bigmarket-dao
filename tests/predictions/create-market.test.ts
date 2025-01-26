@@ -1,20 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { boolCV, Cl, principalCV, uintCV } from "@stacks/transactions";
-import { initSimnet } from "@hirosystems/clarinet-sdk";
-import { metadataHash } from "../helpers";
+import { alice, betty, bob, constructDao, deployer, fred, metadataHash, passCoreProposal, setupSimnet, stxToken, tom, wallace } from "../helpers";
 import { bufferFromHex } from "@stacks/transactions/dist/cl";
+import { generateMerkleProof, generateMerkleTreeUsingStandardPrincipal, proofToClarityValue } from "../gating/gating";
+import { hexToBytes } from "@noble/hashes/utils";
 
-async function setupSimnet() {
-  return await initSimnet();
-}
-
-const simnet = await setupSimnet(); // Ensure proper initialization
-const accounts = simnet.getAccounts();
-
-const acc = simnet.getAccounts();
-const alice = acc.get("wallet_1")!;
-const bob = acc.get("wallet_2")!;
-const deployer = accounts.get("deployer")!;
+const simnet = await setupSimnet();
 
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
@@ -23,71 +14,119 @@ const deployer = accounts.get("deployer")!;
 
 describe("prediction contract", () => {
   it("ensures the contract is deployed", () => {
-    const contractSource = simnet.getContractSource(
+    const contractSource = simnet.getContractSource( 
       "bde023-market-staked-predictions"
     );
     expect(contractSource).toBeDefined();
   });
 
   it("setup market - unknown market type does not work", async () => {
+    constructDao(simnet);
+    console.log(metadataHash());
     const response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(3), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(3),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        Cl.list([]),
+      ],
       deployer
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10001)));
   });
 
   it("setup market with market share type works", async () => {
+    constructDao(simnet);
     const response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(0),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        Cl.list([]),
+      ],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
   });
 
   it("setup market with market stake type works", async () => {
+    constructDao(simnet);
     const response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(1), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(1),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        Cl.list([]),
+      ],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
   });
 
   it("setup two share type markets works", async () => {
+    constructDao(simnet);
     let response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(0),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        Cl.list([]),
+      ],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(0),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        Cl.list([]),
+      ],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
   });
 
   it("ensure market data is as expected", async () => {
+    constructDao(simnet);
+    await passCoreProposal(`bdp001-gating`);
+    const allowedCreators = [alice, bob, tom, betty, wallace];
+    const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
+    let merdat = generateMerkleProof(tree, alice);
+    
     let response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(0),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        proofToClarityValue(merdat.proof),
+      ],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+
+    merdat = generateMerkleProof(tree, bob);
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "create-market",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [
+        Cl.uint(0),
+        Cl.principal(stxToken),
+        Cl.bufferFromHex(metadataHash()),
+        proofToClarityValue(merdat.proof),
+      ],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
@@ -95,7 +134,7 @@ describe("prediction contract", () => {
     const data = await simnet.callReadOnlyFn(
       "bde023-market-staked-predictions",
       "get-market-data",
-      [Cl.uint(0)],
+      [Cl.uint(0)], 
       bob
     );
     expect(data.result).toEqual(
@@ -106,8 +145,11 @@ describe("prediction contract", () => {
           "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(0),
           "no-pool": uintCV(0),
+          "resolution-burn-height": uintCV(0),
+          "resolution-state": uintCV(0),
           concluded: boolCV(false),
           outcome: boolCV(false),
+          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         })
       )
     );

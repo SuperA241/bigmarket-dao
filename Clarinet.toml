@@ -23,9 +23,6 @@ path = "contracts/traits/extension-trait.clar"
 [contracts.proposal-trait]
 path = "contracts/traits/proposal-trait.clar"
 
-[contracts.ownable-trait]
-path = "contracts/traits/ownable-trait.clar"
-
 [contracts.sip010-ft-trait]
 path = "contracts/traits/sip010-ft-trait.clar"
 
@@ -37,12 +34,6 @@ path = "contracts/traits/voting-trait.clar"
 
 [contracts.governance-token-trait]
 path = "contracts/traits/governance-token-trait.clar"
-
-[contracts.payment-gateway-trait]
-path = "contracts/traits/payment-gateway-trait.clar"
-
-[contracts.resource-provider-trait]
-path = "contracts/traits/resource-provider-trait.clar"
 
 [contracts.bitcoin-dao]
 path = "contracts/bitcoin-dao.clar"
@@ -89,24 +80,27 @@ path = "contracts/extensions/bde022-market-gating.clar"
 clarity_version = 3
 epoch = "3.0"
 
-
-[contracts.bdp000-bootstrap]
-path = "contracts/proposals/testnet/bdp000-bootstrap.clar"
+[contracts.wrapped-stx]
+path = "contracts/external/wrapped-stx.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bdp000-executive-team-sunset-height]
-path = "contracts/proposals/testnet/bdp000-executive-team-sunset-height.clar"
+[contracts.sbtc]
+path = "contracts/external/sbtc.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp000-bootstrap]
+path = "contracts/proposals/devnet/bdp000-bootstrap.clar"
 clarity_version = 3
 epoch = "3.0"
 
 [contracts.bdp000-core-team-sunset-height]
-path = "contracts/proposals/testnet/bdp000-core-team-sunset-height.clar"
+path = "contracts/proposals/devnet/bdp000-core-team-sunset-height.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bdp021-opinion-polls]
-path = "contracts/proposals/testnet/bdp021-opinion-polls.clar"
+[contracts.bdp001-gating]
+path = "contracts/proposals/devnet/bdp001-gating.clar"
 clarity_version = 3
 epoch = "3.0"
-

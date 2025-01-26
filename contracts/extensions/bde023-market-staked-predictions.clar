@@ -9,6 +9,8 @@
 ;;;; 2) (Optional) Placeholder for Shares-Based Markets
 ;;;; ----------------------------------------------------
 
+(use-trait ft-token .sip010-ft-trait.sip010-ft-trait)
+
 ;; ---------------- CONSTANTS & TYPES ----------------
 
 (define-constant DEV-FEE-BIPS u200)           ;; 2% (200 basis points)
@@ -44,10 +46,10 @@
 (define-constant err-market-not-open (err u10018))
 (define-constant err-dispute-window-not-elapsed (err u10019))
 (define-constant err-market-wrong-state (err u10020))
+(define-constant err-invalid-token (err u10021))
 
-(define-data-var market-counter uint u1)
-(define-data-var dispute-window-length uint u144)
-(define-data-var market-gating bool false)
+(define-data-var market-counter uint u0)
+(define-data-var dispute-window-length uint u3)
 (define-data-var resolution-agent principal tx-sender)
 (define-data-var dev-fund principal tx-sender)
 (define-data-var dao-treasury principal tx-sender)
@@ -63,6 +65,7 @@
   uint
   {
 		market-data-hash: (buff 32),
+    token: principal,
     creator: principal,
     market-type: uint,
     yes-pool: uint,
@@ -83,24 +86,28 @@
     no-amount: uint
   }
 )
+(define-map allowed-tokens principal bool)
 
 ;; ---------------- PUBLIC FUNCTIONS ----------------
 (define-public (is-dao-or-extension)
 	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
 )
 
+(define-public (set-allowed-token (token principal) (enabled bool))
+	(begin
+		(try! (is-dao-or-extension))
+		(print {event: "allowed-token", token: token, enabled: enabled})
+		(ok (map-set allowed-tokens token enabled))
+	)
+)
+(define-read-only (is-allowed-token (token principal))
+	(default-to false (map-get? allowed-tokens token))
+)
+
 (define-public (set-dispute-window-length (length uint))
   (begin
     (try! (is-dao-or-extension))
     (var-set dispute-window-length length)
-    (ok true)
-  )
-)
-
-(define-public (set-market-gating (gated bool))
-  (begin
-    (try! (is-dao-or-extension))
-    (var-set market-gating gated)
     (ok true)
   )
 )
@@ -131,34 +138,33 @@
 
 ;; Creates a new Yes/No prediction market. `mtype` can be 0 (stake-based) 
 ;; or 1 (shares-based). Returns the new market-id.
-(define-public (create-market (mtype uint) (market-data-hash (buff 32)) (proof (list 10 (buff 32))))
+(define-public (create-market (mtype uint) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
   (begin
     (asserts! (or (is-eq mtype MARKET_TYPE_STAKE) (is-eq mtype MARKET_TYPE_SHARES)) err-invalid-market-type)
 
     (let (
+        (sender tx-sender)
         (new-id (var-get market-counter))
-        (is-gated (var-get market-gating))
       )
+		  (asserts! (is-allowed-token (contract-of token)) err-invalid-token)
       (map-set markets
         new-id
         {
           market-data-hash: market-data-hash,
+          token: (contract-of token),
           creator: tx-sender,
           market-type: mtype,
           yes-pool: u0,
-          no-pool: u0,
+          no-pool: u0, 
           concluded: false,
           outcome: false,
           resolution-state: RESOLUTION_OPEN,
-          resolution-burn-height: u0
+          resolution-burn-height: u0,
         }
       )
-      (if is-gated
-        (try! (contract-call? .bde022-market-gating can-access-by-address market-data-hash proof))
-        true
-      )
+      (try! (as-contract (contract-call? .bde022-market-gating can-access-by-account sender proof)))
       ;; Increment the counter
-      (print {event: "create-market", market-id: new-id, market-data-hash: market-data-hash, market-type: mtype, creator: tx-sender})
+      (print {event: "create-market", market-id: new-id, token: token, market-data-hash: market-data-hash, market-type: mtype, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
       (ok new-id)
     )
@@ -176,23 +182,27 @@
 ;; ---------------- STAKE-BASED FUNCTIONS ----------------
 ;; For stake-based markets, users predict an amount on "Yes" or "No".
 ;; The final pot is distributed to winners after resolution.
-(define-public (predict-yes-stake (market-id uint) (amount uint))
-  (predict-stake market-id amount true))
+(define-public (predict-yes-stake (market-id uint) (amount uint) (token <ft-token>))
+  (predict-stake market-id amount true token))
 
-(define-public (predict-no-stake (market-id uint) (amount uint))
-  (predict-stake market-id amount false))
+(define-public (predict-no-stake (market-id uint) (amount uint) (token <ft-token>))
+  (predict-stake market-id amount false token))
 
-(define-private (predict-stake (market-id uint) (amount uint) (yes bool))
+(define-private (predict-stake (market-id uint) (amount uint) (yes bool) (token <ft-token>))
   (let (
         ;; Ensure amount is valid and transfer STX
-        (amount-less-fee (try! (process-stake-transfer amount)))
+        (amount-less-fee (try! (process-stake-transfer amount token)))
         ;; Fetch and unwrap market data
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
       )
+    ;; Ensure correct token
+    (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
     ;; Ensure correct market type
     (asserts! (is-eq (get market-type md) MARKET_TYPE_STAKE) err-wrong-market-type)
     ;; Ensure market is not concluded
     (asserts! (not (get concluded md)) err-already-concluded)
+    ;; Ensure resolution process has not started 
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-not-open)
 
     ;; Update the appropriate pool
     (map-set markets market-id
@@ -253,7 +263,7 @@
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
     (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
-    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
+    ;; anyone can call this ? (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-open)
 
     (map-set markets market-id
@@ -266,6 +276,9 @@
   )
 )
 
+;; concludes a market that has been disputed. This method has to be called at least
+;; dispute-window-length blocks after the dispute was raised - the voting window.
+;; a proposal with 0 votes will close the market with the outcome false
 (define-public (resolve-market-vote (market-id uint) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
@@ -310,12 +323,14 @@
 
 ;; of the pot if they are on the winning side after resolution. 
 ;; Deducts a 2% DAO fee from the final pot.
-(define-public (claim-winnings (market-id uint))
+(define-public (claim-winnings (market-id uint) (token <ft-token>))
   (begin
     ;; Fetch market and user data
     (let ((market-data (unwrap! (map-get? markets market-id) err-market-not-found))
           (user-bal (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) err-user-balance-unknown)))
 
+      ;; Ensure correct token
+      (asserts! (is-eq (get token market-data) (contract-of token)) err-invalid-token)
       ;; Check if market is concluded
       (asserts! (is-eq (get resolution-state market-data) RESOLUTION_RESOLVED) err-market-not-concluded)
       (asserts! (get concluded market-data) err-market-not-concluded)
@@ -334,7 +349,7 @@
         (asserts! (> user-stake u0) err-user-not-winner)
 
         ;; Claim winnings
-        (claim-winnings-internal market-id user-stake winning-pool total-pool yes-won)
+        (claim-winnings-internal market-id user-stake winning-pool total-pool yes-won token)
       )
     )
   )
@@ -351,9 +366,10 @@
 )
 
 ;; ---------------- PRIVATE FUNCTIONS ----------------
-(define-private (process-stake-transfer (amount uint))
+(define-private (process-stake-transfer (amount uint) (token <ft-token>))
   (let (
-        (sender-balance (stx-get-balance tx-sender))
+        ;;(sender-balance (stx-get-balance tx-sender))
+        (sender-balance (unwrap! (contract-call? token get-balance tx-sender) err-insufficient-balance))
         (fee (calculate-fee amount DEV-FEE-BIPS))
         (transfer-amount (- amount fee))
        )
@@ -363,11 +379,13 @@
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
       ;; Transfer STX to the contract
-      (try! (stx-transfer? transfer-amount tx-sender .bde023-market-staked-predictions))
+      ;;(try! (stx-transfer? transfer-amount tx-sender .bde023-market-staked-predictions))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-staked-predictions none))
       ;; Transfer the fee to the dev fund
-      (try! (stx-transfer? fee tx-sender (var-get dev-fund)))
+      ;;(try! (stx-transfer? fee tx-sender (var-get dev-fund)))
+      (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
       ;; Verify the contract received the correct amount
-      (asserts! (>= (stx-get-balance .bde023-market-staked-predictions) transfer-amount) err-insufficient-contract-balance)
+      ;;(asserts! (>= (stx-get-balance .bde023-market-staked-predictions) transfer-amount) err-insufficient-contract-balance)
 
       (ok transfer-amount)
     )
@@ -395,7 +413,7 @@
   (user-stake uint) 
   (winning-pool uint) 
   (total-pool uint) 
-  (yes bool))
+  (yes bool) (token <ft-token>))
   (let (
         (original-sender tx-sender)
         (user-share (/ (* user-stake total-pool) winning-pool))
@@ -411,8 +429,13 @@
       (as-contract
         (begin
           ;; Transfer user share, capped by initial contract balance
-          (try! (stx-transfer? user-share-net tx-sender original-sender))
-          (try! (stx-transfer? dao-fee tx-sender (var-get dao-treasury)))
+
+          ;;(try! (stx-transfer? user-share-net tx-sender original-sender))
+          ;;(try! (stx-transfer? dao-fee tx-sender (var-get dao-treasury)))
+
+          (try! (contract-call? token transfer user-share-net tx-sender original-sender none))
+          (try! (contract-call? token transfer dao-fee tx-sender (var-get dao-treasury) none))
+
         )
       )
 

@@ -1,20 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { Cl } from "@stacks/transactions";
-import { initSimnet } from "@hirosystems/clarinet-sdk";
-import { constructDao, corePropose, prepareVotes } from "./helpers";
+import { setupSimnet } from "./helpers";
 
-async function setupSimnet() {
-  return await initSimnet();
-}
-
-const simnet = await setupSimnet(); // Ensure proper initialization
+const simnet = await setupSimnet(); 
 const accounts = simnet.getAccounts();
-const wallet1 = accounts.get("wallet_1")!;
 
 const acc = simnet.getAccounts();
 const alice = acc.get("wallet_1")!;
 const bob = acc.get("wallet_2")!;
-const aria = acc.get("wallet_4")!;
 const deployer = accounts.get("deployer")!;
 const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
 const proposalVoting = "bde001-proposal-voting"; // Replace with actual contract name
@@ -48,7 +41,7 @@ describe("bde001-proposal-voting contract", () => {
     // Step 2: Submit the sunset height proposal
     const proposal1 = `${deployer}.bdp000-core-team-sunset-height`;
     const coreProposeResponse = await simnet.callPublicFn(
-      coreProposals,
+      coreProposals, 
       "core-propose",
       [
         Cl.principal(`${deployer}.${proposalVoting}`),

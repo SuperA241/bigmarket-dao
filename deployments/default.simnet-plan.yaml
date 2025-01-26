@@ -79,21 +79,6 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/sip009-nft-trait.clar
             clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: ownable-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/ownable-trait.clar
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: payment-gateway-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/payment-gateway-trait.clar
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: resource-provider-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/resource-provider-trait.clar
-            clarity-version: 1
       epoch: "2.05"
     - id: 1
       transactions:
@@ -143,23 +128,28 @@ plan:
             path: contracts/extensions/bde021-market-resolution-voting.clar
             clarity-version: 3
         - emulated-contract-publish:
+            contract-name: sbtc
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/sbtc.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: bdp000-bootstrap
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/testnet/bdp000-bootstrap.clar
+            path: contracts/proposals/devnet/bdp000-bootstrap.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bdp000-core-team-sunset-height
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/testnet/bdp000-core-team-sunset-height.clar
+            path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bdp000-executive-team-sunset-height
+            contract-name: bdp001-gating
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/testnet/bdp000-executive-team-sunset-height.clar
+            path: contracts/proposals/devnet/bdp001-gating.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bdp021-opinion-polls
+            contract-name: wrapped-stx
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/testnet/bdp021-opinion-polls.clar
+            path: contracts/external/wrapped-stx.clar
             clarity-version: 3
       epoch: "3.0"

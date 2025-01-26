@@ -36,13 +36,11 @@
 (define-constant custom-majority-upper u10000)
 
 (define-data-var custom-majority (optional uint) none)
-(define-data-var next-poll-id uint u1)
 
 (define-map resolution-polls
 	uint
 	{
 		market-data-hash: (buff 32),
-		market-id: uint,
 		votes-for: uint,
 		votes-against: uint,
 		start-burn-height: uint,
@@ -69,28 +67,25 @@
 (define-public (add-proposal
     (market-data-hash (buff 32))               ;; market metadata hash
     (data {market-id: uint, start-burn-height: uint, end-burn-height: uint})
-    (merkle-root (optional (buff 32)))      ;; Optional Merkle root for gating
+    (merkle-root (optional (buff 32)))      ;; Optional Merkle root for gating voters
   )
   (let
     (
       (original-sender tx-sender)
-      (poll-id (var-get next-poll-id))
+      (poll-id (get market-id data))
     )
-		(try! (is-dao-or-extension))
-    (try! (as-contract (contract-call? .bde023-market-staked-predictions dispute-resolution (get market-id data) market-data-hash merkle-root original-sender)))
-
-    ;; Ensure the poll does not already exist
     (asserts! (is-none (map-get? resolution-polls poll-id)) err-poll-already-exists)
+		;; a user with stake can propose but only for a market in the correct state in bde023. 
+    (try! (as-contract (contract-call? .bde023-market-staked-predictions dispute-resolution (get market-id data) market-data-hash merkle-root original-sender)))
 
     ;; Store the Merkle root if provided (gating enabled)
     (if (is-some merkle-root)
-        (try! (contract-call? .bde022-market-gating set-merkle-root market-data-hash (unwrap! merkle-root err-expecting-root)))
+        false ;;(try! (contract-call? .bde022-market-gating set-merkle-root market-data-hash (unwrap! merkle-root err-expecting-root)))
         true)
 
     ;; Register the poll
     (map-set resolution-polls poll-id
       {market-data-hash: market-data-hash,
-      market-id: (get market-id data),
       votes-for: u0,
       votes-against: u0,
       start-burn-height: (get start-burn-height data),
@@ -102,7 +97,6 @@
 
     ;; Emit an event for the new poll
     (print {event: "add-poll", poll-id: poll-id, market-id: (get market-id data), market-data-hash: market-data-hash, end-burn-height: (get end-burn-height data), start-burn-height: (get start-burn-height data), proposer: tx-sender, is-gated: (is-some merkle-root)})
-    (var-set next-poll-id (+ poll-id u1))
     (ok true)
   )
 )
@@ -123,7 +117,7 @@
     (nft-contract (optional <nft-trait>)) ;; Optional NFT contract
     (ft-contract (optional <ft-trait>))   ;; Optional FT contract
     (token-id (optional uint))        ;; Token ID for NFTs
-    (proof (list 10 (buff 32)))       ;; Merkle proof
+    (proof (list 10 (tuple (position bool) (hash (buff 32)))))       ;; Merkle proof
   )
   ;; Process the vote using shared logic
   (process-poll-vote poll-id market-data-hash tx-sender for false nft-contract ft-contract token-id proof)
@@ -140,7 +134,7 @@
                                                 (nft-contract (optional <nft-trait>))
                                                 (ft-contract (optional <ft-trait>))
                                                 (token-id (optional uint))
-                                                (proof (list 10 (buff 32)))),
+                                                (proof (list 10 (tuple (position bool) (hash (buff 32)))))),
                                    signature: (buff 65)})))
   (begin
     (ok (fold fold-vote votes u0))
@@ -157,7 +151,7 @@
                                                 (nft-contract (optional <nft-trait>))
                                                 (ft-contract (optional <ft-trait>))
                                                 (token-id (optional uint))
-                                                (proof (list 10 (buff 32)))),
+                                                (proof (list 10 (tuple (position bool) (hash (buff 32)))))),
                                      signature: (buff 65)}) (current uint))
   (let
     (
@@ -182,7 +176,7 @@
                             (nft-contract (optional <nft-trait>))
                             (ft-contract (optional <ft-trait>))
                             (token-id (optional uint))
-                            (proof (list 10 (buff 32)))),
+                            (proof (list 10 (tuple (position bool) (hash (buff 32)))))),
                  signature: (buff 65)}))
   (let
       (
@@ -210,7 +204,7 @@
     (nft-contract (optional <nft-trait>)) ;; Optional NFT contract
     (ft-contract (optional <ft-trait>))   ;; Optional FT contract
     (token-id (optional uint))       ;; Token ID for NFTs
-    (proof (list 10 (buff 32)))      ;; Merkle proof
+    (proof (list 10 (tuple (position bool) (hash (buff 32)))))      ;; Merkle proof
   )
   (if is-gated
       (ok (try! (contract-call? .bde022-market-gating
@@ -232,7 +226,7 @@
     (nft-contract (optional <nft-trait>)) ;; Optional NFT contract
     (ft-contract (optional <ft-trait>))   ;; Optional FT contract
     (token-id (optional uint))       ;; Token ID for NFTs
-    (proof (list 10 (buff 32)))      ;; Merkle proof
+    (proof (list 10 (tuple (position bool) (hash (buff 32)))))      ;; Merkle proof
   )
   (let
       (
@@ -305,7 +299,7 @@
 		(asserts! (not (get concluded poll-data)) err-proposal-already-concluded)
 		(asserts! (>= burn-block-height (get end-burn-height poll-data)) err-end-burn-height-not-reached)
 		(map-set resolution-polls poll-id (merge poll-data {concluded: true, passed: passed}))
-		(print {event: "conclude", poll-id: poll-id, market-id: market-id, passed: passed})
+		(print {event: "conclude", poll-id: poll-id, passed: passed})
 		(and passed (try! (contract-call? .bde023-market-staked-predictions resolve-market-vote market-id passed)))
 		(ok passed)
 	)

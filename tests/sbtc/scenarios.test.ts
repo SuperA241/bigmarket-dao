@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { boolCV, Cl, principalCV, uintCV } from "@stacks/transactions";
-import { alice, annie, betty, bob, constructDao, deployer, developer, metadataHash, passCoreProposal, setupSimnet, stxToken, tom, wallace } from "../helpers";
+import { betty, constructDao, metadataHash, passCoreProposal, setupSimnet, sbtcToken, wallace, deployer, alice, bob, tom, developer, annie } from "../helpers";
 import { bufferFromHex } from "@stacks/transactions/dist/cl";
-import { resolveUndisputed } from "./helpers_staking";
 import { generateMerkleProof, generateMerkleTreeUsingStandardPrincipal, proofToClarityValue } from "../gating/gating";
+import { resolveUndisputed } from "../predictions/helpers_staking";
 
 const simnet = await setupSimnet();
 
@@ -20,7 +20,7 @@ describe("check actual claims vs expected for some scenarios", () => {
       "create-market",
       [
         Cl.uint(0),
-        Cl.principal(stxToken),
+        Cl.principal(sbtcToken),
         Cl.bufferFromHex(metadataHash()), 
         Cl.list([]),
       ],
@@ -30,7 +30,7 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(stxToken)], 
+      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(sbtcToken)], 
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -39,7 +39,7 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(96040000n)));
@@ -52,7 +52,7 @@ describe("check actual claims vs expected for some scenarios", () => {
       "create-market",
       [
         Cl.uint(0),
-        Cl.principal(stxToken),
+        Cl.principal(sbtcToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
       ],
@@ -62,14 +62,14 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(sbtcToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-no-stake",
-      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(sbtcToken)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -79,7 +79,7 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(192080000n)));
@@ -87,7 +87,7 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       bob
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10006)));
@@ -104,7 +104,7 @@ describe("check actual claims vs expected for some scenarios", () => {
       "create-market",
       [
         Cl.uint(0),
-        Cl.principal(stxToken),
+        Cl.principal(sbtcToken),
         Cl.bufferFromHex(metadataHash()),
         proofToClarityValue(merdat.proof),
       ], 
@@ -114,28 +114,28 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(100000000n), Cl.principal(sbtcToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(50000000n), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(50000000n), Cl.principal(sbtcToken)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-no-stake",
-      [Cl.uint(0), Cl.uint(200000000), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(200000000), Cl.principal(sbtcToken)],
       developer
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "predict-no-stake",
-      [Cl.uint(0), Cl.uint(20000000), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.uint(20000000), Cl.principal(sbtcToken)],
       annie
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -145,14 +145,14 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10006)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       bob
     );
     let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
@@ -164,14 +164,14 @@ describe("check actual claims vs expected for some scenarios", () => {
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       developer
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(323043636n)));
     response = await simnet.callPublicFn(
       "bde023-market-staked-predictions",
       "claim-winnings",
-      [Cl.uint(0), Cl.principal(stxToken)],
+      [Cl.uint(0), Cl.principal(sbtcToken)],
       annie
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(32304364n)));
@@ -190,7 +190,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
     "create-market",
     [
       Cl.uint(0),
-      Cl.principal(stxToken),
+      Cl.principal(sbtcToken),
       Cl.bufferFromHex(metadataHash()),
       Cl.list([]),
     ],
@@ -200,28 +200,28 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(100000000000n), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(100000000000n), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(5000000000000n), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(5000000000000n), Cl.principal(sbtcToken)],
     bob
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     developer
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     annie
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -231,14 +231,14 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(96040000000n)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     bob
   );
   let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
@@ -250,14 +250,14 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     developer
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(19208000000000n)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     annie
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(19208000000000n)));
@@ -275,7 +275,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
     "create-market",
     [
       Cl.uint(0),
-      Cl.principal(stxToken),
+      Cl.principal(sbtcToken),
       Cl.bufferFromHex(metadataHash()),
       Cl.list([]),
     ],
@@ -286,7 +286,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
     "create-market",
     [
       Cl.uint(0),
-      Cl.principal(stxToken),
+      Cl.principal(sbtcToken),
       Cl.bufferFromHex(metadataHash()),
       Cl.list([]),
     ],
@@ -297,57 +297,57 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(100000000000n), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(100000000000n), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-staked-predictions", 
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(5000000000000n), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(5000000000000n), Cl.principal(sbtcToken)],
     bob
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     developer
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-staked-predictions", 
     "predict-no-stake",
-    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     annie
-  );
+  ); 
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-
+ 
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(1), Cl.uint(1000000n), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.uint(1000000n), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(1), Cl.uint(5000000000000n), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.uint(5000000000000n), Cl.principal(sbtcToken)],
     bob
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(1), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     developer
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "predict-no-stake",
-    [Cl.uint(1), Cl.uint(20000000000000), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.uint(20000000000000), Cl.principal(sbtcToken)],
     annie
   );
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -358,14 +358,14 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(96040000000n)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     bob
   );
   let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
@@ -377,14 +377,14 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     developer
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(19208000000000n)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(0), Cl.principal(stxToken)],
+    [Cl.uint(0), Cl.principal(sbtcToken)],
     annie
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(19208000000000n)));
@@ -397,14 +397,14 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(1), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.principal(sbtcToken)],
     alice
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(960400n)));
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(1), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.principal(sbtcToken)],
     bob
   );
   stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
@@ -416,7 +416,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(1), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.principal(sbtcToken)],
     developer
   );
   let data = await simnet.callReadOnlyFn(
@@ -464,7 +464,7 @@ it("Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on
   response = await simnet.callPublicFn(
     "bde023-market-staked-predictions",
     "claim-winnings",
-    [Cl.uint(1), Cl.principal(stxToken)],
+    [Cl.uint(1), Cl.principal(sbtcToken)],
     annie
   );
   expect(response.result).toEqual(Cl.ok(Cl.uint(19208000000000n)));

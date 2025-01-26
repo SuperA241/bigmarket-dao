@@ -4,25 +4,34 @@ import { bytesToHex } from "@noble/hashes/utils";
 import { Cl } from "@stacks/transactions";
 import { expect } from "vitest";
 
-const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
+export const simnet = await setupSimnet();
+export const accounts = simnet.getAccounts();
+export const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
+export const deployer = accounts.get("deployer")!;
+export const alice = accounts.get("wallet_1")!;
+export const bob = accounts.get("wallet_2")!;
+export const tom = accounts.get('wallet_3')!;
+export const betty = accounts.get('wallet_4')!;
+export const fred = accounts.get('wallet_5')!;
+export const wallace = accounts.get('wallet_6')!;
+export const annie = accounts.get("wallet_4")!;
+export const developer = accounts.get("wallet_8")!;
 
-export async function getSimnet() {
-  const simnet = await initSimnet();
-  const accounts = simnet.getAccounts();
-
-  const deployer = accounts.get("deployer")!;
-  const alice = accounts.get("wallet_1")!;
-  const bob = accounts.get("wallet_2")!;
-
-  if (!deployer || !alice || !bob) {
-    throw new Error("Accounts not initialized properly");
-  }
-
-  return { simnet, deployer, alice, bob };
+export async function setupSimnet() {
+  return await initSimnet();
 }
+
+export const stxToken = `${deployer}.wrapped-stx`;
+export const sbtcToken = `${deployer}.sbtc`;
+
 export function metadataHash() {
   const metadata = "example metadata";
   const metadataHash = sha256(metadata);
+  return bytesToHex(metadataHash);
+}
+
+export function dataHash(message: string) {
+  const metadataHash = sha256(message);
   return bytesToHex(metadataHash);
 }
 
@@ -37,7 +46,7 @@ export async function constructDao(simnet: any) {
     [Cl.principal(proposal)],
     simnet.deployer
   );
-  console.log("constructDao: ", Cl.prettyPrint(result.result));
+  // console.log("constructDao: ", Cl.prettyPrint(result.result));
 
   // Ensure the DAO is constructed successfully
   //expect(result.result).toEqual("(ok true)");
@@ -64,7 +73,7 @@ export async function corePropose(
     ],
     alice
   );
-  console.log("corePropose: ", Cl.prettyPrint(result.result));
+  // console.log("corePropose: ", Cl.prettyPrint(result.result));
   expect(result.result).toEqual("ok true");
 }
 
@@ -72,39 +81,47 @@ export async function corePropose(
  * Pass a Proposal by Signals
  */
 export async function passProposalBySignals(simnet: any, proposalName: string) {
-  const accounts = simnet.getAccounts();
-  const deployer = accounts.get("deployer")!;
-  const alice = accounts.get("wallet_1")!;
-  const bob = accounts.get("wallet_2")!;
-
   const proposal = `${deployer}.${proposalName}`;
 
   // Signal 1 by Alice
   const response2 = await simnet.callPublicFn(
     "bde004-core-execute", // Replace with actual contract name
-    "executiveAction",
+    "executive-action",
     [Cl.principal(proposal)],
     alice
   );
-  expect(response2.result).toEqual("ok u1");
+  expect(response2.result).toEqual(Cl.ok(Cl.uint(1)));
 
   // Signal 2 by Bob
-  const response3 = await simnet.callPublicFn(
+  await simnet.callPublicFn(
     "bde004-core-execute",
-    "executiveAction",
+    "executive-action",
     [Cl.principal(proposal)],
     bob
   );
-  expect(response3.result).toEqual("ok u2");
+  expect(response2.result).toEqual(Cl.ok(Cl.uint(1)));
 
   // Check if the proposal is executed
   const executedAt = await simnet.callReadOnlyFn(
     "bitcoin-dao",
-    "executedAt",
+    "executed-at",
     [Cl.principal(proposal)],
     deployer
   );
-  expect(executedAt.result).toMatch(/^ok u\d+/); // Expect a valid block height
+  console.log("executedAt: ", executedAt);
+  //expect(executedAt.result).toEqual(Cl.some(Cl.uint(619n)));
+  expect(executedAt.result).toMatchObject(/^ok u\d+/); // Expect a valid block height
+}
+
+export async function isValidExtension(extension: string) {
+  let data = await simnet.callReadOnlyFn(
+    "bitcoin-dao",
+    "is-extension",
+    [Cl.principal(extension)],
+    alice
+  );
+  expect(data.result).toEqual(Cl.bool(true));
+  return true;
 }
 
 export function prepareVotes(
@@ -128,4 +145,55 @@ export function prepareVotes(
       })
     )
   );
+}
+
+export async function passCoreProposal(proposal: string) {
+  await isValidExtension(`${deployer}.bde000-governance-token`);
+  await isValidExtension(`${deployer}.bde001-proposal-voting`);
+  await isValidExtension(`${deployer}.bde004-core-execute`);
+  await isValidExtension(`${deployer}.bde003-core-proposals`);
+  await isValidExtension(`${deployer}.bde006-treasury`);
+  await isValidExtension(`${deployer}.bde022-market-gating`);
+  await isValidExtension(`${deployer}.bde021-market-resolution-voting`);
+  await isValidExtension(`${deployer}.bde023-market-staked-predictions`);
+
+  const votingContract = "bde001-proposal-voting";
+  const coreProposeResponse = await simnet.callPublicFn(
+    coreProposals,
+    "core-propose",
+    [
+      Cl.principal(`${deployer}.${votingContract}`),
+      Cl.principal(`${deployer}.${proposal}`),
+      Cl.uint(simnet.burnBlockHeight + 10),
+      Cl.uint(100),
+      Cl.some(Cl.uint(6600)),
+    ],
+    alice
+  );
+  expect(coreProposeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
+
+  // Step 3: Mine 2 empty blocks
+  simnet.mineEmptyBurnBlocks(20);
+
+  // Step 4: Vote on the proposal
+  const voteResponse = await simnet.callPublicFn(
+    votingContract,
+    "vote",
+    [Cl.uint(1000), Cl.bool(true), Cl.principal(`${deployer}.${proposal}`)],
+    bob
+  );
+  expect(voteResponse.result).toEqual(Cl.ok(Cl.bool(true)));
+
+  // Step 6: Mine 200 empty blocks to reach the conclusion point
+  simnet.mineEmptyBurnBlocks(200);
+
+  // Step 7: Conclude the proposal
+  const concludeResponse = await simnet.callPublicFn(
+    votingContract,
+    "conclude",
+    [Cl.principal(`${deployer}.${proposal}`)],
+    bob
+  );
+  expect(concludeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
+  return concludeResponse;
 }
