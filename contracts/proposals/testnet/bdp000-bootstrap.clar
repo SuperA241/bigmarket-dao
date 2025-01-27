@@ -48,6 +48,7 @@
 		(try! (contract-call? .bde023-market-staked-predictions set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
 		(try! (contract-call? .bde023-market-staked-predictions set-dev-fund 'ST3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNZN9J752))
 		(try! (contract-call? .bde023-market-staked-predictions set-dao-treasury .bde006-treasury))
+		(try! (contract-call? .bde023-market-staked-predictions set-dispute-window-length u3))
 		(try! (contract-call? .bde023-market-staked-predictions set-allowed-token .wrapped-stx true))
 		(try! (contract-call? .bde023-market-staked-predictions set-allowed-token .sbtc true))
 

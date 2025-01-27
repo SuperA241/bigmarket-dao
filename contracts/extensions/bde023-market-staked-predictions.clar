@@ -31,7 +31,7 @@
 (define-constant err-wrong-market-type (err u10003))
 (define-constant err-already-concluded (err u10004))
 (define-constant err-market-not-found (err u10005))
-(define-constant err-user-not-winner (err u10006))
+(define-constant err-user-not-winner-or-claimed (err u10006))
 (define-constant err-not-participant-or-invalid-market (err u10007))
 (define-constant err-user-balance-unknown (err u10008))
 (define-constant err-market-not-concluded (err u10009))
@@ -279,17 +279,19 @@
 ;; concludes a market that has been disputed. This method has to be called at least
 ;; dispute-window-length blocks after the dispute was raised - the voting window.
 ;; a proposal with 0 votes will close the market with the outcome false
-(define-public (resolve-market-vote (market-id uint) (outcome bool))
+(define-public (resolve-market-vote (market-id uint) (meta-data-hash (buff 32)) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
     (try! (is-dao-or-extension))
-    (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (is-eq meta-data-hash (get market-data-hash md)) err-market-not-found)
     (asserts! (or (is-eq (get resolution-state md) RESOLUTION_DISPUTED) (is-eq (get resolution-state md) RESOLUTION_RESOLVING)) err-market-wrong-state)
+    ;; logic here could be either disputed or (resolving AND dispute window has timed out)?
+    ;; (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, outcome: outcome, resolution-state: RESOLUTION_RESOLVED, resolution-burn-height: burn-block-height }
+        { concluded: true, outcome: outcome, resolution-state: RESOLUTION_RESOLVED }
       )
     )
     (print {event: "resolve-market-vote", market-id: market-id, resolver: contract-caller, outcome: outcome, resolution-state: RESOLUTION_RESOLVED})
@@ -298,18 +300,17 @@
 )
 
 ;; Allows a user with a stake in market to contest the resolution
-;; the call is made via the voting contract 'add-proposal' function
-(define-public (dispute-resolution (market-id uint) (data-hash (buff 32)) (merkle-root (optional (buff 32))) (disputer principal))
+;; the call is made via the voting contract 'create-market-vote' function
+(define-public (dispute-resolution (market-id uint) (data-hash (buff 32)) (disputer principal))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
         (market-data-hash (get market-data-hash md)) 
-        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) (err u105))) 
+        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
         (caller-stake (+ (get yes-amount stake-data) (get no-amount stake-data)))
     )
-    ;; user call add-proposal in the voting contract to start a dispute
+    ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
 
-    (asserts! (> caller-stake u0) err-disputer-must-have-stake) ;; Ensure the caller has a non-zero stake
     (asserts! (is-eq data-hash market-data-hash) err-market-not-found) 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
     (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
@@ -346,7 +347,7 @@
             (total-pool (+ (get yes-pool market-data) (get no-pool market-data))))
         
         ;; Ensure user has a stake on the winning side
-        (asserts! (> user-stake u0) err-user-not-winner)
+        (asserts! (> user-stake u0) err-user-not-winner-or-claimed)
 
         ;; Claim winnings
         (claim-winnings-internal market-id user-stake winning-pool total-pool yes-won token)

@@ -286,4 +286,5 @@ describe("successful claim", () => {
         stxBalances?.get(deployer + ".bde023-market-staked-predictions")
     );
   });
+  
 });

@@ -29,6 +29,10 @@ export default defineConfig({
       json: "reports/report.json",
       junit: "reports/report.xml",
     },
+    test: {
+      sourcemap: true, // Ensure sourcemaps are included
+      fullStack: true, // Enables full stack traces
+    },  
     silent: false, // if true, suppresses all output
     watch: true, // enables watch mode
     environment: "clarinet", // use vitest-environment-clarinet
