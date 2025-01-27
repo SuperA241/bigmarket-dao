@@ -33,7 +33,7 @@
 
 		;; configure prediction markets
 		;; const allowedCreators = ["ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM"];
-		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-staked-predictions 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
+		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-staked-predictions 0xd693025fae8e91c41d415fcb3f84dc4340b4ea78f7b4fc925aa347b41bca0091))
 		(try! (contract-call? .bde023-market-staked-predictions set-resolution-agent 'ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV))
 		(try! (contract-call? .bde023-market-staked-predictions set-dev-fund 'ST1KRE4FNYJTN3R9S580J148BFKK0Z1A61WYKKW9P))
 		(try! (contract-call? .bde023-market-staked-predictions set-dao-treasury .bde006-treasury))

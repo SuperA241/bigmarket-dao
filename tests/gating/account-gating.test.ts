@@ -138,6 +138,28 @@ describe('gating market  creation', () => {
 		expect(response.result).toEqual(Cl.error(Cl.uint(2214)));
 	});
 
+	it("GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION", async () => {
+		constructDao(simnet);
+		const allowedCreators = ["ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV", "ST2RPDWF6N939Y32C4ZEVC74SCRTGSJBFBPJP05H5", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY"];
+		const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
+		let merklProof = generateMerkleProof(tree, "ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV");
+		assert(merklProof.valid)
+		//merklProof = generateMerkleProof(tree, deployer);
+		//assert(merklProof.valid)
+		const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde023-market-staked-predictions');
+		console.log(
+			'GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: bde023-market-staked-predictions: 0x' + lookupRootKey + ' root= 0x' + root
+			//tree
+		);
+		let response = await simnet.callPublicFn(
+			'bde023-market-staked-predictions',
+			'create-market',
+			[Cl.uint(0), Cl.principal(stxToken), Cl.bufferFromHex(metadataHash()), proofToClarityValue(merklProof.proof)],
+			alice
+		);
+		expect(response.result).toEqual(Cl.error(Cl.uint(2214)));
+	});
+
 	it('can create-market with valid merkle proof', async () => {
 		constructDao(simnet);
 
