@@ -2,7 +2,7 @@
 
 # List of URLs to open in the browser, e.g., pointing to different containers
 urls=(
-  "https://explorer.hiro.so/address/ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY?chain=testnet" # pox-4
+  "https://explorer.hiro.so/address/ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV?chain=testnet" # pox-4
   # Add more URLs as needed
 )
 

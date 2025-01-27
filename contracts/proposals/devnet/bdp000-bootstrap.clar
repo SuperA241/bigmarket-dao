@@ -1,5 +1,5 @@
-;; Title: BDP000 Core Sunset Height
-;; Author: Mike Cohen
+;; Title: BDP000 Bootstrap
+;; Author: mijoco.btc
 ;; Description:
 ;; Sets up and configure the DAO
 
