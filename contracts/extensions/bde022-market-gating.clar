@@ -34,7 +34,7 @@
 
 ;; Merkle roots for each type of gated data
 ;; hashed-id is a hash of a known identifier for example
-;; hashed-id = market data hash - see bde023-market-staked-predictions
+;; hashed-id = market data hash - see bde023-market-predicting
 ;; hashed-id = sha256(contractId) - used to gate access to eg 'create-market' function
 (define-map merkle-roots
   (buff 32)

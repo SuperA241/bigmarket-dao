@@ -9,9 +9,9 @@ urls=(
   "http://localhost:3999/extended/v1/contract/ST000000000000000000002AMW42H.pox-4"
   "http://localhost:3999/extended/v1/contract/ST000000000000000000002AMW42H.bns"
   "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao"
-  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting"
-  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting"
-  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting"
+  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised"
+  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised"
+  "http://localhost:3999/extended/v1/contract/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised"
   "http://localhost:8000/transactions?chain=testnet&api=http://localhost:3999"
   "http://localhost:8001" # bitcoin explorer
   # Add more URLs as needed

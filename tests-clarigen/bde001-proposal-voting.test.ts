@@ -19,7 +19,7 @@ const aria = acc.get("wallet_4")!;
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
 */
 
-describe("bde001-proposal-voting", () => {
+describe("bde001-proposal-voting-tokenised", () => {
   test("proposal-voting - cannot vote before start height", async () => {
     constructDao();
 

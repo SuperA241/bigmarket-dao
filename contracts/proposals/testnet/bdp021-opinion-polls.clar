@@ -14,7 +14,7 @@
 		;; Enable genesis extensions.
 		(try! (contract-call? .bitcoin-dao set-extensions
 			(list
-				{extension: .bde021-market-resolution-voting, enabled: true}
+				{extension: .bde021-market-voting, enabled: true}
 			)
 		))
 		(print "Bitcoin DAO opinion polls are enabled.")

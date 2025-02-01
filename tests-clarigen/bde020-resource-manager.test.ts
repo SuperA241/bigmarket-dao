@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { alice, bitcoinDao, bob, constructDao, errors, fred, governanceToken, passProposalBySignals, resourceManager, treasury } from "./helpers";
+import { alice, bitcoinDao, bob, constructDao, errors, fred, governanceToken, passProposalByExecutiveSignals, resourceManager, treasury } from "./helpers";
 import { mapGet, rov, txErr, txOk, varGet } from '@clarigen/test';
 
 
@@ -37,7 +37,7 @@ describe("bde020-resource-manager managing resources", () => {
     } catch(e) {}
     let resourceCount = await varGet(resourceManager.identifier, resourceManager.variables.resourceCount);
     expect(resourceCount).toBe(0n)
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     let result = mapGet(resourceManager.identifier, resourceManager.maps.resourceData, 1);
     expect(result?.name).toBe("edg-token-mint")
     expect(result?.description).toBe("Resource mints 10 EDG to recipient")
@@ -54,28 +54,28 @@ describe("bde020-resource-manager pay invoices", () => {
 
   test("pay-invoice - cannot be paid for resource id 0", async () => {
     constructDao()    
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     const response1 = txErr(resourceManager.payInvoice(0n, new Uint8Array()), alice);
     expect(response1.value).toBe(errors.resourceManager.ERR_RESOURCE_NOT_FOUND)
   });
 
   test("pay-invoice - fails if user balance is below price", async () => {
     constructDao()
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     const response1 = txErr(resourceManager.payInvoice(1n, new Uint8Array()), fred);
     expect(response1.value).toBe(1n) // insufficient funds
   });
 
   test("pay-invoice - succeeds if user balance has funds", async () => {
     constructDao()
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     const response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);
     expect(response1.value).toBe(1n) // insufficient funds
   });
 
   test("pay-invoice - succeeds for two users 1 resource", async () => {
     constructDao()
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     let response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);
     expect(response1.value).toBe(1n) 
     response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), bob);
@@ -84,7 +84,7 @@ describe("bde020-resource-manager pay invoices", () => {
 
   test("pay-invoice - succeeds for one users twice for same resource", async () => {
     constructDao()
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     let response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);
     expect(response1.value).toBe(1n) 
     response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);
@@ -93,7 +93,7 @@ describe("bde020-resource-manager pay invoices", () => {
 
   test("pay-invoice - fails for one user after they run out of funds", async () => {
     constructDao()
-    passProposalBySignals('bdp000-add-resource')
+    passProposalByExecutiveSignals('bdp000-add-resource')
     let response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);
     expect(response1.value).toBe(1n) 
     response1 = txOk(resourceManager.payInvoice(1n, new Uint8Array()), alice);

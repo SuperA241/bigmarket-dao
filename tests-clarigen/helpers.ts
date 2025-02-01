@@ -44,7 +44,7 @@ export function constructDao() {
   expect(response.value).toBeTruthy()
   return proposal;
 }
-export function passProposalBySignals(contractName:string) {
+export function passProposalByExecutiveSignals(contractName:string) {
   const proposal = simnet.deployer + '.' + contractName
   const response2 = txOk(coreExecute.executiveAction(proposal), alice);
   expect(response2.value).toBe(1n)

@@ -3,7 +3,6 @@
   (
     (add-proposal (<proposal-trait>
                   (tuple 
-                    (start-height-stacks uint)
                     (start-burn-height uint)
                     (end-burn-height uint)
                     (custom-majority (optional uint))

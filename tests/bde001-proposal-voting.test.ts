@@ -9,8 +9,8 @@ const acc = simnet.getAccounts();
 const alice = acc.get("wallet_1")!;
 const bob = acc.get("wallet_2")!;
 const deployer = accounts.get("deployer")!;
-const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
-const proposalVoting = "bde001-proposal-voting"; // Replace with actual contract name
+const coreProposals = "bde003-core-proposals-tokenised"; // Replace with actual contract name
+const proposalVoting = "bde001-proposal-voting-tokenised"; // Replace with actual contract name
 
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
@@ -19,7 +19,7 @@ const proposalVoting = "bde001-proposal-voting"; // Replace with actual contract
 
 describe("bde001-proposal-voting contract", () => {
   it("ensures the contract is deployed", () => {
-    const contractSource = simnet.getContractSource("bde001-proposal-voting");
+    const contractSource = simnet.getContractSource("bde001-proposal-voting-tokenised");
     expect(contractSource).toBeDefined();
     //console.log(contractSource);
   });
@@ -44,7 +44,6 @@ describe("bde001-proposal-voting contract", () => {
       coreProposals, 
       "core-propose",
       [
-        Cl.principal(`${deployer}.${proposalVoting}`),
         Cl.principal(proposal1),
         Cl.uint(simnet.burnBlockHeight + 10),
         Cl.uint(100),
@@ -61,7 +60,7 @@ describe("bde001-proposal-voting contract", () => {
     const voteResponse = await simnet.callPublicFn(
       proposalVoting,
       "vote",
-      [Cl.uint(1000), Cl.bool(true), Cl.principal(proposal1)],
+      [Cl.uint(1000), Cl.bool(true), Cl.principal(proposal1), Cl.none()],
       bob
     );
     expect(voteResponse.result).toEqual(Cl.ok(Cl.bool(true)));

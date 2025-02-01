@@ -15,8 +15,8 @@ Note: this is experimental code - use at your own risk
 Bitcoin DAO will launch with the following additional features;
 
 - bde000-governance-token
-- bde001-proposal-voting
-- bde003-core-proposals
+- bde001-proposal-voting-tokenised
+- bde003-core-proposals-tokenised
 - bde004-core-execute
 - bde006-treasury
 

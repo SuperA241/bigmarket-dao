@@ -5,8 +5,8 @@ urls=(
   "http://localhost:8000/transactions?chain=testnet&api=http://localhost:3999"
 
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals?chain=testnet&api=http://localhost:3999"
+  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised?chain=testnet&api=http://localhost:3999"
+  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals-tokenised?chain=testnet&api=http://localhost:3999"
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde004-core-execute?chain=testnet&api=http://localhost:3999"
 
   #"http://localhost:8000/txid/ST000000000000000000002AMW42H.pox-4?chain=testnet&api=http://localhost:3999"

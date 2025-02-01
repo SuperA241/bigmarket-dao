@@ -15,10 +15,10 @@ describe("resolving errors", () => {
   it("only dev can resolve", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market", 
       [ 
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),  
         Cl.list([]),
@@ -28,7 +28,7 @@ describe("resolving errors", () => {
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     // not deployer
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(false)],
       alice
@@ -36,7 +36,7 @@ describe("resolving errors", () => {
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
     // not bob
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(false)],
       tom
@@ -44,7 +44,7 @@ describe("resolving errors", () => {
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
     // only alice
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(false)],
       bob
@@ -55,10 +55,10 @@ describe("resolving errors", () => {
   it("err-market-not-found", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market", 
       [
-        Cl.uint(1),
+        Cl.uint(1), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -67,7 +67,7 @@ describe("resolving errors", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(2), Cl.bool(false)],
       deployer
@@ -78,10 +78,10 @@ describe("resolving errors", () => {
   it("err-already-concluded", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -90,14 +90,14 @@ describe("resolving errors", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(false)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(false)],
       bob
@@ -110,10 +110,10 @@ describe("resolve market", () => {
   it("resolve market yes", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -122,14 +122,14 @@ describe("resolve market", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn( 
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
       bob
@@ -138,7 +138,7 @@ describe("resolve market", () => {
     await resolveUndisputed(0, true);
 
     const data = await simnet.callReadOnlyFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -149,8 +149,8 @@ describe("resolve market", () => {
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
-          "no-pool": uintCV(2000000 - (2 * 2000000) / 100),
+          "yes-pool": uintCV(1980000n),
+          "no-pool": uintCV(1980000n),
           // "resolution-burn-height": uintCV(19),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
@@ -163,10 +163,10 @@ describe("resolve market", () => {
   it("resolve market no bids", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -178,7 +178,7 @@ describe("resolve market", () => {
     await resolveUndisputed(0, false);
 
     let data = await simnet.callReadOnlyFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -200,10 +200,10 @@ describe("resolve market", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -213,7 +213,7 @@ describe("resolve market", () => {
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     await resolveUndisputed(1, true);
     data = await simnet.callReadOnlyFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(1)],
       alice

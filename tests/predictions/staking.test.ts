@@ -14,10 +14,10 @@ describe("prediction errors", () => {
   it("user can't commit more than their balance", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0), 
+        Cl.uint(0), Cl.none(), 
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -26,7 +26,7 @@ describe("prediction errors", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(1000000000000000000000000000000000000n), Cl.principal(stxToken)],
       alice
@@ -37,10 +37,10 @@ describe("prediction errors", () => {
   it("err-wrong-market-type", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(1),
+        Cl.uint(1), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -49,7 +49,7 @@ describe("prediction errors", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(1000000), Cl.principal(stxToken)], // 1 STX
       alice
@@ -60,10 +60,10 @@ describe("prediction errors", () => {
   it("err-already-concluded", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -72,7 +72,7 @@ describe("prediction errors", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(1000000), Cl.principal(stxToken)],
       alice
@@ -80,7 +80,7 @@ describe("prediction errors", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     // conclude
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(true)],
       bob
@@ -88,7 +88,7 @@ describe("prediction errors", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(1000000), Cl.principal(stxToken)],
       alice
@@ -104,10 +104,10 @@ describe("prediction fees and stakes", () => {
     // console.log("prediction fees and stakes:", balances);
 
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -116,7 +116,7 @@ describe("prediction fees and stakes", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)], // 1 STX
       alice
@@ -126,14 +126,14 @@ describe("prediction fees and stakes", () => {
 
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(10000000), Cl.principal(stxToken)], // 1 STX
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     const data = await simnet.callReadOnlyFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -144,10 +144,11 @@ describe("prediction fees and stakes", () => {
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
-          "no-pool": uintCV(10000000 - (2 * 10000000) / 100),
+          "yes-pool": uintCV(1980000),
+          "no-pool": uintCV(9900000),
           "resolution-burn-height": uintCV(0),
           "resolution-state": uintCV(0),
+          "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
           outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx")
@@ -159,10 +160,10 @@ describe("prediction fees and stakes", () => {
   it("fees are collected up front from prediction stakes", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -171,21 +172,21 @@ describe("prediction fees and stakes", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(10000000), Cl.principal(stxToken)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     const data = await simnet.callReadOnlyFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -196,10 +197,11 @@ describe("prediction fees and stakes", () => {
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(2000000 - (2 * 2000000) / 100),
-          "no-pool": uintCV(10000000 - (2 * 10000000) / 100),
+          "yes-pool": uintCV(1980000n),
+          "no-pool": uintCV(9900000n),
           "resolution-burn-height": uintCV(0),
           "resolution-state": uintCV(0),
+          "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
           outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx")
@@ -211,10 +213,10 @@ describe("prediction fees and stakes", () => {
   it("alice hedges yes and no", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -224,7 +226,7 @@ describe("prediction fees and stakes", () => {
 
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)], // 1 STX
       alice
@@ -233,7 +235,7 @@ describe("prediction fees and stakes", () => {
 
     // check stake
     let aliceStake = simnet.getMapEntry(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "stake-balances",
       Cl.tuple({
         "market-id": uintCV(0),
@@ -243,14 +245,14 @@ describe("prediction fees and stakes", () => {
     expect(aliceStake).toEqual(
       Cl.some(
         Cl.tuple({
-          "yes-amount": uintCV(2000000 - (2000000 * 2) / 100),
+          "yes-amount": uintCV(1980000),
           "no-amount": uintCV(0),
         })
       )
     );
 
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(4000000), Cl.principal(stxToken)], // 1 STX
       alice
@@ -258,7 +260,7 @@ describe("prediction fees and stakes", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
     aliceStake = simnet.getMapEntry(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "stake-balances",
       Cl.tuple({
         "market-id": uintCV(0),
@@ -268,8 +270,8 @@ describe("prediction fees and stakes", () => {
     expect(aliceStake).toEqual(
       Cl.some(
         Cl.tuple({
-          "yes-amount": uintCV(2000000 - (2000000 * 2) / 100),
-          "no-amount": uintCV(4000000 - (4000000 * 2) / 100),
+          "yes-amount": uintCV(1980000),
+          "no-amount": uintCV(3960000),
         })
       )
     );

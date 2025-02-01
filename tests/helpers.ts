@@ -1,12 +1,12 @@
 import { initSimnet } from "@hirosystems/clarinet-sdk";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
-import { Cl } from "@stacks/transactions";
-import { expect } from "vitest";
+import { Cl, uintCV } from "@stacks/transactions";
+import { assert, expect } from "vitest";
+import { contractId2Key, generateMerkleProof, generateMerkleTreeUsingStandardPrincipal } from "./gating/gating";
 
 export const simnet = await setupSimnet();
 export const accounts = simnet.getAccounts();
-export const coreProposals = "bde003-core-proposals"; // Replace with actual contract name
 export const deployer = accounts.get("deployer")!;
 export const alice = accounts.get("wallet_1")!;
 export const bob = accounts.get("wallet_2")!;
@@ -16,6 +16,12 @@ export const fred = accounts.get('wallet_5')!;
 export const wallace = accounts.get('wallet_6')!;
 export const annie = accounts.get("wallet_4")!;
 export const developer = accounts.get("wallet_8")!;
+
+export const coreProposals = "bde003-core-proposals-tokenised"; 
+export const marketVoting = "bde021-market-voting";
+export const marketGating = "bde022-market-gating";
+export const marketPredicting = "bde023-market-predicting";
+export const treasury = "bde006-treasury";
 
 export async function setupSimnet() {
   return await initSimnet();
@@ -53,9 +59,56 @@ export async function constructDao(simnet: any) {
   return proposal;
 }
 
+export async function assertDataVarNumber(contract:string, varName:string, value: number) {
+  let result = Number((simnet.getDataVar(contract, varName) as any).value);
+  expect(result).toEqual(value)
+}
+export async function assertContractBalance(contract:string, value:bigint) {
+  let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
+  console.log("contractBalance: " + contract + stxBalances?.get(`${deployer}.${contract}`));
+  expect(stxBalances?.get(`${deployer}.${contract}`)).toEqual(value)
+}
+
+export async function assertUserBalance(user:string, value:bigint) {
+  let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
+  console.log("assertUserBalance: " + user + stxBalances?.get(`${user}`));
+  expect(stxBalances?.get(`${user}`)).toEqual(value)
+}
+
+export async function allowMarketCreators(user:string) {
+  const allowedCreators = [alice, bob, tom, betty, wallace];
+  const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
+  // console.log('Leaves (Tree):', tree.getLeaves().map(bytesToHex));
+  const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde023-market-predicting');
+  console.log('root=' + root)
+  console.log('lookupRootKey=' + lookupRootKey)
+  const proposal = `bdp001-gating`;
+  await passProposalByCoreVote(proposal);
+  let merdat = generateMerkleProof(tree, user);
+  
+  return merdat.proof;
+}
+
+
+export async function assertStakeBalance(user:string, forValue:number, againstValue:number) {
+  let data = await simnet.callReadOnlyFn(
+    "bde023-market-predicting",
+    "get-stake-balances",
+    [Cl.uint(0), Cl.principal(user)],
+    alice
+  );
+  expect(data.result).toEqual(
+    Cl.some(
+      Cl.tuple({
+        "yes-amount": uintCV(forValue),
+        "no-amount": uintCV(againstValue),
+      })
+    )
+  );
+}
+
 export async function corePropose(
   simnet: any,
-  proposalVoting: string,
   proposalName: string
 ) {
   const alice = simnet.getAccounts().get("wallet_1")!;
@@ -65,7 +118,6 @@ export async function corePropose(
     coreProposals,
     "core-propose",
     [
-      Cl.principal(`${deployer}.${proposalVoting}`),
       Cl.principal(proposal1),
       Cl.uint(simnet.blockHeight + 2),
       Cl.uint(100),
@@ -80,7 +132,7 @@ export async function corePropose(
 /**
  * Pass a Proposal by Signals
  */
-export async function passProposalBySignals(simnet: any, proposalName: string) {
+export async function passProposalByExecutiveSignals(simnet: any, proposalName: string) {
   const proposal = `${deployer}.${proposalName}`;
 
   // Signal 1 by Alice
@@ -108,7 +160,7 @@ export async function passProposalBySignals(simnet: any, proposalName: string) {
     [Cl.principal(proposal)],
     deployer
   );
-  console.log("executedAt: ", executedAt);
+  //console.log("executedAt: ", executedAt);
   //expect(executedAt.result).toEqual(Cl.some(Cl.uint(619n)));
   expect(executedAt.result).toMatchObject(/^ok u\d+/); // Expect a valid block height
 }
@@ -147,22 +199,21 @@ export function prepareVotes(
   );
 }
 
-export async function passCoreProposal(proposal: string) {
+export async function passProposalByCoreVote(proposal: string) {
   await isValidExtension(`${deployer}.bde000-governance-token`);
-  await isValidExtension(`${deployer}.bde001-proposal-voting`);
+  await isValidExtension(`${deployer}.bde001-proposal-voting-tokenised`);
   await isValidExtension(`${deployer}.bde004-core-execute`);
-  await isValidExtension(`${deployer}.bde003-core-proposals`);
+  await isValidExtension(`${deployer}.bde003-core-proposals-tokenised`);
   await isValidExtension(`${deployer}.bde006-treasury`);
   await isValidExtension(`${deployer}.bde022-market-gating`);
-  await isValidExtension(`${deployer}.bde021-market-resolution-voting`);
-  await isValidExtension(`${deployer}.bde023-market-staked-predictions`);
+  await isValidExtension(`${deployer}.bde021-market-voting`);
+  await isValidExtension(`${deployer}.bde023-market-predicting`);
 
-  const votingContract = "bde001-proposal-voting";
+  const votingContract = "bde001-proposal-voting-tokenised";
   const coreProposeResponse = await simnet.callPublicFn(
     coreProposals,
     "core-propose",
     [
-      Cl.principal(`${deployer}.${votingContract}`),
       Cl.principal(`${deployer}.${proposal}`),
       Cl.uint(simnet.burnBlockHeight + 10),
       Cl.uint(100),
@@ -179,7 +230,7 @@ export async function passCoreProposal(proposal: string) {
   const voteResponse = await simnet.callPublicFn(
     votingContract,
     "vote",
-    [Cl.uint(1000), Cl.bool(true), Cl.principal(`${deployer}.${proposal}`)],
+    [Cl.uint(1000), Cl.bool(true), Cl.principal(`${deployer}.${proposal}`), Cl.none()],
     bob
   );
   expect(voteResponse.result).toEqual(Cl.ok(Cl.bool(true)));

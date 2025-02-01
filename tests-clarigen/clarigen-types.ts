@@ -990,7 +990,7 @@ export const contracts = {
     fungible_tokens: [],
     epoch: "Epoch30",
     clarity_version: "Clarity3",
-    contractName: "bde001-proposal-voting",
+    contractName: "bde001-proposal-voting-tokenised",
   },
   bde002ProposalSubmission: {
     functions: {
@@ -1518,7 +1518,7 @@ export const contracts = {
     fungible_tokens: [],
     epoch: "Epoch30",
     clarity_version: "Clarity3",
-    contractName: "bde003-core-proposals",
+    contractName: "bde003-core-proposals-tokenised",
   },
   bde004CoreExecute: {
     functions: {
@@ -3298,11 +3298,11 @@ export const identifiers = {
   bde000GovernanceToken:
     "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde000-governance-token",
   bde001ProposalVoting:
-    "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting",
+    "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised",
   bde002ProposalSubmission:
     "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde002-proposal-submission",
   bde003CoreProposals:
-    "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals",
+    "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals-tokenised",
   bde004CoreExecute:
     "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde004-core-execute",
   bde006Treasury: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde006-treasury",
@@ -3343,8 +3343,8 @@ export const deployments = {
     mainnet: null,
   },
   bde001ProposalVoting: {
-    devnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting",
-    simnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting",
+    devnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised",
+    simnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde001-proposal-voting-tokenised",
     testnet: null,
     mainnet: null,
   },
@@ -3357,8 +3357,8 @@ export const deployments = {
     mainnet: null,
   },
   bde003CoreProposals: {
-    devnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals",
-    simnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals",
+    devnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals-tokenised",
+    simnet: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde003-core-proposals-tokenised",
     testnet: null,
     mainnet: null,
   },

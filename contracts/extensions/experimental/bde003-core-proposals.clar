@@ -24,6 +24,8 @@
 (define-constant err-proposal-minimum-start-delay (err u3304))
 (define-constant err-proposal-minimum-duration (err u3305))
 
+(define-constant start-delay u72)
+
 (define-map core-team principal bool)
 
 ;; --- Authorisation check
@@ -59,7 +61,7 @@
 	(begin
 		(asserts! (is-core-team-member tx-sender) err-not-core-team-member)
 		(asserts! (or (is-eq (var-get core-team-sunset-height) u0) (< burn-block-height (var-get core-team-sunset-height))) err-sunset-height-reached)
-		(asserts! (>= start-burn-height (+ burn-block-height u2)) err-proposal-minimum-start-delay)
+		(asserts! (>= start-burn-height (+ burn-block-height start-delay)) err-proposal-minimum-start-delay)
 		(asserts! (>= (+ start-burn-height duration) (+ burn-block-height u72)) err-proposal-minimum-duration)
 		(contract-call? voting-contract add-proposal proposal
 			{

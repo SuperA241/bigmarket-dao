@@ -11,7 +11,7 @@ const simnet = await setupSimnet();
 
 async function assertMarketData(user:string, yesPool:number, noPool:number, resolutionState:number, concluded:boolean, passed:boolean) {
   const data = await simnet.callReadOnlyFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-predicting",
     "get-market-data",
     [Cl.uint(0)], 
     tom
@@ -35,7 +35,7 @@ async function assertMarketData(user:string, yesPool:number, noPool:number, reso
 async function assertVotingData(proposer:string, votesFor:number, votesAg:number, concluded:boolean, passed:boolean, testName?:string) {
   if (testName) console.log(testName)
   const data = await simnet.callReadOnlyFn(
-    "bde021-market-resolution-voting",
+    "bde021-market-voting",
     "get-poll-data",
     [Cl.uint(0)], 
     tom
@@ -50,7 +50,6 @@ async function assertVotingData(proposer:string, votesFor:number, votesAg:number
   //       "votes-for": uintCV(votesFor),
   //       "votes-against": uintCV(votesAg),
   //       "proposer": principalCV(proposer),
-  //       "is-gated": boolCV(false),
   //       concluded: boolCV(concluded),
   //       passed: boolCV(passed),
   //     }) 
@@ -61,17 +60,17 @@ async function assertVotingData(proposer:string, votesFor:number, votesAg:number
 async function setUpmarketAndResolve(resolve:boolean) {
   constructDao(simnet);
   let response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-predicting",
     "create-market",
     [
-      Cl.uint(0),
+      Cl.uint(0), Cl.none(),
       Cl.principal(stxToken),
       Cl.bufferFromHex(metadataHash()),
       Cl.list([]), 
     ],
     deployer
   );
-  expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+  expect(response.result).toEqual(Cl.ok(Cl.uint(0))); 
   let md = await assertMarketData(deployer, 0, 0, 0, false, false)
   expect(md.result).toMatchObject(
     Cl.some(
@@ -90,7 +89,7 @@ async function setUpmarketAndResolve(resolve:boolean) {
   );
 
   response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-predicting",
     "predict-no-stake",
     [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
     bob
@@ -98,7 +97,7 @@ async function setUpmarketAndResolve(resolve:boolean) {
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
   response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-predicting",
     "predict-yes-stake",
     [Cl.uint(0), Cl.uint(5000), Cl.principal(stxToken)],
     alice
@@ -106,7 +105,7 @@ async function setUpmarketAndResolve(resolve:boolean) {
   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   
   response = await simnet.callPublicFn(
-    "bde023-market-staked-predictions",
+    "bde023-market-predicting",
     "resolve-market",
     [Cl.uint(0), Cl.bool(resolve)],
     bob
@@ -121,10 +120,10 @@ describe("voting on resolution", () => {
   it("err-disputer-must-have-stake", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -133,27 +132,27 @@ describe("voting on resolution", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market", 
       [Cl.uint(0), Cl.bool(true)],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "dispute-resolution",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.principal(alice)],
       bob
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10015)));
-    let md = await assertMarketData(deployer, 0, 1960000, 1, false, true)
+    let md = await assertMarketData(deployer, 0, 1980000, 1, false, true)
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
@@ -161,7 +160,7 @@ describe("voting on resolution", () => {
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
           "yes-pool": uintCV(0),
-          "no-pool": uintCV(1960000),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(1),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -175,10 +174,10 @@ describe("voting on resolution", () => {
   it("err-unauthorised - dao function", async () => {
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "create-market",
       [
-        Cl.uint(0),
+        Cl.uint(0), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
         Cl.list([]),
@@ -187,7 +186,7 @@ describe("voting on resolution", () => {
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-no-stake",
       [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
       bob
@@ -195,7 +194,7 @@ describe("voting on resolution", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "predict-yes-stake",
       [Cl.uint(0), Cl.uint(5000), Cl.principal(stxToken)],
       alice
@@ -203,7 +202,7 @@ describe("voting on resolution", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.bool(true)],
       bob
@@ -211,7 +210,7 @@ describe("voting on resolution", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde023-market-staked-predictions",
+      "bde023-market-predicting",
       "dispute-resolution",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.principal(alice)],
       bob
@@ -223,9 +222,9 @@ describe("voting on resolution", () => {
   it("staker can create market vote", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -236,7 +235,7 @@ describe("voting on resolution", () => {
 
   //   simnet.mineEmptyBlocks(145);
   //   let response = await simnet.callPublicFn(
-  //     "bde023-market-staked-predictions",
+  //     "bde023-market-predicting",
   //     "resolve-market-undisputed",
   //     [Cl.uint(0)],
   //     deployer
@@ -244,7 +243,7 @@ describe("voting on resolution", () => {
   //   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     
   //   response = await simnet.callPublicFn(
-  //     "bde021-market-resolution-voting",
+  //     "bde021-market-voting",
   //     "create-market-vote",
   //     [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
   //     alice
@@ -255,21 +254,21 @@ describe("voting on resolution", () => {
   it("staker can create market vote", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -285,7 +284,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -296,21 +294,21 @@ describe("voting on resolution", () => {
   it("vote cant close before voting window", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -327,14 +325,13 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
       )
     );
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "conclude-market-vote",
       [Cl.uint(0)],
       alice
@@ -346,21 +343,21 @@ describe("voting on resolution", () => {
   it("vote can close after voting window with no votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -376,7 +373,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -384,30 +380,30 @@ describe("voting on resolution", () => {
     );
     simnet.mineEmptyBlocks(11);
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "conclude-market-vote",
       [Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(2113)));
 
-    simnet.mineEmptyBlocks(1);
+    simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "conclude-market-vote",
       [Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(false)));
-    md = await assertMarketData(deployer, 4900, 1960000, 3, true, false);
+    md = await assertMarketData(deployer, 4950, 1980000, 3, true, false);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
           outcome: boolCV(false),
@@ -423,7 +419,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(true),
           passed: boolCV(false),
         }) 
@@ -435,21 +430,21 @@ describe("voting on resolution", () => {
   it("vote cant vote after end", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(false),
@@ -465,23 +460,22 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
       )
     );
 
-    simnet.mineEmptyBlocks(13);
+    simnet.mineEmptyBlocks(25);
 
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(2105)));
-    md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+    md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
     vd = await assertVotingData(alice, 0, 0, false, false)
     expect(vd.result).toMatchObject(
       Cl.some(
@@ -490,7 +484,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -498,24 +491,24 @@ describe("voting on resolution", () => {
     );
   });
 
-  it("cant vote twice", async () => {
+  it("cant vote with more than current unlocked bdg balance", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(false),
@@ -531,7 +524,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -539,28 +531,29 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(1000000000), Cl.none()],
       alice
     );
-    expect(response.result).toEqual(Cl.error(Cl.uint(2106)));
-     md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+    // vote exceeds
+    expect(response.result).toEqual(Cl.error(Cl.uint(1)));
+     md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(false),
@@ -573,10 +566,9 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(1),
+          "votes-for": uintCV(100),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -587,21 +579,21 @@ describe("voting on resolution", () => {
   it("can vote before end", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(false),
@@ -617,7 +609,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -625,35 +616,35 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
-      betty
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-     md = await assertMarketData(deployer, 4900, 1960000, 2, false, false);
+     md = await assertMarketData(deployer, 4950, 1980000, 2, false, false);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(false),
@@ -666,10 +657,9 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(1),
-          "votes-against": uintCV(2),
+          "votes-for": uintCV(100),
+          "votes-against": uintCV(200),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -680,21 +670,21 @@ describe("voting on resolution", () => {
   it("vote closes true with for votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -710,7 +700,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -719,21 +708,21 @@ describe("voting on resolution", () => {
 
 
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-     md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+     md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -746,33 +735,32 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(1),
+          "votes-for": uintCV(100),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
       )
     );
 
-    simnet.mineEmptyBlocks(13);
+    simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "conclude-market-vote",
       [Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-     md = await assertMarketData(deployer, 4900, 1960000, 3, true, true);
+     md = await assertMarketData(deployer, 4950, 1980000, 3, true, true);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
           outcome: boolCV(true),
@@ -785,10 +773,9 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(1),
+          "votes-for": uintCV(100),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(true),
           passed: boolCV(true),
         }) 
@@ -799,21 +786,21 @@ describe("voting on resolution", () => {
   it("vote closes true with against votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    let md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+    let md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -830,7 +817,6 @@ describe("voting on resolution", () => {
           "votes-for": uintCV(0),
           "votes-against": uintCV(0),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
@@ -838,35 +824,35 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.none(), Cl.none(), Cl.none(), Cl.list([])],
-      betty
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-     md = await assertMarketData(deployer, 4900, 1960000, 2, false, true);
+     md = await assertMarketData(deployer, 4950, 1980000, 2, false, true);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4900),
-          "no-pool": uintCV(1960000),
+          "yes-pool": uintCV(4950n),
+          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
           outcome: boolCV(true),
@@ -879,33 +865,32 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(1),
-          "votes-against": uintCV(2),
+          "votes-for": uintCV(100),
+          "votes-against": uintCV(200),
           "proposer": principalCV(alice),
-          "is-gated": boolCV(false),
           concluded: boolCV(false),
           passed: boolCV(false),
         }) 
       )
     );
 
-    simnet.mineEmptyBlocks(13);
+    simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bde021-market-resolution-voting",
+      "bde021-market-voting",
       "conclude-market-vote",
       [Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(false)));
-    md = await assertMarketData(deployer, 4900, 1960000, 2, true, false);
+    md = await assertMarketData(deployer, 4950, 1980000, 2, true, false);
     expect(md.result).toMatchObject(
      Cl.some(
        Cl.tuple({
          creator: principalCV(deployer),
          "market-type": uintCV(0),
          "market-data-hash": bufferFromHex(metadataHash()),
-         "yes-pool": uintCV(4900),
-         "no-pool": uintCV(1960000),
+         "yes-pool": uintCV(4950),
+         "no-pool": uintCV(1980000),
          "resolution-state": uintCV(3),
          concluded: boolCV(true),
          outcome: boolCV(false),
@@ -918,10 +903,9 @@ describe("voting on resolution", () => {
      Cl.some(
        Cl.tuple({
          "market-data-hash": bufferFromHex(metadataHash()),
-         "votes-for": uintCV(1),
-         "votes-against": uintCV(2),
+         "votes-for": uintCV(100),
+         "votes-against": uintCV(200),
          "proposer": principalCV(alice),
-         "is-gated": boolCV(false),
          concluded: boolCV(true),
          passed: boolCV(false),
        }) 

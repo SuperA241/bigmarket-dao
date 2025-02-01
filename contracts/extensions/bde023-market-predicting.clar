@@ -13,8 +13,8 @@
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 
-(define-constant DEV-FEE-BIPS u200)           ;; 2% (200 basis points)
-(define-constant DAO-FEE-BIPS u200)           ;; 2% (200 basis points)
+;;(define-constant DEV-FEE-BIPS u200)           ;; 2% (200 basis points)
+;;(define-constant DAO-FEE-BIPS u200)           ;; 2% (200 basis points)
 
 ;; Market Types (0 => Stake-based, 1 => Shares-based)
 (define-constant MARKET_TYPE_STAKE u0)
@@ -39,7 +39,7 @@
 (define-constant err-insufficient-balance (err u10011))
 (define-constant err-insufficient-contract-balance (err u10012))
 (define-constant err-user-share-is-zero (err u10013))
-(define-constant err-dao-fee-is-zero (err u10014))
+(define-constant err-dao-fee-bips-is-zero (err u10014))
 (define-constant err-disputer-must-have-stake (err u10015))
 (define-constant err-dispute-window-elapsed (err u10016))
 (define-constant err-market-not-resolving (err u10017))
@@ -47,12 +47,18 @@
 (define-constant err-dispute-window-not-elapsed (err u10019))
 (define-constant err-market-wrong-state (err u10020))
 (define-constant err-invalid-token (err u10021))
+(define-constant err-max-market-fee-bips-exceeded (err u10022))
 
 (define-data-var market-counter uint u0)
 (define-data-var dispute-window-length uint u3)
 (define-data-var resolution-agent principal tx-sender)
+(define-data-var dev-fee-bips uint u200)
+(define-data-var dao-fee-bips uint u200)
+(define-data-var market-fee-bips-max uint u500)
+(define-data-var market-create-fee uint u0)
 (define-data-var dev-fund principal tx-sender)
 (define-data-var dao-treasury principal tx-sender)
+(define-data-var creation-gated bool false)
 
 ;; Data structure for each Market
 ;; market-id: internal numeric ID
@@ -72,6 +78,7 @@
     no-pool: uint,
     concluded: bool,
     outcome: bool,
+    market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
     resolution-burn-height: uint
   }
@@ -112,10 +119,53 @@
   )
 )
 
+(define-public (set-creation-gated (gated bool))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set creation-gated gated)
+    (ok true)
+  )
+)
+
 (define-public (set-resolution-agent (new-agent principal))
   (begin
     (try! (is-dao-or-extension))
     (var-set resolution-agent new-agent)
+    (ok true)
+  )
+)
+
+(define-public (set-dev-fee-bips (new-fee uint))
+  (begin
+		(asserts! (<= new-fee u1000) err-max-market-fee-bips-exceeded)
+    (try! (is-dao-or-extension))
+    (var-set dev-fee-bips new-fee)
+    (ok true)
+  )
+)
+
+(define-public (set-dao-fee-bips (new-fee uint))
+  (begin
+		(asserts! (<= new-fee u1000) err-max-market-fee-bips-exceeded)
+    (try! (is-dao-or-extension))
+    (var-set dao-fee-bips new-fee)
+    (ok true)
+  )
+)
+
+(define-public (set-market-fee-bips-max (new-fee uint))
+  (begin
+		(asserts! (<= new-fee u1000) err-max-market-fee-bips-exceeded)
+    (try! (is-dao-or-extension))
+    (var-set market-fee-bips-max new-fee)
+    (ok true)
+  )
+)
+
+(define-public (set-market-create-fee (new-fee uint))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set market-create-fee new-fee)
     (ok true)
   )
 )
@@ -138,15 +188,25 @@
 
 ;; Creates a new Yes/No prediction market. `mtype` can be 0 (stake-based) 
 ;; or 1 (shares-based). Returns the new market-id.
-(define-public (create-market (mtype uint) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
-  (begin
-    (asserts! (or (is-eq mtype MARKET_TYPE_STAKE) (is-eq mtype MARKET_TYPE_SHARES)) err-invalid-market-type)
-
+(define-public (create-market (mtype uint) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
+        (market-fee-bips (default-to u0 fee-bips))
       )
+		  (asserts! (<= market-fee-bips (var-get market-fee-bips-max)) err-max-market-fee-bips-exceeded)
+      ;; ensure the trading token is allowed 
 		  (asserts! (is-allowed-token (contract-of token)) err-invalid-token)
+      (asserts! (or (is-eq mtype MARKET_TYPE_STAKE) (is-eq mtype MARKET_TYPE_SHARES)) err-invalid-market-type)
+      ;; ensure user pays creation fee if required
+      (if (and (not (is-eq tx-sender (var-get resolution-agent))) (> (var-get market-create-fee) u0))
+        (try! (stx-transfer? (var-get market-create-fee) tx-sender .bde006-treasury))
+        true
+      )
+      ;; ensure the user is allowed to create if gating by merkle proof is required
+      (if (var-get creation-gated) (try! (as-contract (contract-call? .bde022-market-gating can-access-by-account sender proof))) true)
+
+      ;; all checks pass - insert market data
       (map-set markets
         new-id
         {
@@ -158,16 +218,15 @@
           no-pool: u0, 
           concluded: false,
           outcome: false,
+          market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
           resolution-burn-height: u0,
         }
       )
-      (try! (as-contract (contract-call? .bde022-market-gating can-access-by-account sender proof)))
       ;; Increment the counter
-      (print {event: "create-market", market-id: new-id, token: token, market-data-hash: market-data-hash, market-type: mtype, creator: tx-sender})
+      (print {event: "create-market", market-id: new-id, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, market-type: mtype, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
       (ok new-id)
-    )
   )
 )
 
@@ -371,7 +430,7 @@
   (let (
         ;;(sender-balance (stx-get-balance tx-sender))
         (sender-balance (unwrap! (contract-call? token get-balance tx-sender) err-insufficient-balance))
-        (fee (calculate-fee amount DEV-FEE-BIPS))
+        (fee (calculate-fee amount (var-get dev-fee-bips)))
         (transfer-amount (- amount fee))
        )
     (begin
@@ -380,13 +439,13 @@
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
       ;; Transfer STX to the contract
-      ;;(try! (stx-transfer? transfer-amount tx-sender .bde023-market-staked-predictions))
-      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-staked-predictions none))
+      ;;(try! (stx-transfer? transfer-amount tx-sender .bde023-market-predicting))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-predicting none))
       ;; Transfer the fee to the dev fund
       ;;(try! (stx-transfer? fee tx-sender (var-get dev-fund)))
       (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
       ;; Verify the contract received the correct amount
-      ;;(asserts! (>= (stx-get-balance .bde023-market-staked-predictions) transfer-amount) err-insufficient-contract-balance)
+      ;;(asserts! (>= (stx-get-balance .bde023-market-predicting) transfer-amount) err-insufficient-contract-balance)
 
       (ok transfer-amount)
     )
@@ -416,15 +475,19 @@
   (total-pool uint) 
   (yes bool) (token <ft-token>))
   (let (
+        (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (original-sender tx-sender)
+        (creator (get creator md))
+        (market-fee-bips (get market-fee-bips md))
         (user-share (/ (* user-stake total-pool) winning-pool))
-        (dao-fee (/ (* user-share DAO-FEE-BIPS) u10000))
-        (user-share-net (- user-share dao-fee))
+        (daofee (/ (* user-share (var-get dao-fee-bips)) u10000))
+        (marketfee (/ (* user-share market-fee-bips) u10000))
+        (user-share-net (- user-share (+ daofee marketfee)))
     )
     (begin
       ;; Ensure inputs are valid
       (asserts! (> user-share-net u0) err-user-share-is-zero)
-      (asserts! (> dao-fee u0) err-dao-fee-is-zero)
+      (asserts! (> daofee u0) err-dao-fee-bips-is-zero)
 
       ;; Perform transfers
       (as-contract
@@ -432,10 +495,20 @@
           ;; Transfer user share, capped by initial contract balance
 
           ;;(try! (stx-transfer? user-share-net tx-sender original-sender))
-          ;;(try! (stx-transfer? dao-fee tx-sender (var-get dao-treasury)))
+          ;;(try! (stx-transfer? daofee tx-sender (var-get dao-treasury)))
 
-          (try! (contract-call? token transfer user-share-net tx-sender original-sender none))
-          (try! (contract-call? token transfer dao-fee tx-sender (var-get dao-treasury) none))
+          (if (> user-share-net u0) 
+            (try! (contract-call? token transfer user-share-net tx-sender original-sender none))
+            true
+          )
+          (if (> daofee u0)
+            (try! (contract-call? token transfer daofee tx-sender (var-get dao-treasury) none))
+            true
+          )
+          (if (> marketfee u0) 
+            (try! (contract-call? token transfer marketfee tx-sender creator none))
+            true
+          )
 
         )
       )
@@ -448,7 +521,7 @@
         })
 
       ;; Log and return user share
-      (print {event: "claim-winnings", market-id: market-id, yes: yes, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, dao-fee: dao-fee, winning-pool: winning-pool, total-pool: total-pool})
+      (print {event: "claim-winnings", market-id: market-id, yes: yes, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, marketfee: marketfee, daofee: daofee, winning-pool: winning-pool, total-pool: total-pool})
       (ok user-share-net)
     )
   )
