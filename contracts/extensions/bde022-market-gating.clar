@@ -33,9 +33,7 @@
 (define-constant err-ownership-proof-invalid (err u2215))
 
 ;; Merkle roots for each type of gated data
-;; hashed-id is a hash of a known identifier for example
-;; hashed-id = market data hash - see bde023-market-predicting
-;; hashed-id = sha256(contractId) - used to gate access to eg 'create-market' function
+;; key is a hash of a known identifier for example
 (define-map merkle-roots
   (buff 32)
   {
@@ -47,32 +45,27 @@
 	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
 )
 
-;; DAO sets the Merkle root for a poll
 (define-public (set-merkle-root (hashed-id (buff 32)) (root (buff 32)))
   (begin
     ;; Ensure only dao can set the root
     (try! (is-dao-or-extension))
-    ;; Store the Merkle root
     (map-set merkle-roots hashed-id { merkle-root: root})
     (print {event: "merkle-root", hashed-id: hashed-id, merkle-root: (map-get? merkle-roots hashed-id)})
     (ok true)
   )
 )
 
-;; DAO sets the Merkle root for a poll
 (define-public (set-merkle-root-by-principal (contract-id principal) (root (buff 32)))
   (let
       (
-        ;; Fetch the Merkle root for the poll
+        ;; construct the key from the contract-id
         (principal-contract (unwrap! (principal-destruct? contract-id) (err u1001)))
         (contract-bytes (get hash-bytes principal-contract))
         (contract-name (unwrap! (to-consensus-buff? (unwrap! (get name principal-contract) err-expecting-an-owner)) err-expecting-an-owner))
         (contract-key (sha256 (concat contract-bytes contract-name )))
-        ;;(contract-key (sha256 contract-bytes))
     )
       ;; Ensure only dao can set the root
       (try! (is-dao-or-extension))
-      ;;(asserts! proof-valid err-token-contract-invalid)
       (map-set merkle-roots contract-key { merkle-root: root})
       (print {event: "set-merkle-root-by-principal", contract-id: contract-id, contract-name: contract-name, contract-key: contract-key, merkle-root: (map-get? merkle-roots contract-key)})
       (ok true)
@@ -85,24 +78,11 @@
 ;; Verify a Merkle proof
 (define-private (calculate-hash (hash1 (buff 32)) (hash2 (buff 32)) (position bool))
   (if position
-      (sha256 (concat hash2 hash1)) ;; position=false => hash2 is "left"
-      (sha256 (concat hash1 hash2)) ;; position=true => hash1 is "left"
+      (sha256 (concat hash2 hash1))
+      (sha256 (concat hash1 hash2))
   )
 )
 
-;;(define-private (verify-merkle-proof
-;;    (leaf (buff 32))               ;; The leaf hash (token hash)
-;;    (proof (list 10 (tuple (position bool) (hash (buff 32)))))    ;; The Merkle proof
-;;    (root (buff 32))               ;; The Merkle root
-;;  )
-;;  (let
-;;      (
-;;        (calculated-root
-;;          (fold calculate-hash proof leaf)
-;;        )
- ;;     )
-  ;;  (ok (is-eq calculated-root root))
- ;; ))
  (define-private (process-proof-step (proof-step (tuple (position bool) (hash (buff 32)))) (current (buff 32)))
   (let ((position (get position proof-step))
         (hash (get hash proof-step)))
@@ -112,8 +92,8 @@
 
 (define-private (verify-merkle-proof
     (leaf (buff 32))               ;; The leaf hash (token hash)
-    (proof (list 10 (tuple (position bool) (hash (buff 32)))))    ;; The Merkle proof
-    (root (buff 32))               ;; The Merkle root
+    (proof (list 10 (tuple (position bool) (hash (buff 32))))) 
+    (root (buff 32)) 
   )
   (let
       (

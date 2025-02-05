@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Cl, principalCV, uintCV } from "@stacks/transactions";
-import { alice, bob, constructDao, deployer, metadataHash, setupSimnet, sbtcToken } from "../helpers";
+import { alice, bob, constructDao, deployer, metadataHash, setupSimnet, sbtcToken, stxToken } from "../helpers";
+import { createBinaryMarket, predictCategory } from "../categorical/categorical.test";
 
 const simnet = await setupSimnet();
 
@@ -12,18 +13,7 @@ const simnet = await setupSimnet();
 describe("claiming errors", () => {
   it("err-market-not-found", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn( 
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    ); 
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     // not deployer
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
@@ -36,18 +26,7 @@ describe("claiming errors", () => {
 
   it("err-user-balance-unknown", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]), 
-      ],
-      deployer
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "claim-winnings",
@@ -59,62 +38,30 @@ describe("claiming errors", () => {
 
   it("err-market-not-concluded", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(sbtcToken)],
-      alice
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(alice, 0, 'yay', 2000000, 1, sbtcToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(sbtcToken)],
       alice
     );
-    expect(response.result).toEqual(Cl.error(Cl.uint(10009)));
+    expect(response.result).toEqual(Cl.error(Cl.uint(10020)));
   });
 
   it("err-user-not-winner", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-no-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(sbtcToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(bob, 0, 'nay', 2000000, 0, sbtcToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(true)],
+      [Cl.uint(0), Cl.stringAscii('yay')],
       bob
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "claim-winnings",
@@ -130,71 +77,26 @@ describe("claiming errors", () => {
 
   it("err-market-not-concluded", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-no-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(sbtcToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    // response = await simnet.callPublicFn(
-    //   "bde023-market-predicting",
-    //   "resolve-market",
-    //   [Cl.uint(0), Cl.bool(true)],
-    //   developer
-    // );
-    // expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(bob, 0, 'nay', 2000000, 0, sbtcToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(sbtcToken)],
       bob
     );
-    expect(response.result).toEqual(Cl.error(Cl.uint(10009)));
+    expect(response.result).toEqual(Cl.error(Cl.uint(10020)));
   });
 });
 
 describe("successful claim", () => {
   it("bob wins 50% of pool", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(sbtcToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0, deployer, sbtcToken);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(5000), Cl.principal(sbtcToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(5000), Cl.principal(sbtcToken)],
-      alice
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(bob, 0, 'yay', 5000, 1, sbtcToken);
+    response = await predictCategory(alice, 0, 'yay', 5000, 1, sbtcToken);
 
     let aliceStake = simnet.getMapEntry(
       "bde023-market-predicting",
@@ -206,20 +108,17 @@ describe("successful claim", () => {
     );
     expect(aliceStake).toEqual(
       Cl.some(
-        Cl.tuple({
-          "yes-amount": uintCV(4950n),
-          "no-amount": uintCV(0),
-        })
+        Cl.list([Cl.uint(0), Cl.uint(4950n), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)])
       )
     );
 
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(true)],
+      [Cl.uint(0), Cl.stringAscii('yay')],
       bob
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
 
     simnet.mineEmptyBlocks(10);
     response = await simnet.callPublicFn(
@@ -233,10 +132,10 @@ describe("successful claim", () => {
     simnet.mineEmptyBlocks(145);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
-      "resolve-market-undisputed",
+      "resolve-market-undisputed", 
       [Cl.uint(0)],
       deployer
-    );
+    ); 
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
     let data = await simnet.callReadOnlyFn(
@@ -247,10 +146,7 @@ describe("successful claim", () => {
     );
     expect(data.result).toEqual(
       Cl.some(
-        Cl.tuple({
-          "yes-amount": uintCV(4950n),
-          "no-amount": uintCV(0),
-        })
+        Cl.list([Cl.uint(0), Cl.uint(4950n), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)])
       )
     );
     let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal

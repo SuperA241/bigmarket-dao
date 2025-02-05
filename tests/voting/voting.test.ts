@@ -1,7 +1,8 @@
 import { assert, describe, expect, it, test } from "vitest";
-import { boolCV, Cl, noneCV, principalCV, uintCV } from "@stacks/transactions";
-import { alice, betty, bob, constructDao, deployer, metadataHash, setupSimnet, stxToken, tom } from "../helpers";
+import { boolCV, Cl, listCV, noneCV, principalCV, someCV, stringAsciiCV, uintCV } from "@stacks/transactions";
+import { alice, betty, bob, constructDao, deployer, marketPredicting, metadataHash, setupSimnet, stxToken, tom } from "../helpers";
 import { bufferFromHex } from "@stacks/transactions/dist/cl";
+import { createBinaryMarket, predictCategory } from "../categorical/categorical.test";
 
 const simnet = await setupSimnet();
 /*
@@ -15,21 +16,8 @@ async function assertMarketData(user:string, yesPool:number, noPool:number, reso
     "get-market-data",
     [Cl.uint(0)], 
     tom
-  );
+  ); 
   return data;
-  //console.log('data.result', data.result.value)
-  // const result = {
-  //   concluded: data.result.value.data.concluded.type === 4,
-  //   outcome: (data.result.value.data['outcome']).type === 4,
-  //   creator: data.result.value.data.creator,
-  //   metaDataHash: data.result.value.data['market-data-hash'],
-  //   noPool: Number(data.result.value.data['no-pool'].value) || 0,
-  //   yesPool: Number(data.result.value.data['yes-pool'].value) || 0,
-  //   token: (data.result.value.data['token']) || undefined,
-  //   resolutionBurnHeight: Number((data.result.value.data['resolution-burn-height']).value) || 0,
-  //   resolutionState: Number((data.result.value.data['resolution-state']).value) || 0,
-  // }
-  // return result
 }
 
 async function assertVotingData(proposer:string, votesFor:number, votesAg:number, concluded:boolean, passed:boolean, testName?:string) {
@@ -42,75 +30,39 @@ async function assertVotingData(proposer:string, votesFor:number, votesAg:number
   );
   return data;
 
-  //console.log('data.result', data.result.value)
-  // expect(data.result).toMatchObject(
-  //   Cl.some(
-  //     Cl.tuple({
-  //       "market-data-hash": bufferFromHex(metadataHash()),
-  //       "votes-for": uintCV(votesFor),
-  //       "votes-against": uintCV(votesAg),
-  //       "proposer": principalCV(proposer),
-  //       concluded: boolCV(concluded),
-  //       passed: boolCV(passed),
-  //     }) 
-  //   )
-  // );
 }
 
 async function setUpmarketAndResolve(resolve:boolean) {
   constructDao(simnet);
-  let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
-    "create-market",
-    [
-      Cl.uint(0), Cl.none(),
-      Cl.principal(stxToken),
-      Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), 
-    ],
-    deployer
-  );
+    let response = await createBinaryMarket(0);
   expect(response.result).toEqual(Cl.ok(Cl.uint(0))); 
   let md = await assertMarketData(deployer, 0, 0, 0, false, false)
   expect(md.result).toMatchObject(
-    Cl.some(
+    Cl.some( 
       Cl.tuple({
         creator: principalCV(deployer),
-        "market-type": uintCV(0),
         "market-data-hash": bufferFromHex(metadataHash()),
-        "yes-pool": uintCV(0),
-        "no-pool": uintCV(0),
+        "stakes": listCV([uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+        "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+        "outcome": noneCV(),
         "resolution-state": uintCV(0),
         concluded: boolCV(false),
-        outcome: boolCV(false),
         token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
       }) 
     )
   );
 
-  response = await simnet.callPublicFn(
-    "bde023-market-predicting",
-    "predict-no-stake",
-    [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
-    bob
-  );
-  expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+  response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
 
-  response = await simnet.callPublicFn(
-    "bde023-market-predicting",
-    "predict-yes-stake",
-    [Cl.uint(0), Cl.uint(5000), Cl.principal(stxToken)],
-    alice
-  );
-  expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+  response = await predictCategory(alice, 0, 'yay', 5000, 1, stxToken);
   
   response = await simnet.callPublicFn(
     "bde023-market-predicting",
     "resolve-market",
-    [Cl.uint(0), Cl.bool(resolve)],
+    [Cl.uint(0), Cl.stringAscii('yay')],
     bob
   );
-  expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+  expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
   return response;
 
 }
@@ -119,32 +71,16 @@ describe("voting on resolution", () => {
 
   it("err-disputer-must-have-stake", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-no-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market", 
-      [Cl.uint(0), Cl.bool(true)],
+      [Cl.uint(0), Cl.stringAscii('yay')],
       bob
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "dispute-resolution",
@@ -157,13 +93,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(0),
-          "no-pool": uintCV(1980000),
+          "stakes": listCV([uintCV(1980000n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "resolution-state": uintCV(1),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -173,42 +108,20 @@ describe("voting on resolution", () => {
 
   it("err-unauthorised - dao function", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
+    let response = await createBinaryMarket(0);
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-no-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
 
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(5000), Cl.principal(stxToken)],
-      alice
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    response = await predictCategory(alice, 0, 'yay', 5000, 1, stxToken);
     
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(true)],
+      [Cl.uint(0), Cl.stringAscii('yay')],
       bob
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
+
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "dispute-resolution",
@@ -224,39 +137,18 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
   });
-
-  // it("cant create vote is market resolved undisputed", async () => {
-  //   await setUpmarketAndResolve(true)
-
-  //   simnet.mineEmptyBlocks(145);
-  //   let response = await simnet.callPublicFn(
-  //     "bde023-market-predicting",
-  //     "resolve-market-undisputed",
-  //     [Cl.uint(0)],
-  //     deployer
-  //   );
-  //   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    
-  //   response = await simnet.callPublicFn(
-  //     "bde021-market-voting",
-  //     "create-market-vote",
-  //     [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.none()],
-  //     alice
-  //   );
-  //   expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-  // });
 
   it("staker can create market vote", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -265,13 +157,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
-          "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
+           "market-data-hash": bufferFromHex(metadataHash()),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -281,11 +172,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
         }) 
       )
     );
@@ -296,7 +187,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -305,13 +196,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -322,18 +212,18 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
         }) 
       )
     );
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "conclude-market-vote",
-      [Cl.uint(0)],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(2113)));
@@ -345,7 +235,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -354,13 +244,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -370,11 +259,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
           concluded: boolCV(false),
-          passed: boolCV(false),
         }) 
       )
     );
@@ -382,7 +271,7 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "conclude-market-vote",
-      [Cl.uint(0)],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(2113)));
@@ -391,22 +280,21 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "conclude-market-vote",
-      [Cl.uint(0)],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(false)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     md = await assertMarketData(deployer, 4950, 1980000, 3, true, false);
     expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(0)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -416,11 +304,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(true),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": someCV(uintCV(0)),
         }) 
       )
     );
@@ -432,7 +320,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -441,13 +329,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -457,11 +344,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -471,7 +358,7 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(2105)));
@@ -481,11 +368,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -496,7 +383,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -505,13 +392,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -521,11 +407,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -533,14 +419,14 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(1000000000), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(1000000000), Cl.none()],
       alice
     );
     // vote exceeds
@@ -550,27 +436,26 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
-      )
+      ) 
     );
     vd = await assertVotingData(alice, 1, 0, false, false)
     expect(vd.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(100),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(100)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -581,7 +466,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -590,13 +475,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -606,11 +490,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -618,21 +502,21 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -641,13 +525,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -657,11 +540,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(100),
-          "votes-against": uintCV(200),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(200), uintCV(100)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -672,7 +555,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -681,13 +564,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -697,11 +579,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -710,7 +592,7 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -719,13 +601,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -735,11 +616,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(100),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(100)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -748,22 +629,21 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "conclude-market-vote",
-      [Cl.uint(0)],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
      md = await assertMarketData(deployer, 4950, 1980000, 3, true, true);
      expect(md.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -773,11 +653,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(100),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(true),
-          passed: boolCV(true),
+          votes: listCV([uintCV(0), uintCV(100)]),
+          "num-categories": uintCV(2),
+          "winning-category": someCV(uintCV(1)),
         }) 
       )
     );
@@ -788,7 +668,7 @@ describe("voting on resolution", () => {
     let response = await simnet.callPublicFn(
       "bde021-market-voting",
       "create-market-vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash())],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -797,13 +677,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -814,11 +693,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(0),
-          "votes-against": uintCV(0),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(0), uintCV(0)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -826,21 +705,21 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(true), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "vote",
-      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.bool(false), Cl.uint(100), Cl.none()],
+      [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       deployer
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
@@ -849,13 +728,12 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
+          "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(4950n),
-          "no-pool": uintCV(1980000),
           "resolution-state": uintCV(2),
           concluded: boolCV(false),
-          outcome: boolCV(true),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
         }) 
       )
@@ -865,11 +743,11 @@ describe("voting on resolution", () => {
       Cl.some(
         Cl.tuple({
           "market-data-hash": bufferFromHex(metadataHash()),
-          "votes-for": uintCV(100),
-          "votes-against": uintCV(200),
           "proposer": principalCV(alice),
           concluded: boolCV(false),
-          passed: boolCV(false),
+          votes: listCV([uintCV(200), uintCV(100)]),
+          "num-categories": uintCV(2),
+          "winning-category": noneCV(),
         }) 
       )
     );
@@ -878,22 +756,21 @@ describe("voting on resolution", () => {
     response = await simnet.callPublicFn(
       "bde021-market-voting",
       "conclude-market-vote",
-      [Cl.uint(0)],
+      [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(false)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     md = await assertMarketData(deployer, 4950, 1980000, 2, true, false);
     expect(md.result).toMatchObject(
      Cl.some(
        Cl.tuple({
          creator: principalCV(deployer),
-         "market-type": uintCV(0),
+         "stakes": listCV([uintCV(1980000), uintCV(4950), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+         "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+         "outcome": someCV(uintCV(0)),
          "market-data-hash": bufferFromHex(metadataHash()),
-         "yes-pool": uintCV(4950),
-         "no-pool": uintCV(1980000),
          "resolution-state": uintCV(3),
          concluded: boolCV(true),
-         outcome: boolCV(false),
          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM", "wrapped-stx")
        }) 
      )
@@ -903,12 +780,12 @@ describe("voting on resolution", () => {
      Cl.some(
        Cl.tuple({
          "market-data-hash": bufferFromHex(metadataHash()),
-         "votes-for": uintCV(100),
-         "votes-against": uintCV(200),
          "proposer": principalCV(alice),
          concluded: boolCV(true),
-         passed: boolCV(false),
-       }) 
+         votes: listCV([uintCV(200), uintCV(100)]),
+         "num-categories": uintCV(2),
+         "winning-category": someCV(uintCV(0)),
+      }) 
      )
    );
 

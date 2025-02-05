@@ -65,7 +65,7 @@ export async function assertDataVarNumber(contract:string, varName:string, value
 }
 export async function assertContractBalance(contract:string, value:bigint) {
   let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
-  console.log("contractBalance: " + contract + stxBalances?.get(`${deployer}.${contract}`));
+  console.log("contractBalance : " + contract + ' : ' + stxBalances?.get(`${deployer}.${contract}`));
   expect(stxBalances?.get(`${deployer}.${contract}`)).toEqual(value)
 }
 
@@ -88,9 +88,9 @@ export async function allowMarketCreators(user:string) {
   
   return merdat.proof;
 }
+ 
 
-
-export async function assertStakeBalance(user:string, forValue:number, againstValue:number) {
+export async function assertStakeBalance(user:string, againstValue:number, forValue:number) {
   let data = await simnet.callReadOnlyFn(
     "bde023-market-predicting",
     "get-stake-balances",
@@ -99,10 +99,7 @@ export async function assertStakeBalance(user:string, forValue:number, againstVa
   );
   expect(data.result).toEqual(
     Cl.some(
-      Cl.tuple({
-        "yes-amount": uintCV(forValue),
-        "no-amount": uintCV(againstValue),
-      })
+      Cl.list([Cl.uint(forValue), Cl.uint(againstValue), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)])
     )
   );
 }

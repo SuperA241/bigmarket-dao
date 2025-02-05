@@ -64,7 +64,7 @@ describe("bde001-proposal-voting contract", () => {
       bob
     );
     expect(voteResponse.result).toEqual(Cl.ok(Cl.bool(true)));
-
+ 
     // Step 6: Mine 200 empty blocks to reach the conclusion point
     simnet.mineEmptyBurnBlocks(200);
 

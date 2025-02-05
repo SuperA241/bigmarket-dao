@@ -29,8 +29,8 @@ path = "contracts/traits/sip010-ft-trait.clar"
 [contracts.sip009-nft-trait]
 path = "contracts/traits/sip009-nft-trait.clar"
 
-[contracts.voting-trait]
-path = "contracts/traits/voting-trait.clar"
+[contracts.prediction-market-trait]
+path = "contracts/traits/prediction-market-trait.clar"
 
 [contracts.governance-token-trait]
 path = "contracts/traits/governance-token-trait.clar"
@@ -102,6 +102,16 @@ epoch = "3.0"
 
 [contracts.bdp001-gating]
 path = "contracts/proposals/devnet/bdp001-gating.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-gating-false]
+path = "contracts/proposals/devnet/bdp001-gating-false.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-gating-true-testnet]
+path = "contracts/proposals/devnet/bdp001-gating-true-testnet.clar"
 clarity_version = 3
 epoch = "3.0"
 

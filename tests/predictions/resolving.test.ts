@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { boolCV, Cl, principalCV, uintCV } from "@stacks/transactions";
+import { boolCV, Cl, listCV, noneCV, principalCV, someCV, stringAsciiCV, uintCV } from "@stacks/transactions";
 import { alice, bob, constructDao, deployer, metadataHash, setupSimnet, stxToken, tom } from "../helpers";
 import { bufferFromHex } from "@stacks/transactions/dist/cl";
 import { resolveUndisputed } from "./helpers_staking";
+import { createBinaryMarket, predictCategory } from "../categorical/categorical.test";
 
 const simnet = await setupSimnet();
 
@@ -14,23 +15,12 @@ const simnet = await setupSimnet();
 describe("resolving errors", () => {
   it("only dev can resolve", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market", 
-      [ 
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),  
-        Cl.list([]),
-      ],
-      deployer
-    ); 
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    let response = await createBinaryMarket(0, deployer, stxToken);
     // not deployer
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(false)],
+      [Cl.uint(0), Cl.stringAscii('nay')],
       alice
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
@@ -38,7 +28,7 @@ describe("resolving errors", () => {
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(false)],
+      [Cl.uint(0), Cl.stringAscii('nay')],
       tom
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
@@ -46,30 +36,19 @@ describe("resolving errors", () => {
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(0), Cl.bool(false)],
+      [Cl.uint(0), Cl.stringAscii('nay')],
       bob
     );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
   });
 
   it("err-market-not-found", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market", 
-      [
-        Cl.uint(1), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    let response = await createBinaryMarket(0, deployer, stxToken);
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
       "resolve-market",
-      [Cl.uint(2), Cl.bool(false)],
+      [Cl.uint(2), Cl.stringAscii('nay')],
       deployer
     );
     expect(response.result).toEqual(Cl.error(Cl.uint(10005)));
@@ -77,69 +56,35 @@ describe("resolving errors", () => {
 
   it("err-already-concluded", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
+    let response = await createBinaryMarket(0, deployer, stxToken);
+    response = await simnet.callPublicFn(
+      "bde023-market-predicting", 
+      "resolve-market",
+      [Cl.uint(0), Cl.stringAscii('yay')],
+      bob 
     );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     response = await simnet.callPublicFn(
       "bde023-market-predicting",
-      "resolve-market",
-      [Cl.uint(0), Cl.bool(false)],
+      "resolve-market", 
+      [Cl.uint(0), Cl.stringAscii('nay')], 
       bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "resolve-market",
-      [Cl.uint(0), Cl.bool(false)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.error(Cl.uint(10018)));
+    ); 
+    expect(response.result).toEqual(Cl.error(Cl.uint(10020)));
   });
 });
 
 describe("resolve market", () => {
   it("resolve market yes", async () => {
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-    response = await simnet.callPublicFn( 
-      "bde023-market-predicting",
-      "predict-yes-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
-      alice
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "predict-no-stake",
-      [Cl.uint(0), Cl.uint(2000000), Cl.principal(stxToken)],
-      bob
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+    let response = await createBinaryMarket(0, deployer, stxToken);
+    response = await predictCategory(alice, 0, 'yay', 2000000, 1);
+    response = await predictCategory(bob, 0, 'nay', 2000000, 0);
     await resolveUndisputed(0, true);
 
     const data = await simnet.callReadOnlyFn(
       "bde023-market-predicting",
-      "get-market-data",
+      "get-market-data", 
       [Cl.uint(0)],
       alice
     );
@@ -147,33 +92,21 @@ describe("resolve market", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(1980000n),
-          "no-pool": uintCV(1980000n),
           // "resolution-burn-height": uintCV(19),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
-          outcome: boolCV(true),
+          "stakes": listCV([uintCV(1980000n), uintCV(1980000n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
         })
       )
     );
   });
 
-  it("resolve market no bids", async () => {
+  it("resolve market no bids", async () => { 
     constructDao(simnet);
-    let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+    let response = await createBinaryMarket(0, deployer, stxToken);
 
     await resolveUndisputed(0, false);
 
@@ -187,49 +120,34 @@ describe("resolve market", () => {
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(0),
-          "no-pool": uintCV(0),
-          // "resolution-burn-height": uintCV(19),
+          "stakes": listCV([uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(0)),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
-          outcome: boolCV(false),
         })
       )
     );
 
-    response = await simnet.callPublicFn(
-      "bde023-market-predicting",
-      "create-market",
-      [
-        Cl.uint(0), Cl.none(),
-        Cl.principal(stxToken),
-        Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
-      ],
-      deployer
-    );
-    expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
+    response = await createBinaryMarket(1, deployer, stxToken);
     await resolveUndisputed(1, true);
     data = await simnet.callReadOnlyFn(
       "bde023-market-predicting",
       "get-market-data",
       [Cl.uint(1)],
-      alice
+      alice 
     );
     expect(data.result).toMatchObject(
       Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
-          "market-type": uintCV(0),
           "market-data-hash": bufferFromHex(metadataHash()),
-          "yes-pool": uintCV(0),
-          "no-pool": uintCV(0),
-          // "resolution-burn-height": uintCV(19),
+          "stakes": listCV([uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+          "categories": listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
+          "outcome": someCV(uintCV(1)),
           "resolution-state": uintCV(3),
           concluded: boolCV(true),
-          outcome: boolCV(true),
         })
       )
     );

@@ -24,7 +24,6 @@
 (define-constant err-end-burn-height-not-reached (err u2113))
 (define-constant err-no-votes-to-return (err u2114))
 (define-constant err-not-concluded (err u2115))
-(define-constant err-invalid-category (err u2116))
 
 (define-constant structured-data-prefix 0x534950303138)
 (define-constant message-domain-hash (sha256 (unwrap! (to-consensus-buff?
@@ -46,12 +45,12 @@
 	uint
 	{
 		market-data-hash: (buff 32),
-    votes: (list 10 uint), ;; votes for each category. NB with 2 categories the votes at 0 are against and 1 = for and 2+ unused 
+		votes-for: uint,
+		votes-against: uint,
 		end-burn-height: uint,
 		proposer: principal,
 		concluded: bool,
-    num-categories: uint,
-    winning-category: (optional uint),
+		passed: bool,
 	}
 )
 (define-map member-total-votes {market-id: uint, voter: principal} uint)
@@ -85,28 +84,24 @@
     (market <prediction-market-trait>)
     (market-id uint)
     (market-data-hash (buff 32))
-    (empty-votes (list 10 uint))
-    (num-categories uint) 
   )
   (let
     (
-      (original-sender tx-sender) 
+      (original-sender tx-sender)
     )
-    (asserts! (is-none (map-get? resolution-polls market-id)) err-invalid-category)
-    (asserts! (is-eq (len empty-votes) num-categories) err-poll-already-exists)
+    (asserts! (is-none (map-get? resolution-polls market-id)) err-poll-already-exists)
 		;; a user with stake can propose but only for a market in the correct state in bde023. 
     (try! (as-contract (contract-call? market dispute-resolution market-id market-data-hash original-sender)))
 
     ;; Register the poll
     (map-set resolution-polls market-id
       {market-data-hash: market-data-hash,
-      votes: empty-votes,
+      votes-for: u0,
+      votes-against: u0,
       end-burn-height: (+ burn-block-height (var-get voting-duration)),
       proposer: tx-sender,
       concluded: false,
-      num-categories: num-categories,
-      winning-category: none}
-    )
+      passed: false})
 
     ;; Emit an event for the new poll
     (print {event: "create-market-vote", market-id: market-id, market-data-hash: market-data-hash, proposer: tx-sender})
@@ -126,12 +121,12 @@
 (define-public (vote
     (market-id uint)
     (market-data-hash (buff 32)) 
-    (category-for uint)
+    (for bool)  
     (amount uint) 
     (prev-market-id (optional uint))
   )
   ;; Process the vote using shared logic
-  (process-market-vote market-id market-data-hash tx-sender category-for amount false prev-market-id)
+  (process-market-vote market-id market-data-hash tx-sender for amount false prev-market-id)
 )
 
 
@@ -140,7 +135,7 @@
                                                 (market-data-hash (buff 32))
                                                 (attestation (string-ascii 100)) 
                                                 (timestamp uint) 
-                                                (category-for uint)
+                                                (vote bool)
                                                 (amount uint)
                                                 (voter principal)
                                                 (prev-market-id (optional uint))),
@@ -155,7 +150,7 @@
                                                 (market-data-hash (buff 32))
                                                 (attestation (string-ascii 100)) 
                                                 (timestamp uint) 
-                                                (category-for uint)
+                                                (vote bool)
                                                 (amount uint)
                                                 (voter principal)
                                                 (prev-market-id (optional uint))),
@@ -178,7 +173,7 @@
                             (market-data-hash (buff 32))
                             (attestation (string-ascii 100)) 
                             (timestamp uint) 
-                            (category-for uint)
+                            (vote bool)
                             (amount uint)
                             (voter principal)
                             (prev-market-id (optional uint))),
@@ -192,15 +187,15 @@
         (timestamp (get timestamp message-data))
         (market-id (get market-id message-data))
         (voter (get voter message-data))
-        (category-for (get category-for message-data))
+        (for (get vote message-data))
         (amount (get amount message-data))
         ;; Verify the signature
-        (message (tuple (attestation attestation) (market-id market-id) (timestamp timestamp) (vote (get category-for message-data))))
+        (message (tuple (attestation attestation) (market-id market-id) (timestamp timestamp) (vote (get vote message-data))))
         (structured-data-hash (sha256 (unwrap! (to-consensus-buff? message) err-unauthorised)))
         (is-valid-sig (verify-signed-structured-data structured-data-hash (get signature input-vote) voter))
       )
     (if is-valid-sig
-        (process-market-vote market-id meta-hash voter category-for amount true (get prev-market-id message-data) )
+        (process-market-vote market-id meta-hash voter for amount true (get prev-market-id message-data) )
         (ok false)) ;; Invalid signature
   ))
 
@@ -209,17 +204,15 @@
     (market-id uint)  ;; The poll ID
     (market-data-hash (buff 32))  ;; hash of off chain poll data
     (voter principal)         ;; The voter's principal
-    (category-for uint)        ;; category voting for (with two categories, we get simple "for" or "against" binary vote)
-    (amount uint)             ;; voting power
-    (sip18 bool)              ;; sip18 message vote or tx vote
+    (for bool)                ;; Vote "for" or "against"
+    (amount uint)                ;; voting power
+    (sip18 bool)                ;; sip18 message vote or tx vote
     (prev-market-id (optional uint))
   )
   (let
       (
         ;; Fetch the poll data
         (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
-        (num-categories (get num-categories poll-data))
-        (current-votes (get votes poll-data))
       )
     (begin
       ;; reclaim previously locked tokens
@@ -228,9 +221,6 @@
       ;; Ensure the voting period is active
       (asserts! (< burn-block-height (get end-burn-height poll-data)) err-proposal-inactive)
 
-      ;; passed category exists
-      (asserts! (< category-for num-categories) err-invalid-category)
-
       ;; Record the vote
       (map-set member-total-votes {market-id: market-id, voter: voter}
         (+ (get-current-total-votes market-id voter) amount)
@@ -238,13 +228,14 @@
 
       ;; update market voting power
       (map-set resolution-polls market-id
-        (merge poll-data 
-          {votes: (unwrap! (replace-at? current-votes category-for (+ (unwrap! (element-at? current-votes category-for) err-invalid-category) amount)) err-invalid-category)}
+        (if for
+          (merge poll-data {votes-for: (+ (get votes-for poll-data) amount)})
+          (merge poll-data {votes-against: (+ (get votes-against poll-data) amount)})
         )
       )
 
       ;; Emit an event for the vote
-      (print {event: "market-vote", market-id: market-id, voter: voter, category-for: category-for, sip18: sip18, amount: amount, prev-market-id: prev-market-id})
+      (print {event: "market-vote", market-id: market-id, voter: voter, for: for, sip18: sip18, amount: amount, prev-market-id: prev-market-id})
 
 		  (contract-call? .bde000-governance-token bdg-lock amount voter)
     )
@@ -270,8 +261,9 @@
         (
             (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
             (is-active (< burn-block-height (get end-burn-height poll-data)))
+            (passed (> (get votes-for poll-data) (get votes-against poll-data)))
         )
-        (ok {active: is-active, concluded: (get concluded poll-data), votes: (get votes poll-data)})
+        (ok {active: is-active, passed: passed})
     )
 ) 
     
@@ -281,17 +273,20 @@
 		(
       (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
       (market-data-hash (get market-data-hash poll-data))
-      (votes (get votes poll-data))
-      (winning-category (get max-index (find-max-category votes)))
-      (total-votes (fold + votes u0))
-      (winning-votes (unwrap! (element-at? votes winning-category) err-already-voted))
-      (result (try! (contract-call? market resolve-market-vote market-id market-data-hash winning-category)))
+      (is-active (< burn-block-height (get end-burn-height poll-data)))
+			(passed
+				(match (var-get custom-majority)
+					majority (> (* (get votes-for poll-data) custom-majority-upper) (* (+ (get votes-for poll-data) (get votes-against poll-data)) majority))
+					(> (get votes-for poll-data) (get votes-against poll-data))
+				)
+			)
+      (result (try! (contract-call? market resolve-market-vote market-id market-data-hash passed)))
 		)
 		(asserts! (not (get concluded poll-data)) err-proposal-already-concluded)
 		(asserts! (>= burn-block-height (get end-burn-height poll-data)) err-end-burn-height-not-reached)
-		(map-set resolution-polls market-id (merge poll-data {concluded: true, winning-category: (some winning-category)}))
-		(print {event: "conclude-market-vote", market-id: market-id, winning-category: winning-category, result: result})
-		(ok winning-category)
+		(map-set resolution-polls market-id (merge poll-data {concluded: true, passed: passed}))
+		(print {event: "conclude-market-vote", market-id: market-id, passed: passed, result: result})
+		(ok passed)
 	)
 )
 
@@ -311,23 +306,4 @@
 ;; --- Extension callback
 (define-public (callback (sender principal) (memo (buff 34)))
 	(ok true)
-)
-
-
-(define-private (find-max-category (votes (list 10 uint)))
-  (fold find-max-iter votes {max-votes: u0, max-index: u0, current-index: u0})
-)
-
-(define-private (find-max-iter (current-votes uint) (acc (tuple (max-votes uint) (max-index uint) (current-index uint))))
-  (let
-    (
-      (max-votes (get max-votes acc))  ;; Extract highest vote count so far
-      (max-index (get max-index acc))  ;; Extract category index with highest votes
-      (current-index (get current-index acc))  ;; Track current category index
-    )
-    (if (> current-votes max-votes)
-      (tuple (max-votes current-votes) (max-index current-index) (current-index (+ current-index u1)))  ;; Update max
-      (tuple (max-votes max-votes) (max-index max-index) (current-index (+ current-index u1)))  ;; Keep previous max
-    )
-  )
 )

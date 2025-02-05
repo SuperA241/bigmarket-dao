@@ -29,8 +29,8 @@ path = "contracts/traits/sip010-ft-trait.clar"
 [contracts.sip009-nft-trait]
 path = "contracts/traits/sip009-nft-trait.clar"
 
-[contracts.voting-trait]
-path = "contracts/traits/voting-trait.clar"
+[contracts.prediction-market-trait]
+path = "contracts/traits/prediction-market-trait.clar"
 
 [contracts.governance-token-trait]
 path = "contracts/traits/governance-token-trait.clar"
@@ -91,6 +91,35 @@ clarity_version = 3
 epoch = "3.0"
 
 [contracts.bdp000-bootstrap]
-path = "contracts/proposals/testnet/bdp000-bootstrap.clar"
+path = "contracts/proposals/devnet/bdp000-bootstrap.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp000-core-team-sunset-height]
+path = "contracts/proposals/devnet/bdp000-core-team-sunset-height.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-gating-false]
+path = "contracts/proposals/devnet/bdp001-gating-false.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-gating-true-testnet]
+path = "contracts/proposals/devnet/bdp001-gating-true-testnet.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-gating]
+path = "contracts/proposals/devnet/bdp001-gating.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bdp001-market-fees]
+path = "contracts/proposals/devnet/unit-tests/bdp001-market-fees.clar"
+clarity_version = 3
+epoch = "3.0"
+[contracts.bdp001-market-fees-1]
+path = "contracts/proposals/devnet/unit-tests/bdp001-market-fees-1.clar"
 clarity_version = 3
 epoch = "3.0"

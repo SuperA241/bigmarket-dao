@@ -8,10 +8,10 @@ export async function resolveUndisputed(marketId: number, outcome: boolean) {
   let response = await simnet.callPublicFn(
     "bde023-market-predicting",
     "resolve-market",
-    [Cl.uint(marketId), Cl.bool(outcome)],
+    [Cl.uint(marketId), Cl.stringAscii(outcome ? 'yay' : 'nay')],
     bob
   );
-  expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
+  expect(response.result).toEqual(Cl.ok(Cl.uint(outcome ? 1 : 0)));
   simnet.mineEmptyBlocks(145);
   response = await simnet.callPublicFn(
     "bde023-market-predicting",

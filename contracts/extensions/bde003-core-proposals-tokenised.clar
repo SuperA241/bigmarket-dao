@@ -13,7 +13,6 @@
 
 (impl-trait .extension-trait.extension-trait)
 (use-trait proposal-trait .proposal-trait.proposal-trait)
-(use-trait voting-trait .voting-trait.voting-trait)
 
 (define-data-var core-team-sunset-height uint u0) ;; does not expire by default - can be changed by proposal
 

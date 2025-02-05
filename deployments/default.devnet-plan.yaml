@@ -37,10 +37,10 @@ plan:
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: voting-trait
+            contract-name: prediction-market-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3820
-            path: contracts/traits/voting-trait.clar
+            cost: 1890
+            path: contracts/traits/prediction-market-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
@@ -77,7 +77,7 @@ plan:
         - contract-publish:
             contract-name: bde003-core-proposals-tokenised
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 26490
+            cost: 25970
             path: contracts/extensions/bde003-core-proposals-tokenised.clar
             anchor-block-only: true
             clarity-version: 3
@@ -96,24 +96,24 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bde021-market-voting
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 127590
+            path: contracts/extensions/bde021-market-voting.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bde022-market-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 89930
+            cost: 80840
             path: contracts/extensions/bde022-market-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde023-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 199000
+            cost: 176950
             path: contracts/extensions/bde023-market-predicting.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: bde021-market-voting
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 111650
-            path: contracts/extensions/bde021-market-voting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -126,7 +126,7 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 40680
+            cost: 42750
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -140,7 +140,7 @@ plan:
         - contract-publish:
             contract-name: bdp001-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 4280
+            cost: 5040
             path: contracts/proposals/devnet/bdp001-gating.clar
             anchor-block-only: true
             clarity-version: 3

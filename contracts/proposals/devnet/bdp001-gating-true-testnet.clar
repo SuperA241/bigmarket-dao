@@ -9,9 +9,8 @@
 	(begin
 		;; Enable genesis extensions.
 		;; [alice, bob, tom, betty, wallace];
-		;;(try! (contract-call? .bde023-market-predicting set-market-create-fee u100000000))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
-		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0x5f24649277af2f6364faf35827dffe12b85f2f1dca5ae92733c72af91455aa64))
+		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
 		(ok true)
 	)
 )

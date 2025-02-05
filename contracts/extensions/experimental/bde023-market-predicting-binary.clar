@@ -1,12 +1,11 @@
-;; Title: BDE023 categorical market preditions
+;; Title: BDE023 binary market preditions
 ;; Author: Mike Cohen
 ;; Depends-On: 
 ;; Synopsis:
-;; Implements a categorical prediciton market.
+;; Implements a simple binary prediciton market.
 ;; Description:
-;; Enables market creation and category based operation where users
-;; stake on the the outcome they think most likely to happen.
-;; The contract is part of the dao and parameters are controlled by
+;; Enables market creation and binary yes/no operation
+;; the contract is part of the dao and parameters are controlled by
 ;; dao proposals. Market resolution can be disputed by anyone with a 
 ;; stake in the market and disputes are resolved by dao / community
 ;; voting
@@ -15,8 +14,8 @@
 (impl-trait .prediction-market-trait.prediction-market-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
-;; Market Types (1 => categorical market)
-(define-constant MARKET_TYPE u1)
+;; Market Types (0 => binary yesy/no market)
+(define-constant MARKET_TYPE u0)
 
 (define-constant RESOLUTION_OPEN u0)
 (define-constant RESOLUTION_RESOLVING u1)
@@ -30,7 +29,7 @@
 (define-constant err-already-concluded (err u10004))
 (define-constant err-market-not-found (err u10005))
 (define-constant err-user-not-winner-or-claimed (err u10006))
-(define-constant err-user-not-staked (err u10008))
+(define-constant err-user-balance-unknown (err u10008))
 (define-constant err-market-not-concluded (err u10009))
 (define-constant err-insufficient-balance (err u10011))
 (define-constant err-insufficient-contract-balance (err u10012))
@@ -44,8 +43,6 @@
 (define-constant err-market-wrong-state (err u10020))
 (define-constant err-invalid-token (err u10021))
 (define-constant err-max-market-fee-bips-exceeded (err u10022))
-(define-constant err-category-not-found (err u10023))
-(define-constant err-too-few-categories (err u10024))
 
 (define-data-var market-counter uint u0)
 (define-data-var dispute-window-length uint u3)
@@ -59,26 +56,37 @@
 (define-data-var creation-gated bool false)
 
 ;; Data structure for each Market
-;; outcome: winning category
+;; market-id: internal numeric ID
+;; creator: who created the market
+;; market-type: 0 => stake-based, 1 => shares-based
+;; yes-pool/no-pool: total amount staked (or pooled) on Yes/No
+;; concluded: whether the market is concluded
+;; outcome: true => Yes won, false => No won (only valid if concluded = true)
 (define-map markets
   uint
   {
 		market-data-hash: (buff 32),
     token: principal,
     creator: principal,
+    market-type: uint,
+    yes-pool: uint,
+    no-pool: uint,
+    concluded: bool,
+    outcome: bool,
     market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
-    resolution-burn-height: uint,
-    categories: (list 10 (string-ascii 32)), ;; List of available categories
-    stakes: (list 10 uint), ;; Total staked per category
-    outcome: (optional uint),
-    concluded: bool
+    resolution-burn-height: uint
   }
 )
 
+;; For stake-based, we simply track how much each user staked on Yes/No.
+;; For shares-based, you'd track how many shares the user holds.
 (define-map stake-balances
   { market-id: uint, user: principal }
-  (list 10 uint)
+  {
+    yes-amount: uint,
+    no-amount: uint
+  }
 )
 (define-map allowed-tokens principal bool)
 
@@ -173,19 +181,16 @@
   )
 )
 
-;; ---------- Market Functions ----------
-
-;; Create a new categorical market
-(define-public (create-market (categories (list 10 (string-ascii 32))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
+(define-public (create-market (mtype uint) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
         (market-fee-bips (default-to u0 fee-bips))
       )
-		  (asserts! (> (len categories) u1) err-too-few-categories)
 		  (asserts! (<= market-fee-bips (var-get market-fee-bips-max)) err-max-market-fee-bips-exceeded)
       ;; ensure the trading token is allowed 
 		  (asserts! (is-allowed-token (contract-of token)) err-invalid-token)
+      (asserts! (is-eq mtype MARKET_TYPE) err-invalid-market-type)
       ;; ensure user pays creation fee if required
       (if (and (not (is-eq tx-sender (var-get resolution-agent))) (> (var-get market-create-fee) u0))
         (try! (stx-transfer? (var-get market-create-fee) tx-sender .bde006-treasury))
@@ -201,21 +206,23 @@
           market-data-hash: market-data-hash,
           token: (contract-of token),
           creator: tx-sender,
+          market-type: mtype,
+          yes-pool: u0,
+          no-pool: u0, 
+          concluded: false,
+          outcome: false,
           market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
           resolution-burn-height: u0,
-          categories: categories,
-          stakes: (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0),
-          outcome: none,
-          concluded: false
         }
       )
       ;; Increment the counter
-      (print {event: "create-market", market-id: new-id, market-type: MARKET_TYPE, categories: categories, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, creator: tx-sender})
+      (print {event: "create-market", market-id: new-id, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, market-type: MARKET_TYPE, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
       (ok new-id)
   )
 )
+
 (define-read-only (get-market-data (market-id uint))
 	(map-get? markets market-id)
 )
@@ -224,52 +231,82 @@
 	(map-get? stake-balances { market-id: market-id, user: user })
 )
 
-(define-public (predict-category (market-id uint) (amount uint) (category (string-ascii 32)) (token <ft-token>))
+;; ---------------- STAKE-BASED FUNCTIONS ----------------
+;; For stake-based markets, users predict an amount on "Yes" or "No".
+;; The final pot is distributed to winners after resolution.
+(define-public (predict-yes-stake (market-id uint) (amount uint) (token <ft-token>))
+  (predict-stake market-id amount true token))
+
+(define-public (predict-no-stake (market-id uint) (amount uint) (token <ft-token>))
+  (predict-stake market-id amount false token))
+
+(define-private (predict-stake (market-id uint) (amount uint) (yes bool) (token <ft-token>))
   (let (
+        ;; Ensure amount is valid and transfer STX
         (amount-less-fee (try! (process-stake-transfer amount token)))
+        ;; Fetch and unwrap market data
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
-        (current-stakes (get stakes md))
-        (index (unwrap! (index-of? (get categories md) category) err-category-not-found))
-        (current-stake (unwrap! (element-at? current-stakes index) err-category-not-found))
-        (current-stake-balances (default-to (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0) (map-get? stake-balances {market-id: market-id, user: tx-sender})))
-        (current-user-stake (unwrap! (element-at? current-stake-balances index) err-category-not-found))
-      ) 
+      )
     ;; Ensure correct token
     (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
+    ;; Ensure correct market type
+    (asserts! (is-eq (get market-type md) MARKET_TYPE) err-wrong-market-type)
     ;; Ensure market is not concluded
     (asserts! (not (get concluded md)) err-already-concluded)
     ;; Ensure resolution process has not started 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-not-open)
 
+    ;; Update the appropriate pool
     (map-set markets market-id
-      (merge md {stakes: (unwrap! (replace-at? current-stakes index (+ current-stake amount-less-fee)) err-category-not-found)})
+      (merge md
+        (if yes
+            { yes-pool: (+ (get yes-pool md) amount-less-fee), no-pool: (get no-pool md) }
+            { yes-pool: (get yes-pool md), no-pool: (+ (get no-pool md) amount-less-fee) }
+        )
+      )
     )
 
-    (map-set stake-balances {market-id: market-id, user: tx-sender}
-        (unwrap! (replace-at? current-stake-balances index (+ current-user-stake amount-less-fee)) err-category-not-found)
+    ;; Update user balance
+    (let (
+          (current-bal (default-to 
+                          { yes-amount: u0, no-amount: u0 } 
+                          (map-get? stake-balances { market-id: market-id, user: tx-sender }))
+          )
+        )
+      ;; Update or set balance
+      (map-set stake-balances { market-id: market-id, user: tx-sender }
+        (if yes
+            {
+              yes-amount: (+ (get yes-amount current-bal) amount-less-fee),
+              no-amount: (get no-amount current-bal)
+            }
+            {
+              yes-amount: (get yes-amount current-bal),
+              no-amount: (+ (get no-amount current-bal) amount-less-fee)
+            }
+        )
+      )
     )
-
-    (print {event: "market-stake", market-id: market-id, market-type: MARKET_TYPE, index: index, category: category, amount: amount-less-fee, voter: tx-sender})
-    (ok index)
+    (print {event: "market-stake", market-id: market-id, market-type: MARKET_TYPE, amount: amount, yes: yes, voter: tx-sender})
+    (ok true)
   )
 )
 
 ;; Resolve a market invoked by ai-agent.
-(define-public (resolve-market (market-id uint) (category (string-ascii 32)))
+(define-public (resolve-market (market-id uint) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
-        (index (unwrap! (index-of? (get categories md) category) err-category-not-found))
     )
     (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
-    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-wrong-state)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-not-open)
 
     (map-set markets market-id
       (merge md
-        { outcome: (some index), resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
+        { outcome: outcome, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market", market-id: market-id, market-type: MARKET_TYPE, outcome: index, category: category, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVING})
-    (ok index)
+    (print {event: "resolve-market", market-id: market-id, market-type: MARKET_TYPE, outcome: outcome, resolver: (var-get resolution-agent), resolution-state: RESOLUTION_RESOLVING})
+    (ok true)
   )
 )
 
@@ -294,18 +331,19 @@
 ;; concludes a market that has been disputed. This method has to be called at least
 ;; dispute-window-length blocks after the dispute was raised - the voting window.
 ;; a proposal with 0 votes will close the market with the outcome false
-(define-public (resolve-market-vote (market-id uint) (meta-data-hash (buff 32)) (outcome uint))
+(define-public (resolve-market-vote (market-id uint) (meta-data-hash (buff 32)) (outcome bool))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
     (try! (is-dao-or-extension))
-    (asserts! (< outcome (len (get categories md))) err-market-not-found)
     (asserts! (is-eq meta-data-hash (get market-data-hash md)) err-market-not-found)
     (asserts! (or (is-eq (get resolution-state md) RESOLUTION_DISPUTED) (is-eq (get resolution-state md) RESOLUTION_RESOLVING)) err-market-wrong-state)
+    ;; logic here could be either disputed or (resolving AND dispute window has timed out)?
+    ;; (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, outcome: (some outcome), resolution-state: RESOLUTION_RESOLVED }
+        { concluded: true, outcome: outcome, resolution-state: RESOLUTION_RESOLVED }
       )
     )
     (print {event: "resolve-market-vote", market-id: market-id, market-type: MARKET_TYPE, resolver: contract-caller, outcome: outcome, resolution-state: RESOLUTION_RESOLVED})
@@ -320,6 +358,7 @@
         (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
         (market-data-hash (get market-data-hash md)) 
         (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
+        (caller-stake (+ (get yes-amount stake-data) (get no-amount stake-data)))
     )
     ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
@@ -335,30 +374,80 @@
   )
 )
 
-;; Claim winnings (for users who staked on the correct category)
+;; of the pot if they are on the winning side after resolution. 
+;; Deducts a 2% DAO fee from the final pot.
 (define-public (claim-winnings (market-id uint) (token <ft-token>))
-  (let 
-    (
-      (market-data (unwrap! (map-get? markets market-id) err-market-not-found))
-      (user-stake-list (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) err-user-not-staked))
-      (index-won (unwrap! (get outcome market-data) err-market-wrong-state))
-      (user-stake (unwrap! (element-at? user-stake-list index-won) err-user-not-staked))
-      (stake-list (get stakes market-data))
-      (winning-pool (unwrap! (element-at? stake-list index-won) err-market-wrong-state))
-      (total-pool (fold + stake-list u0))
+  (begin
+    ;; Fetch market and user data
+    (let ((market-data (unwrap! (map-get? markets market-id) err-market-not-found))
+          (user-bal (unwrap! (map-get? stake-balances { market-id: market-id, user: tx-sender }) err-user-balance-unknown)))
+
+      ;; Ensure correct token
+      (asserts! (is-eq (get token market-data) (contract-of token)) err-invalid-token)
+      ;; Check if market is concluded
+      (asserts! (is-eq (get resolution-state market-data) RESOLUTION_RESOLVED) err-market-not-concluded)
+      (asserts! (get concluded market-data) err-market-not-concluded)
+
+      ;; Determine user stake and winning pool
+      (let ((yes-won (get outcome market-data))
+            (user-stake (if (get outcome market-data)
+                            (get yes-amount user-bal)
+                            (get no-amount user-bal)))
+            (winning-pool (if (get outcome market-data)
+                              (get yes-pool market-data)
+                              (get no-pool market-data)))
+            (total-pool (+ (get yes-pool market-data) (get no-pool market-data))))
+        
+        ;; Ensure user has a stake on the winning side
+        (asserts! (> user-stake u0) err-user-not-winner-or-claimed)
+
+        ;; Claim winnings
+        (claim-winnings-internal market-id user-stake winning-pool total-pool yes-won token)
+      )
     )
+  )
+)
 
-    ;; Ensure correct token
-    (asserts! (is-eq (get token market-data) (contract-of token)) err-invalid-token)
-    ;; Check if market is concluded
-    (asserts! (is-eq (get resolution-state market-data) RESOLUTION_RESOLVED) err-market-not-concluded)
-    (asserts! (get concluded market-data) err-market-not-concluded)
-    ;; Determine user stake and winning pool
-    (asserts! (> user-stake u0) err-user-not-winner-or-claimed)
-    (asserts! (> winning-pool u0) err-amount-too-low)
+;; ---------------- PRIVATE FUNCTIONS ----------------
+(define-private (process-stake-transfer (amount uint) (token <ft-token>))
+  (let (
+        ;;(sender-balance (stx-get-balance tx-sender))
+        (sender-balance (unwrap! (contract-call? token get-balance tx-sender) err-insufficient-balance))
+        (fee (calculate-fee amount (var-get dev-fee-bips)))
+        (transfer-amount (- amount fee))
+       )
+    (begin
+      ;; Ensure amount is valid
+      (asserts! (>= amount u5000) err-amount-too-low)
+      ;; Check tx-sender's balance
+      (asserts! (>= sender-balance amount) err-insufficient-balance)
+      ;; Transfer STX to the contract
+      ;;(try! (stx-transfer? transfer-amount tx-sender .bde023-market-predicting))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-predicting none))
+      ;; Transfer the fee to the dev fund
+      ;;(try! (stx-transfer? fee tx-sender (var-get dev-fund)))
+      (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
+      ;; Verify the contract received the correct amount
+      ;;(asserts! (>= (stx-get-balance .bde023-market-predicting) transfer-amount) err-insufficient-contract-balance)
 
-      ;; Claim winnings
-    (claim-winnings-internal market-id user-stake winning-pool total-pool index-won token)
+      (ok transfer-amount)
+    )
+  )
+)
+
+(define-private (calculate-fee (amount uint) (fee-bips uint))
+  (let ((fee (/ (* amount fee-bips) u10000)))
+    fee
+  )
+)
+
+
+
+(define-private (take-fee (amount uint) (fee-bips uint))
+  (let (
+        (fee (/ (* amount fee-bips) u10000))
+       )
+    fee
   )
 )
 
@@ -367,7 +456,7 @@
   (user-stake uint) 
   (winning-pool uint) 
   (total-pool uint) 
-  (index-won uint) (token <ft-token>))
+  (yes bool) (token <ft-token>))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (original-sender tx-sender)
@@ -403,48 +492,20 @@
             (try! (contract-call? token transfer marketfee tx-sender creator none))
             true
           )
+
         )
       )
 
       ;; Zero out user stake
-      (map-set stake-balances { market-id: market-id, user: tx-sender } (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0))
+      (map-set stake-balances { market-id: market-id, user: tx-sender }
+        {
+          yes-amount: u0,
+          no-amount: u0
+        })
 
       ;; Log and return user share
-      (print {event: "claim-winnings", market-id: market-id, market-type: MARKET_TYPE, index-won: index-won, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, marketfee: marketfee, daofee: daofee, winning-pool: winning-pool, total-pool: total-pool})
+      (print {event: "claim-winnings", market-id: market-id, market-type: MARKET_TYPE, yes: yes, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, marketfee: marketfee, daofee: daofee, winning-pool: winning-pool, total-pool: total-pool})
       (ok user-share-net)
     )
-  )
-)
-
-(define-private (process-stake-transfer (amount uint) (token <ft-token>))
-  (let (
-        ;;(sender-balance (stx-get-balance tx-sender))
-        (sender-balance (unwrap! (contract-call? token get-balance tx-sender) err-insufficient-balance))
-        (fee (calculate-fee amount (var-get dev-fee-bips)))
-        (transfer-amount (- amount fee))
-       )
-    (begin
-      ;; Ensure amount is valid
-      (asserts! (>= amount u100) err-amount-too-low)
-      ;; Check tx-sender's balance
-      (asserts! (>= sender-balance amount) err-insufficient-balance)
-      
-      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-predicting none))
-      (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
-
-      (ok transfer-amount)
-    )
-  )
-)
-(define-private (calculate-fee (amount uint) (fee-bips uint))
-  (let ((fee (/ (* amount fee-bips) u10000)))
-    fee
-  )
-)
-(define-private (take-fee (amount uint) (fee-bips uint))
-  (let (
-        (fee (/ (* amount fee-bips) u10000))
-       )
-    fee
   )
 )
