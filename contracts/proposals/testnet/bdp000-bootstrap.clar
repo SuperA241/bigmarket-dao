@@ -38,7 +38,7 @@
 		(try! (contract-call? .bde023-market-predicting set-dev-fund 'ST1JGAVFJ7N63M2CC0CY2RSKSQWK94DBVKK1TBAHT))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
 		(try! (contract-call? .bde023-market-predicting set-dao-treasury .bde006-treasury))
-		(try! (contract-call? .bde023-market-predicting set-market-create-fee u100000000))
+		(try! (contract-call? .bde023-market-predicting set-market-create-fee u1000000))
 		(try! (contract-call? .bde023-market-predicting set-market-fee-bips-max u1000))
 		(try! (contract-call? .bde023-market-predicting set-dev-fee-bips u200))
 		(try! (contract-call? .bde023-market-predicting set-dao-fee-bips u200))

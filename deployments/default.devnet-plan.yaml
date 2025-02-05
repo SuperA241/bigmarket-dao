@@ -112,7 +112,7 @@ plan:
         - contract-publish:
             contract-name: bde023-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 176950
+            cost: 188770
             path: contracts/extensions/bde023-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -126,7 +126,7 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 42750
+            cost: 42740
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -140,8 +140,22 @@ plan:
         - contract-publish:
             contract-name: bdp001-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 5040
+            cost: 5910
             path: contracts/proposals/devnet/bdp001-gating.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-gating-false
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 5050
+            path: contracts/proposals/devnet/bdp001-gating-false.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-gating-true-testnet
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 5040
+            path: contracts/proposals/devnet/bdp001-gating-true-testnet.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:

@@ -46,6 +46,9 @@
 (define-constant err-max-market-fee-bips-exceeded (err u10022))
 (define-constant err-category-not-found (err u10023))
 (define-constant err-too-few-categories (err u10024))
+(define-constant err-element-expected (err u10025))
+(define-constant err-winning-stake-not-zero (err u10026))
+(define-constant err-losing-stake-is-zero (err u10027))
 
 (define-data-var market-counter uint u0)
 (define-data-var dispute-window-length uint u3)
@@ -359,6 +362,31 @@
 
       ;; Claim winnings
     (claim-winnings-internal market-id user-stake winning-pool total-pool index-won token)
+  )
+)
+
+(define-public (transfer-losing-stakes (market-id uint) (token <ft-token>))
+  (let (
+        (md (unwrap! (map-get? markets market-id) err-market-not-found))
+        (stakes (get stakes md))
+        (winning-index (unwrap! (get outcome md) err-market-not-concluded))
+        (balance (fold + stakes u0))
+    )
+    ;; Ensure market is concluded and winning category is empty
+    (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVED) err-market-not-concluded)
+    (asserts! (is-eq u0 (unwrap! (element-at? stakes winning-index) err-element-expected)) err-winning-stake-not-zero)
+    (asserts! (> balance u0) err-losing-stake-is-zero)
+    (as-contract
+      (begin
+        (if (> balance u0)
+          (try! (contract-call? token transfer balance tx-sender (var-get dao-treasury) none))
+          true
+        )
+      )
+    )
+    (print {event: "transfer-losing-stakes", market-id: market-id, balance: balance})
+    (ok true)
   )
 )
 

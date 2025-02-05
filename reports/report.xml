@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="254" failures="0" errors="0" time="1152.496">
-    <testsuite name="tests/bde001-proposal-voting.test.ts" timestamp="2025-02-05T10:03:19.944Z" hostname="Mikes-MacBook-Pro.local" tests="2" failures="0" errors="0" skipped="0" time="0.02">
+<testsuites name="vitest tests" tests="254" failures="0" errors="0" time="5.849">
+    <testsuite name="tests/bde001-proposal-voting.test.ts" timestamp="2025-02-05T16:30:50.458Z" hostname="Mikes-MacBook-Pro.local" tests="2" failures="0" errors="0" skipped="0" time="0.02">
         <testcase classname="tests/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; ensures the contract is deployed" time="0.003">
         </testcase>
         <testcase classname="tests/bde001-proposal-voting.test.ts" name="bde001-proposal-voting contract &gt; core-propose - can set new sunset height" time="0.017">
             <system-out>
-heightAfter:  { type: [33m1[39m, value: [33m263n[39m }
+heightAfter:  { type: [33m1[39m, value: [33m234n[39m }
 
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/categorical/categorical.test.ts" timestamp="2025-02-05T10:03:19.944Z" hostname="Mikes-MacBook-Pro.local" tests="14" failures="0" errors="0" skipped="0" time="0.273">
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
+    <testsuite name="tests/categorical/categorical.test.ts" timestamp="2025-02-05T16:30:50.459Z" hostname="Mikes-MacBook-Pro.local" tests="14" failures="0" errors="0" skipped="0" time="0.267">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
         </testcase>
         <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create ok" time="0.015">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.016">
         </testcase>
         <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve ok" time="0.019">
-        </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
         </testcase>
         <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.023">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.024">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -49,75 +49,75 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; claim winner ok" time="0.028">
+        <testcase classname="tests/categorical/categorical.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/gating/account-gating.test.ts" timestamp="2025-02-05T10:03:19.945Z" hostname="Mikes-MacBook-Pro.local" tests="23" failures="0" errors="0" skipped="0" time="0.407">
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
+    <testsuite name="tests/gating/account-gating.test.ts" timestamp="2025-02-05T16:30:50.460Z" hostname="Mikes-MacBook-Pro.local" tests="23" failures="0" errors="0" skipped="0" time="0.426">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create ok" time="0.014">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.016">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.021">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim loser ok" time="0.022">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim loser ok" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-expecting-merkle-root-for-poll" time="0.014">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-expecting-merkle-root-for-poll" time="0.016">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-unauthorised" time="0.013">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-unauthorised" time="0.015">
         </testcase>
         <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; ensure bde022 is valid extension" time="0.013">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can call set-merkle-root via proposal" time="0.018">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can call set-merkle-root via proposal" time="0.019">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can&apos;t call create-market with invalid merkle lookup key" time="0.019">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can&apos;t call create-market with invalid merkle lookup key" time="0.02">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; deployer can create-market if dao bootstrapped" time="0.014">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; deployer can create-market if dao bootstrapped" time="0.015">
             <system-out>
 bde023-market-predicting: 0x548bbe4cdf9ba84d53315dc3802e9665b6351d53ae24372e9b6f01b33bd7b684 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; alice cannot create-market if dao bootstrapped" time="0.015">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; alice cannot create-market if dao bootstrapped" time="0.017">
             <system-out>
 bde023-market-predicting: 0x548bbe4cdf9ba84d53315dc3802e9665b6351d53ae24372e9b6f01b33bd7b684 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
 
@@ -129,7 +129,7 @@ GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: bde023-market-predicting: 0x7
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can create-market with valid merkle proof" time="0.027">
+        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can create-market with valid merkle proof" time="0.029">
             <system-out>
 lookupRootKey=548bbe4cdf9ba84d53315dc3802e9665b6351d53ae24372e9b6f01b33bd7b684
 ddv:  [90mundefined[39m
@@ -141,26 +141,222 @@ ddv:  [90mundefined[39m
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/claims-with-market-fee.test.ts" timestamp="2025-02-05T10:03:19.946Z" hostname="Mikes-MacBook-Pro.local" tests="15" failures="0" errors="0" skipped="0" time="0.282">
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
+    <testsuite name="tests/sbtc/claims.test.ts" timestamp="2025-02-05T16:30:50.461Z" hostname="Mikes-MacBook-Pro.local" tests="21" failures="0" errors="0" skipped="0" time="0.381">
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err too few categories" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.018">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim loser ok" time="0.023">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-found" time="0.016">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-user-balance-unknown" time="0.015">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-user-not-winner" time="0.018">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-winning-pool-is-zero" time="0.003">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/claims.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.024">
+            <system-out>
+contractBalance 215: undefined
+contractBalance 228: undefined
+contractBalance 242: undefined
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/sbtc/scenarios.test.ts" timestamp="2025-02-05T16:30:50.462Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.419">
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.023">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim loser ok" time="0.022">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stake 100STX on YES, market resolves yes" time="0.019">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100STX on yes, Bob 100STX on NO market resolves yes" time="0.022">
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.038">
+            <system-out>
+contractBalance: undefined
+contractBalance: undefined
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.028">
+            <system-out>
+contractBalance: undefined
+contractBalance: undefined
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.044">
+            <system-out>
+contractBalance: undefined
+contractBalance: undefined
+contractBalance: undefined
+contractBalance 32: undefined
+contractBalance 32: undefined
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/sbtc/staking.test.ts" timestamp="2025-02-05T16:30:50.463Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.353">
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create ok" time="0.015">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake ok" time="0.016">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim loser ok" time="0.022">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+            <system-out>
+contractBalance : bde023-market-predicting : 2970
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="prediction errors &gt; user can&apos;t commit more than their balance" time="0.015">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="prediction errors &gt; err-already-concluded" time="0.019">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; user transfers exact stake" time="0.018">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; fees are collected up front from prediction stakes" time="0.018">
+        </testcase>
+        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; alice hedges yes and no" time="0.018">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/predictions/claims-with-market-fee.test.ts" timestamp="2025-02-05T16:30:50.464Z" hostname="Mikes-MacBook-Pro.local" tests="15" failures="0" errors="0" skipped="0" time="0.297">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; err too few categories" time="0.015">
+        </testcase>
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
+        </testcase>
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create ok" time="0.016">
         </testcase>
         <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create and stake ok" time="0.016">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
         </testcase>
         <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
         <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
             <system-out>
@@ -168,7 +364,7 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.021">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -180,13 +376,13 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; claim winner ok" time="0.024">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.022">
+        <testcase classname="tests/predictions/claims-with-market-fee.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.023">
             <system-out>
 contractBalance 215: 9900
 contractBalance 272: 4950
@@ -195,26 +391,26 @@ contractBalance 285: 0
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/claims.test.ts" timestamp="2025-02-05T10:03:19.947Z" hostname="Mikes-MacBook-Pro.local" tests="21" failures="0" errors="0" skipped="0" time="0.371">
+    <testsuite name="tests/predictions/claims.test.ts" timestamp="2025-02-05T16:30:50.465Z" hostname="Mikes-MacBook-Pro.local" tests="21" failures="0" errors="0" skipped="0" time="0.37">
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create ok" time="0.013">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create ok" time="0.014">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.021">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
             <system-out>
@@ -222,7 +418,7 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.021">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -234,7 +430,7 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -250,7 +446,7 @@ contractBalance : bde023-market-predicting : 2970
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-winning-pool-is-zero" time="0.003">
         </testcase>
-        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.016">
+        <testcase classname="tests/predictions/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.017">
         </testcase>
         <testcase classname="tests/predictions/claims.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.022">
             <system-out>
@@ -261,14 +457,14 @@ contractBalance 285: 0
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/create-market-fees.test.ts" timestamp="2025-02-05T10:03:19.948Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.396">
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
+    <testsuite name="tests/predictions/create-market-fees.test.ts" timestamp="2025-02-05T16:30:50.466Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.392">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create ok" time="0.014">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.018">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
         </testcase>
@@ -276,11 +472,11 @@ contractBalance 285: 0
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
             <system-out>
@@ -288,7 +484,7 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.021">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -308,11 +504,11 @@ contractBalance : bde023-market-predicting : 2970
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure creation fee is paid" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure create market fee is paid" time="0.02">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure create market fee is paid" time="0.022">
         </testcase>
         <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure market fee cant exceed max" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure betty pays the market creat fee of 1000 but receives 10% of alice winnings" time="0.035">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure betty pays the market creat fee of 1000 but receives 10% of alice winnings" time="0.029">
             <system-out>
 assertUserBalance: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM100000000000000
 root=5f24649277af2f6364faf35827dffe12b85f2f1dca5ae92733c72af91455aa64
@@ -326,7 +522,7 @@ contractBalance : bde006-treasury : 1475
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure fees are correct with 4 users" time="0.041">
+        <testcase classname="tests/predictions/create-market-fees.test.ts" name="prediction contract &gt; ensure fees are correct with 4 users" time="0.04">
             <system-out>
 assertUserBalance: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM100000000000000
 root=5f24649277af2f6364faf35827dffe12b85f2f1dca5ae92733c72af91455aa64
@@ -341,10 +537,10 @@ contractBalance : bde006-treasury : 19001000
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/create-market.test.ts" timestamp="2025-02-05T10:03:19.949Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.331">
+    <testsuite name="tests/predictions/create-market.test.ts" timestamp="2025-02-05T16:30:50.467Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.336">
         <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
+        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
         <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; create ok" time="0.014">
         </testcase>
@@ -354,7 +550,7 @@ contractBalance : bde006-treasury : 19001000
         </testcase>
         <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
         </testcase>
         <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
         </testcase>
@@ -362,13 +558,13 @@ contractBalance : bde006-treasury : 19001000
         </testcase>
         <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.021">
+        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -380,24 +576,24 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; claim winner ok" time="0.024">
+        <testcase classname="tests/predictions/create-market.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensures the contract is deployed" time="0.003">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensures the contract is deployed" time="0.002">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market share type works" time="0.014">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market share type works" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market stake type works" time="0.014">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup market with market stake type works" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup two share type markets works" time="0.016">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; setup two share type markets works" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensure market data is as expected" time="0.021">
+        <testcase classname="tests/predictions/create-market.test.ts" name="prediction contract &gt; ensure market data is as expected" time="0.022">
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/resolving.test.ts" timestamp="2025-02-05T10:03:19.950Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.35">
+    <testsuite name="tests/predictions/resolving.test.ts" timestamp="2025-02-05T16:30:50.468Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.365">
         <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; err too few categories" time="0.014">
         </testcase>
         <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
@@ -410,71 +606,71 @@ contractBalance : bde023-market-predicting : 2970
         </testcase>
         <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
         </testcase>
         <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim loser ok" time="0.021">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim loser ok" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+        <testcase classname="tests/predictions/resolving.test.ts" name="claiming errors &gt; claim winner ok" time="0.027">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; only dev can resolve" time="0.017">
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; only dev can resolve" time="0.018">
         </testcase>
         <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; err-market-not-found" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; err-already-concluded" time="0.015">
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolving errors &gt; err-already-concluded" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market yes" time="0.02">
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market yes" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market no bids" time="0.02">
+        <testcase classname="tests/predictions/resolving.test.ts" name="resolve market &gt; resolve market no bids" time="0.022">
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/scenarios.test.ts" timestamp="2025-02-05T10:03:19.951Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.396">
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
+    <testsuite name="tests/predictions/scenarios.test.ts" timestamp="2025-02-05T16:30:50.469Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.402">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; err too few categories" time="0.015">
         </testcase>
         <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create ok" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.016">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
         </testcase>
         <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
         </testcase>
         <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
-        </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        </testcase>
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -486,7 +682,7 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; claim loser ok" time="0.023">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="claiming errors &gt; claim loser ok" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -498,9 +694,9 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stake 100STX on YES, market resolves yes" time="0.019">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stake 100STX on YES, market resolves yes" time="0.018">
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100STX on yes, Bob 100STX on NO market resolves yes" time="0.02">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100STX on yes, Bob 100STX on NO market resolves yes" time="0.021">
         </testcase>
         <testcase classname="tests/predictions/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.03">
             <system-out>
@@ -509,7 +705,7 @@ contractBalance: 0
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.025">
+        <testcase classname="tests/predictions/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.026">
             <system-out>
 contractBalance: 39600000000000
 contractBalance: 0
@@ -527,280 +723,84 @@ contractBalance 32: 0
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/predictions/staking.test.ts" timestamp="2025-02-05T10:03:19.952Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.349">
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
+    <testsuite name="tests/predictions/staking.test.ts" timestamp="2025-02-05T16:30:50.470Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.38">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; err too few categories" time="0.015">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create binary market ok" time="0.016">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create ok" time="0.014">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create ok" time="0.016">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.018">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake ok" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.018">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.021">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
-        </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve ok" time="0.022">
         </testcase>
         <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.023">
+        </testcase>
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.024">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim loser ok" time="0.021">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim loser ok" time="0.024">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+        <testcase classname="tests/predictions/staking.test.ts" name="claiming errors &gt; claim winner ok" time="0.027">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; user can&apos;t commit more than their balance" time="0.015">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; user can&apos;t commit more than their balance" time="0.017">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; err-already-concluded" time="0.018">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction errors &gt; err-already-concluded" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; user transfers exact stake" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; user transfers exact stake" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; fees are collected up front from prediction stakes" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; fees are collected up front from prediction stakes" time="0.019">
         </testcase>
-        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; alice hedges yes and no" time="0.017">
+        <testcase classname="tests/predictions/staking.test.ts" name="prediction fees and stakes &gt; alice hedges yes and no" time="0.018">
         </testcase>
     </testsuite>
-    <testsuite name="tests/sbtc/claims.test.ts" timestamp="2025-02-05T10:03:19.953Z" hostname="Mikes-MacBook-Pro.local" tests="21" failures="0" errors="0" skipped="0" time="0.371">
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create binary market ok" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create ok" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim loser ok" time="0.021">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-found" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-user-balance-unknown" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.016">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-user-not-winner" time="0.017">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-winning-pool-is-zero" time="0.003">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="claiming errors &gt; err-market-not-concluded" time="0.016">
-        </testcase>
-        <testcase classname="tests/sbtc/claims.test.ts" name="successful claim &gt; bob wins 50% of pool" time="0.023">
-            <system-out>
-contractBalance 215: undefined
-contractBalance 228: undefined
-contractBalance 242: undefined
-
-            </system-out>
-        </testcase>
-    </testsuite>
-    <testsuite name="tests/sbtc/scenarios.test.ts" timestamp="2025-02-05T10:03:19.955Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.398">
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create ok" time="0.014">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake ok" time="0.016">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve ok" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.022">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim loser ok" time="0.021">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="claiming errors &gt; claim winner ok" time="0.024">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stake 100STX on YES, market resolves yes" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100STX on yes, Bob 100STX on NO market resolves yes" time="0.021">
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="check actual claims vs expected for some scenarios &gt; Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.031">
-            <system-out>
-contractBalance: undefined
-contractBalance: undefined
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.027">
-            <system-out>
-contractBalance: undefined
-contractBalance: undefined
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/scenarios.test.ts" name="Alice stakes 100 STX on YES, Bob stakes 50 STX on YES, Tom stakes 200 STX on NO, Annie stakes 20 STX on NO, market resolves NO" time="0.043">
-            <system-out>
-contractBalance: undefined
-contractBalance: undefined
-contractBalance: undefined
-contractBalance 32: undefined
-contractBalance 32: undefined
-
-            </system-out>
-        </testcase>
-    </testsuite>
-    <testsuite name="tests/sbtc/staking.test.ts" timestamp="2025-02-05T10:03:19.956Z" hostname="Mikes-MacBook-Pro.local" tests="19" failures="0" errors="0" skipped="0" time="0.349">
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; err too few categories" time="0.013">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create binary market ok" time="0.014">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create ok" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.017">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake ok" time="0.017">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.016">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.019">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.02">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.023">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim loser ok" time="0.021">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
-            <system-out>
-contractBalance : bde023-market-predicting : 2970
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="prediction errors &gt; user can&apos;t commit more than their balance" time="0.015">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="prediction errors &gt; err-already-concluded" time="0.018">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; user transfers exact stake" time="0.018">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; fees are collected up front from prediction stakes" time="0.018">
-        </testcase>
-        <testcase classname="tests/sbtc/staking.test.ts" name="prediction fees and stakes &gt; alice hedges yes and no" time="0.017">
-        </testcase>
-    </testsuite>
-    <testsuite name="tests/voting/voting.test.ts" timestamp="2025-02-05T10:03:19.957Z" hostname="Mikes-MacBook-Pro.local" tests="25" failures="0" errors="0" skipped="0" time="0.548">
+    <testsuite name="tests/voting/voting.test.ts" timestamp="2025-02-05T16:30:50.471Z" hostname="Mikes-MacBook-Pro.local" tests="25" failures="0" errors="0" skipped="0" time="0.563">
         <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; err too few categories" time="0.023">
         </testcase>
         <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create binary market ok" time="0.017">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create ok" time="0.016">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create ok" time="0.015">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.019">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.018">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake ok" time="0.018">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake ok" time="0.019">
         </testcase>
         <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.018">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.02">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.021">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve ok" time="0.02">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve ok" time="0.021">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.021">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.022">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -812,13 +812,13 @@ contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; claim loser ok" time="0.022">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; claim loser ok" time="0.023">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
             </system-out>
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; claim winner ok" time="0.025">
+        <testcase classname="tests/voting/voting.test.ts" name="claiming errors &gt; claim winner ok" time="0.026">
             <system-out>
 contractBalance : bde023-market-predicting : 2970
 
@@ -826,21 +826,21 @@ contractBalance : bde023-market-predicting : 2970
         </testcase>
         <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; err-disputer-must-have-stake" time="0.019">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; err-unauthorised - dao function" time="0.018">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; err-unauthorised - dao function" time="0.019">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; staker can create market vote" time="0.021">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; staker can create market vote" time="0.022">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; staker can create market vote" time="0.021">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; staker can create market vote" time="0.023">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote cant close before voting window" time="0.024">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote cant close before voting window" time="0.025">
         </testcase>
         <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote can close after voting window with no votes" time="0.028">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote cant vote after end" time="0.024">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote cant vote after end" time="0.025">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; cant vote with more than current unlocked bdg balance" time="0.025">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; cant vote with more than current unlocked bdg balance" time="0.026">
         </testcase>
-        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; can vote before end" time="0.025">
+        <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; can vote before end" time="0.026">
         </testcase>
         <testcase classname="tests/voting/voting.test.ts" name="voting on resolution &gt; vote closes true with for votes" time="0.029">
         </testcase>
