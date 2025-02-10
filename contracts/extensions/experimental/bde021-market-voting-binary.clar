@@ -9,7 +9,7 @@
 
 (impl-trait .extension-trait.extension-trait)
 (use-trait nft-trait .sip009-nft-trait.nft-trait)
-(use-trait ft-trait .sip010-ft-trait.sip010-ft-trait)
+(use-trait ft-trait  .sip010-ft-trait.sip010-ft-trait)
 (use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)
 
 (define-constant err-unauthorised (err u2100))

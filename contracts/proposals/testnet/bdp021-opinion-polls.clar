@@ -1,6 +1,6 @@
 ;; Title: BDP021 Opinion Polling
 ;; Author: mijoco.btc
-;; Depends-On: 
+;; Depends-On:
 ;; Synopsis:
 ;; Enables quick opinion polling functionality.
 ;; Description:

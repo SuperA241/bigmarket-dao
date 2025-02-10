@@ -17,23 +17,45 @@ path = ".cache"
 #trusted_caller = true
 #callee_filter = true
 
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip010-ft-trait"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip009-nft-trait"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc"
+
+[contracts.sip009-nft-trait]
+path = "contracts/traits/sip009-nft-trait.clar"
+
+[contracts.sip010-ft-trait]
+path = "contracts/traits/sip010-ft-trait.clar"
+
 [contracts.extension-trait]
 path = "contracts/traits/extension-trait.clar"
 
 [contracts.proposal-trait]
 path = "contracts/traits/proposal-trait.clar"
 
-[contracts.sip010-ft-trait]
-path = "contracts/traits/sip010-ft-trait.clar"
-
-[contracts.sip009-nft-trait]
-path = "contracts/traits/sip009-nft-trait.clar"
-
 [contracts.prediction-market-trait]
 path = "contracts/traits/prediction-market-trait.clar"
 
 [contracts.governance-token-trait]
 path = "contracts/traits/governance-token-trait.clar"
+
+[contracts.wrapped-stx]
+path = "contracts/external/wrapped-stx.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.sbtc]
+path = "contracts/external/sbtc.clar"
+clarity_version = 3
+epoch = "3.0"
 
 [contracts.bitcoin-dao]
 path = "contracts/bitcoin-dao.clar"
@@ -82,16 +104,6 @@ epoch = "3.0"
 
 [contracts.bde022-market-gating]
 path = "contracts/extensions/bde022-market-gating.clar"
-clarity_version = 3
-epoch = "3.0"
-
-[contracts.wrapped-stx]
-path = "contracts/external/wrapped-stx.clar"
-clarity_version = 3
-epoch = "3.0"
-
-[contracts.sbtc]
-path = "contracts/external/sbtc.clar"
 clarity_version = 3
 epoch = "3.0"
 

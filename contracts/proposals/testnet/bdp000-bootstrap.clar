@@ -24,21 +24,21 @@
 			)
 		))
 		;; Set core team members.
-		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6 true))
-		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM true))
+		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ true))
+		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849 true))
 
 		;; Set executive team members.
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6 true))
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849 true))
 		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09 true))
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STT112P0GC76KK7DRTZ88PJ1DNYGDNSKBWQJAQ84 true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STTCAQJM6D5J1WAH1Z3X5A3NFN7FRSBHYCF7DE17 true))
 		(try! (contract-call? .bde004-core-execute set-signals-required u2)) ;; signal from 3 out of 4 team members requied.
 
 		;; configure prediction markets
-		;; allowedCreators = ["ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6", "ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
+		;; allowedCreators = ["ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ", "STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
 		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0xe6b0a3652319a9d8735f2fde4f36e578abc6eeb3c5eab85dbc994afc034ae8ee))
 		(try! (contract-call? .bde023-market-predicting set-resolution-agent 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ))
-		(try! (contract-call? .bde023-market-predicting set-dev-fund 'STT112P0GC76KK7DRTZ88PJ1DNYGDNSKBWQJAQ84))
+		(try! (contract-call? .bde023-market-predicting set-dev-fund 'STTCAQJM6D5J1WAH1Z3X5A3NFN7FRSBHYCF7DE17))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
 		(try! (contract-call? .bde023-market-predicting set-dao-treasury .bde006-treasury))
 		(try! (contract-call? .bde023-market-predicting set-market-create-fee u1000000))
@@ -56,8 +56,8 @@
 		;; Fake sbtc mint.
 		(try! (contract-call? .sbtc sbtc-mint-many
 			(list
-				{amount: u1000000000000000, recipient: 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6}
-				{amount: u1000000000000000, recipient: 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM}
+				{amount: u1000000000000000, recipient: 'ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ}
+				{amount: u1000000000000000, recipient: 'STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849}
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09}
 				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
@@ -69,7 +69,7 @@
 		(try! (contract-call? .bde000-governance-token set-core-team-vesting
 			(list
 				{recipient: sender, start-block: burn-block-height, duration: u105120}
-				{recipient: 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849, start-block: burn-block-height, duration: u105120} 
 				{recipient: 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09, start-block: burn-block-height, duration: u105120} 
 				{recipient: 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, start-block: burn-block-height, duration: u105120}
 				{recipient: 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, start-block: burn-block-height, duration: u105120}
