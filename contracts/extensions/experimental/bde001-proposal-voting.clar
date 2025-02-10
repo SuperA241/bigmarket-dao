@@ -1,5 +1,5 @@
 ;; Title: BDE001 Snapshot Proposal Voting
-;; Author: Mike Cohen (based upon work of Marvin Janssen)
+;; Author: mijoco.btc (based upon work of Marvin Janssen)
 ;; Depends-On: 
 ;; Synopsis:
 ;; This extension is a concept that allows all STX holders to

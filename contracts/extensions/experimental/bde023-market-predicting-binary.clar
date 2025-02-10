@@ -1,5 +1,5 @@
 ;; Title: BDE023 binary market preditions
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Depends-On: 
 ;; Synopsis:
 ;; Implements a simple binary prediciton market.

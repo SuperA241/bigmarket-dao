@@ -1,5 +1,5 @@
 ;; Title: BDE021 Poll Gating
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Depends-On: 
 ;; Synopsis:
 ;; Efficient verification of access control using merkle roots.
@@ -61,6 +61,7 @@
         ;; construct the key from the contract-id
         (principal-contract (unwrap! (principal-destruct? contract-id) (err u1001)))
         (contract-bytes (get hash-bytes principal-contract))
+        ;; panics if not contract principal
         (contract-name (unwrap! (to-consensus-buff? (unwrap! (get name principal-contract) err-expecting-an-owner)) err-expecting-an-owner))
         (contract-key (sha256 (concat contract-bytes contract-name )))
     )
@@ -113,7 +114,7 @@
   )
   (let
       (
-        (owner (unwrap! (contract-call? nft-contract get-owner token-id) (err u301)))
+        (owner (unwrap! (contract-call? nft-contract get-owner token-id) err-not-nft-owner))
       )
     (ok (is-eq (unwrap! owner err-expecting-an-owner) voter))
   ))
@@ -125,7 +126,7 @@
   )
   (let
       (
-        (balance (unwrap! (contract-call? ft-contract get-balance voter) (err u304)))
+        (balance (unwrap! (contract-call? ft-contract get-balance voter) err-not-ft-owner))
       )
     (ok (>= balance quantity))
   ))

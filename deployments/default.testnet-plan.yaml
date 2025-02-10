@@ -10,42 +10,42 @@ plan:
       transactions:
         - contract-publish:
             contract-name: extension-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 940
             path: contracts/traits/extension-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: proposal-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 820
             path: contracts/traits/proposal-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: governance-token-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 4900
             path: contracts/traits/governance-token-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: sip010-ft-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 8120
             path: contracts/traits/sip010-ft-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: voting-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 3820
-            path: contracts/traits/voting-trait.clar
+            contract-name: prediction-market-trait
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 1890
+            path: contracts/traits/prediction-market-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: sip009-nft-trait
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 4690
             path: contracts/traits/sip009-nft-trait.clar
             anchor-block-only: true
@@ -55,84 +55,84 @@ plan:
       transactions:
         - contract-publish:
             contract-name: bitcoin-dao
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 27570
             path: contracts/bitcoin-dao.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde000-governance-token
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 42300
             path: contracts/extensions/bde000-governance-token.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde001-proposal-voting-tokenised
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 92840
             path: contracts/extensions/bde001-proposal-voting-tokenised.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde003-core-proposals-tokenised
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 26490
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 25970
             path: contracts/extensions/bde003-core-proposals-tokenised.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde004-core-execute
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 36850
             path: contracts/extensions/bde004-core-execute.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde006-treasury
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 50690
             path: contracts/extensions/bde006-treasury.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bde021-market-voting
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 127590
+            path: contracts/extensions/bde021-market-voting.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bde022-market-gating
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 89930
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 80840
             path: contracts/extensions/bde022-market-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde023-market-predicting
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 199000
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 188770
             path: contracts/extensions/bde023-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bde021-market-voting
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 111650
-            path: contracts/extensions/bde021-market-voting.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: bdp000-bootstrap
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
-            cost: 34400
-            path: contracts/proposals/testnet/bdp000-bootstrap.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
             contract-name: sbtc
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 25790
             path: contracts/external/sbtc.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bdp000-bootstrap
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
+            cost: 44570
+            path: contracts/proposals/testnet/bdp000-bootstrap.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: wrapped-stx
-            expected-sender: ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W
+            expected-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
             cost: 6720
             path: contracts/external/wrapped-stx.clar
             anchor-block-only: true

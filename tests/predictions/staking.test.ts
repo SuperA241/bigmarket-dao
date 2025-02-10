@@ -66,7 +66,8 @@ describe("prediction fees and stakes", () => {
           "resolution-state": uintCV(0),
           "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
-          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx")
+          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx"),
+          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bde022-market-gating")
         })
       )
     );
@@ -84,7 +85,7 @@ describe("prediction fees and stakes", () => {
       alice
     );
     expect(data.result).toEqual(
-      Cl.some( 
+      Cl.some(
         Cl.tuple({
           creator: principalCV(deployer),
           "market-data-hash": bufferFromHex(metadataHash()),
@@ -95,7 +96,8 @@ describe("prediction fees and stakes", () => {
           "resolution-state": uintCV(0),
           "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
-          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx")
+          token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","wrapped-stx"),
+          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bde022-market-gating")
         })
       )
     );

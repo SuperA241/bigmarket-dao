@@ -1,5 +1,5 @@
 ;; Title: BDE008 Funded Custom End Proposal Submission
-;; Author: Marvin Janssen & Mike Cohen
+;; Author: Marvin Janssen & mijoco.btc
 ;; Depends-On: BDE001, BDE007
 ;; Synopsis:
 ;; This extension part of the core of Bitcoin DAO. It allows members to

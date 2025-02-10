@@ -1,5 +1,5 @@
 ;; Title: BDE004 Core Execute
-;; Author: Mike Cohen (based on Marvin Janssen)
+;; Author: mijoco.btc (based on Marvin Janssen)
 ;; Depends-On: 
 ;; Synopsis:
 ;; This extension allows a small number of very trusted principals to immediately

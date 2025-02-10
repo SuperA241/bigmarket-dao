@@ -1,5 +1,5 @@
 ;; Title: BDP000 Add Resource
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Synopsis:
 ;; sets core team sunset height.
 

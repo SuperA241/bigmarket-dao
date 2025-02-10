@@ -109,7 +109,7 @@ describe("prediction contract", () => {
 
       // betty pays thed market creat fee of 1000 but receives 10% of alice winnings
       assertUserBalance(alice, 99999999998075n)
-      assertUserBalance(betty, 100000000000000n - 1000n + 950n)
+      assertUserBalance(`${deployer}.bde022-market-gating`, 950n)
       assertUserBalance(deployer, 100000000000000n)
       assertStakeBalance(alice, 0, 0)
       assertContractBalance(marketPredicting, 0n)

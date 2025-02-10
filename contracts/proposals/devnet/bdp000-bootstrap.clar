@@ -5,6 +5,8 @@
 
 (impl-trait .proposal-trait.proposal-trait)
 
+(define-constant token-supply u10000000000000)
+
 (define-public (execute (sender principal))
 	(begin
 		;; Enable genesis extensions.
@@ -15,6 +17,7 @@
 				{extension: .bde003-core-proposals-tokenised, enabled: true}
 				{extension: .bde004-core-execute, enabled: true}
 				{extension: .bde006-treasury, enabled: true}
+				{extension: .bde010-token-sale, enabled: true}
 				{extension: .bde021-market-voting, enabled: true}
 				{extension: .bde022-market-gating, enabled: true}
 				{extension: .bde023-market-predicting, enabled: true}
@@ -49,13 +52,13 @@
 		(try! (contract-call? .bde023-market-predicting set-dispute-window-length u24))
 
 		(try! (contract-call? .bde021-market-voting set-voting-duration u24))
+		(try! (contract-call? .bde010-token-sale initialize-ido))
 
 		;;(try! (contract-call? .bde023-market-predicting set-allowed-token .bde000-governance-token true))
 		(try! (contract-call? .sbtc sbtc-mint-many
 			(list
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
-				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
 				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
 				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
@@ -63,14 +66,25 @@
 			)
 		))
 
-		;; Mint initial token supply.
+		;; core team voting rights unlock over u105120 bitcoin
+		;; core team voting rights unlock over u105120 bitcoin block period
+		(try! (contract-call? .bde000-governance-token set-core-team-vesting
+			(list
+				{recipient: sender, start-block: burn-block-height, duration: u105120}
+				{recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG, start-block: burn-block-height, duration: u105120}
+				{recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC, start-block: burn-block-height, duration: u105120}
+			)
+		))
 		(try! (contract-call? .bde000-governance-token bdg-mint-many
 			(list
 				{amount: u1000000000, recipient: sender}
 				{amount: u1000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
 				{amount: u1000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
 				{amount: u1000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
-				{amount: u1000000000000, recipient: .bde006-treasury}
+				;;{amount: u1000000000, recipient: .bde006-treasury}
+				{amount: (/ (* u1000 token-supply) u10000), recipient: .bde006-treasury}
 			)
 		))
 

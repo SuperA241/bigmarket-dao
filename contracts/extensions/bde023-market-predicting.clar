@@ -1,5 +1,5 @@
 ;; Title: BDE023 categorical market preditions
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Depends-On: 
 ;; Synopsis:
 ;; Implements a categorical prediciton market.
@@ -68,6 +68,7 @@
   {
 		market-data-hash: (buff 32),
     token: principal,
+    treasury: principal,
     creator: principal,
     market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
@@ -179,7 +180,7 @@
 ;; ---------- Market Functions ----------
 
 ;; Create a new categorical market
-(define-public (create-market (categories (list 10 (string-ascii 32))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))))
+(define-public (create-market (categories (list 10 (string-ascii 32))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
@@ -191,7 +192,7 @@
 		  (asserts! (is-allowed-token (contract-of token)) err-invalid-token)
       ;; ensure user pays creation fee if required
       (if (and (not (is-eq tx-sender (var-get resolution-agent))) (> (var-get market-create-fee) u0))
-        (try! (stx-transfer? (var-get market-create-fee) tx-sender .bde006-treasury))
+        (try! (stx-transfer? (var-get market-create-fee) tx-sender (var-get dao-treasury)))
         true
       )
       ;; ensure the user is allowed to create if gating by merkle proof is required
@@ -203,6 +204,7 @@
         {
           market-data-hash: market-data-hash,
           token: (contract-of token),
+          treasury: treasury,
           creator: tx-sender,
           market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
@@ -327,6 +329,9 @@
     ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
 
+    ;; prevent market getting locked in unresolved state
+    (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
+
     (asserts! (is-eq data-hash market-data-hash) err-market-not-found) 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
     (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
@@ -399,15 +404,16 @@
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (original-sender tx-sender)
-        (creator (get creator md))
+        (treasury (get treasury md))
         (market-fee-bips (get market-fee-bips md))
-        (user-share (/ (* user-stake total-pool) winning-pool))
+        (user-share (if (> winning-pool u0) (/ (* user-stake total-pool) winning-pool) u0))
         (daofee (/ (* user-share (var-get dao-fee-bips)) u10000))
         (marketfee (/ (* user-share market-fee-bips) u10000))
         (user-share-net (- user-share (+ daofee marketfee)))
     )
     (begin
       ;; Ensure inputs are valid
+      (asserts! (> winning-pool u0) err-amount-too-low)
       (asserts! (> user-share-net u0) err-user-share-is-zero)
       (asserts! (> daofee u0) err-dao-fee-bips-is-zero)
 
@@ -428,7 +434,7 @@
             true
           )
           (if (> marketfee u0) 
-            (try! (contract-call? token transfer marketfee tx-sender creator none))
+            (try! (contract-call? token transfer marketfee tx-sender treasury none))
             true
           )
         )

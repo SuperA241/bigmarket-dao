@@ -63,7 +63,7 @@ plan:
         - contract-publish:
             contract-name: bde000-governance-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 42300
+            cost: 82600
             path: contracts/extensions/bde000-governance-token.clar
             anchor-block-only: true
             clarity-version: 3
@@ -96,6 +96,13 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bde010-token-sale
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 65230
+            path: contracts/extensions/bde010-token-sale.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bde021-market-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 127590
@@ -105,14 +112,14 @@ plan:
         - contract-publish:
             contract-name: bde022-market-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 80840
+            cost: 81410
             path: contracts/extensions/bde022-market-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bde023-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 188770
+            cost: 192370
             path: contracts/extensions/bde023-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -126,7 +133,7 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 42740
+            cost: 51280
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -135,6 +142,62 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 3360
             path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-1
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-1.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-2
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-2.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-3
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-3.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-4
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-5
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-5.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-6
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-6.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-advance-stage-7
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2490
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-7.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-cancel-stage
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2480
+            path: contracts/proposals/devnet/unit-tests/bdp001-cancel-stage.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -159,6 +222,16 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bdp001-initialise-token-sale
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 2460
+            path: contracts/proposals/devnet/unit-tests/bdp001-initialise-token-sale.clar
+            anchor-block-only: true
+            clarity-version: 3
+      epoch: "3.0"
+    - id: 2
+      transactions:
+        - contract-publish:
             contract-name: bdp001-market-fees
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4960
@@ -170,6 +243,13 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4900
             path: contracts/proposals/devnet/unit-tests/bdp001-market-fees-1.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-reset-allocation
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 6220
+            path: contracts/proposals/devnet/unit-tests/bdp001-reset-allocation.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:

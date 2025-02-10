@@ -1,5 +1,5 @@
 ;; Title: Gating
-;; Author(s): Mike Cohen
+;; Author(s): mijoco.btc
 ;; Synopsis:
 ;; Description:
 

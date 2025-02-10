@@ -5,6 +5,8 @@
 
 (impl-trait .proposal-trait.proposal-trait)
 
+(define-constant token-supply u10000000000000)
+
 (define-public (execute (sender principal))
 	(begin
 		;; Enable genesis extensions.
@@ -15,27 +17,28 @@
 				{extension: .bde003-core-proposals-tokenised, enabled: true}
 				{extension: .bde004-core-execute, enabled: true}
 				{extension: .bde006-treasury, enabled: true}
+				{extension: .bde010-token-sale, enabled: true}
 				{extension: .bde021-market-voting, enabled: true}
 				{extension: .bde022-market-gating, enabled: true}
 				{extension: .bde023-market-predicting, enabled: true}
 			)
 		))
 		;; Set core team members.
-		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W true))
-		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST1EVGZ9JDRDKMMVJKNQCFBG1JCNDAEDFJRV15S3C true))
+		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6 true))
+		(try! (contract-call? .bde003-core-proposals-tokenised set-core-team-member 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM true))
 
 		;; Set executive team members.
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W true))
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST1EVGZ9JDRDKMMVJKNQCFBG1JCNDAEDFJRV15S3C true))
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST3ZN50B98X3WGVDH0DG8MSTMB7GNRH035EFBQ4R5 true))
-		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST1JGAVFJ7N63M2CC0CY2RSKSQWK94DBVKK1TBAHT true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6 true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09 true))
+		(try! (contract-call? .bde004-core-execute set-executive-team-member 'STT112P0GC76KK7DRTZ88PJ1DNYGDNSKBWQJAQ84 true))
 		(try! (contract-call? .bde004-core-execute set-signals-required u2)) ;; signal from 3 out of 4 team members requied.
 
 		;; configure prediction markets
-		;; allowedCreators = ["ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W", "ST1EVGZ9JDRDKMMVJKNQCFBG1JCNDAEDFJRV15S3C", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
-		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0x88bbe7a9506b98e89f83df1cd16fea8402a1fcdd56c7e021b109a053bbf01cf7))
+		;; allowedCreators = ["ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6", "ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
+		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0xe6b0a3652319a9d8735f2fde4f36e578abc6eeb3c5eab85dbc994afc034ae8ee))
 		(try! (contract-call? .bde023-market-predicting set-resolution-agent 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ))
-		(try! (contract-call? .bde023-market-predicting set-dev-fund 'ST1JGAVFJ7N63M2CC0CY2RSKSQWK94DBVKK1TBAHT))
+		(try! (contract-call? .bde023-market-predicting set-dev-fund 'STT112P0GC76KK7DRTZ88PJ1DNYGDNSKBWQJAQ84))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
 		(try! (contract-call? .bde023-market-predicting set-dao-treasury .bde006-treasury))
 		(try! (contract-call? .bde023-market-predicting set-market-create-fee u1000000))
@@ -48,28 +51,33 @@
 		(try! (contract-call? .bde023-market-predicting set-allowed-token .bde000-governance-token true))
 
 		(try! (contract-call? .bde021-market-voting set-voting-duration u12))
+		(try! (contract-call? .bde010-token-sale initialize-ido))
 
 		;; Fake sbtc mint.
 		(try! (contract-call? .sbtc sbtc-mint-many
 			(list
-				{amount: u1000000000000000, recipient: 'ST2293W5GRAYMAQTC5D3NZ0R5YR4XT56NW8P920W}
-				{amount: u1000000000000000, recipient: 'ST1EVGZ9JDRDKMMVJKNQCFBG1JCNDAEDFJRV15S3C}
+				{amount: u1000000000000000, recipient: 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6}
+				{amount: u1000000000000000, recipient: 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM}
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
-				{amount: u1000000000000000, recipient: 'ST3ZN50B98X3WGVDH0DG8MSTMB7GNRH035EFBQ4R5}
+				{amount: u1000000000000000, recipient: 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09}
 				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
 				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
 				{amount: u1000000000000000, recipient: 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ}
 			)
 		))
-		;; Mint initial token supply.
+		;; core team voting rights unlock over u105120 bitcoin block period 
+		(try! (contract-call? .bde000-governance-token set-core-team-vesting
+			(list
+				{recipient: sender, start-block: burn-block-height, duration: u105120}
+				{recipient: 'ST2N2GQGSDFC78XR5ASBNZHKXX21P7D5NES8C3VKM, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'STPBQA353JF9PC2T9NHEF0P155MNM7SMJ8KDGB09, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, start-block: burn-block-height, duration: u105120}
+				{recipient: 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, start-block: burn-block-height, duration: u105120}
+			)
+		))
 		(try! (contract-call? .bde000-governance-token bdg-mint-many
 			(list
-				{amount: u1000, recipient: sender}
-				{amount: u1000, recipient: 'ST1EVGZ9JDRDKMMVJKNQCFBG1JCNDAEDFJRV15S3C}
-				{amount: u1000, recipient: 'ST3ZN50B98X3WGVDH0DG8MSTMB7GNRH035EFBQ4R5}
-				{amount: u1000, recipient: 'ST1JGAVFJ7N63M2CC0CY2RSKSQWK94DBVKK1TBAHT}
-				{amount: u1000, recipient: 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ}
-				{amount: u1000000000, recipient: .bde006-treasury}
+				{amount: (/ (* u1000 token-supply) u10000), recipient: .bde006-treasury}
 			)
 		))
 

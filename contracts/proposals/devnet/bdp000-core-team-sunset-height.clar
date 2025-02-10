@@ -1,5 +1,5 @@
 ;; Title: set-core-team-sunset-height
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Synopsis:
 ;; sets core team sunset height.
 

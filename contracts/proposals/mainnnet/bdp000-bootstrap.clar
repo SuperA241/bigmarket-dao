@@ -1,5 +1,5 @@
 ;; Title: BDP000 Bootstrap
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Synopsis:
 ;; Boot proposal that sets the governance token, DAO parameters, and extensions, and
 ;; mints the initial governance tokens.

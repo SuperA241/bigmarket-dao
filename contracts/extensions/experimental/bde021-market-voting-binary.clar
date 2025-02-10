@@ -1,5 +1,5 @@
 ;; Title: BDE021 Opinion Polling
-;; Author: Mike Cohen
+;; Author: mijoco.btc
 ;; Depends-On: 
 ;; Synopsis:
 ;; Enables quick opinion polling functionality.

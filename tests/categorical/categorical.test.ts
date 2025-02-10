@@ -38,7 +38,7 @@ export async function createBinaryMarketWithGating(marketId:number, proof:any, k
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), (fee) ? Cl.some(Cl.uint(fee)) : Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex((key) ? key : metadataHash()),
-      proof, 
+      proof, Cl.principal(`${deployer}.bde022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -57,7 +57,7 @@ export async function createBinaryMarketWithFees(marketId:number, fee:number, cr
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), Cl.some(Cl.uint(fee)),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), 
+      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -72,7 +72,7 @@ export async function createBinaryMarketWithErrorCode(errorCode:number, fee?:num
       Cl.list([Cl.stringAscii('lion'), Cl.stringAscii('tiger')]), (fee) ? Cl.some(Cl.uint(fee)) : Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), 
+      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -87,7 +87,7 @@ export async function createBinaryMarket(marketId:number, creator?: string, toke
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), 
+      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -103,7 +103,7 @@ async function createCategoricalMarket(marketId:number, creator?: string, token?
       Cl.list([Cl.stringAscii('lion'), Cl.stringAscii('tiger'), Cl.stringAscii('cheetah')]), Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), 
+      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -180,7 +180,7 @@ describe("claiming errors", () => {
         Cl.list([Cl.stringAscii('lion')]), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
-        Cl.list([]),
+        Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
       ],
       deployer
     ); 

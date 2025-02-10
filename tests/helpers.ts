@@ -14,6 +14,7 @@ export const tom = accounts.get('wallet_3')!;
 export const betty = accounts.get('wallet_4')!;
 export const fred = accounts.get('wallet_5')!;
 export const wallace = accounts.get('wallet_6')!;
+export const piedro = accounts.get('wallet_7')!;
 export const annie = accounts.get("wallet_4")!;
 export const developer = accounts.get("wallet_8")!;
 
@@ -196,7 +197,7 @@ export function prepareVotes(
   );
 }
 
-export async function passProposalByCoreVote(proposal: string) {
+export async function passProposalByCoreVote(proposal: string, errorCode?: number) {
   await isValidExtension(`${deployer}.bde000-governance-token`);
   await isValidExtension(`${deployer}.bde001-proposal-voting-tokenised`);
   await isValidExtension(`${deployer}.bde004-core-execute`);
@@ -242,6 +243,10 @@ export async function passProposalByCoreVote(proposal: string) {
     [Cl.principal(`${deployer}.${proposal}`)],
     bob
   );
-  expect(concludeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
+  if (errorCode) {
+    expect(concludeResponse.result).toEqual(Cl.error(Cl.uint(errorCode)));
+  } else {
+    expect(concludeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
+  }
   return concludeResponse;
 }
