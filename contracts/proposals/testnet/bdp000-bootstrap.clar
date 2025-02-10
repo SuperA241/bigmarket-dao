@@ -37,7 +37,7 @@
 		;; configure prediction markets
 		;; allowedCreators = ["ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ", "STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
 		(try! (contract-call? .bde022-market-gating set-merkle-root-by-principal .bde023-market-predicting 0xe6b0a3652319a9d8735f2fde4f36e578abc6eeb3c5eab85dbc994afc034ae8ee))
-		(try! (contract-call? .bde023-market-predicting set-resolution-agent 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ))
+		(try! (contract-call? .bde023-market-predicting set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
 		(try! (contract-call? .bde023-market-predicting set-dev-fund 'STTCAQJM6D5J1WAH1Z3X5A3NFN7FRSBHYCF7DE17))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
 		(try! (contract-call? .bde023-market-predicting set-dao-treasury .bde006-treasury))

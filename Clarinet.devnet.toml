@@ -29,6 +29,18 @@ contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx"
 [[project.requirements]]
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc"
 
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.extension-trait"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.proposal-trait"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait"
+
+[[project.requirements]]
+contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.governance-token-trait"
+
 [contracts.sip009-nft-trait]
 path = "contracts/traits/sip009-nft-trait.clar"
 
