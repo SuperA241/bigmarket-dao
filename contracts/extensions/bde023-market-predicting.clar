@@ -1,6 +1,4 @@
 ;; Title: BDE023 categorical market preditions
-;; Author: mijoco.btc
-;; Depends-On: 
 ;; Synopsis:
 ;; Implements a categorical prediciton market.
 ;; Description:

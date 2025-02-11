@@ -1,6 +1,4 @@
 ;; Title: BDE010 Token Sale
-;; Author: mijoco.btc
-;; Depends-On: 
 ;; Synopsis:
 ;; Enables token sale for govenernance tokens.
 ;; Description:

@@ -1,6 +1,4 @@
 ;; Title: BDE004 Core Execute
-;; Author: mijoco.btc (based on Marvin Janssen)
-;; Depends-On: 
 ;; Synopsis:
 ;; This extension allows a small number of very trusted principals to immediately
 ;; execute a proposal once a super majority is reached.

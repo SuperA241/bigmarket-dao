@@ -48,19 +48,12 @@ genesis:
 plan:
   batches:
     - id: 0
-      transactions:
-        - emulated-contract-publish:
-            contract-name: nft-trait
-            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
-            path: "./.cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
-            path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
-            clarity-version: 1
+      transactions: []
       epoch: "2.0"
     - id: 1
+      transactions: []
+      epoch: "2.05"
+    - id: 2
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
@@ -72,8 +65,18 @@ plan:
             emulated-sender: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z
             path: "./.cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.clar"
             clarity-version: 1
-      epoch: "2.05"
-    - id: 2
+        - emulated-contract-publish:
+            contract-name: nft-trait
+            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
+            path: "./.cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
+            clarity-version: 1
+        - emulated-contract-publish:
+            contract-name: sip-010-trait-ft-standard
+            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
+            path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
+            clarity-version: 1
+      epoch: "2.1"
+    - id: 3
       transactions:
         - emulated-contract-publish:
             contract-name: sip-010-trait-ft-standard
@@ -81,7 +84,10 @@ plan:
             path: "./.cache/requirements/ST3VXT52QEQPZ5246A16RFNMR1PRJ96JK6YYX37N8.sip-010-trait-ft-standard.clar"
             clarity-version: 2
       epoch: "2.5"
-    - id: 3
+    - id: 4
+      transactions: []
+      epoch: "2.5"
+    - id: 5
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
@@ -209,7 +215,7 @@ plan:
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar
             clarity-version: 3
       epoch: "3.0"
-    - id: 4
+    - id: 6
       transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-5
@@ -291,4 +297,7 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/wrapped-stx.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 7
+      transactions: []
       epoch: "3.0"

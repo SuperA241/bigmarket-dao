@@ -1,6 +1,4 @@
 ;; Title: BDE003 Core Proposals
-;; Author: mijoco.btc (based upon work of Marvin Janssen)
-;; Depends-On: BDE001
 ;; Synopsis:
 ;; This extension allows for the creation of core proposals by a few trusted
 ;; principals.

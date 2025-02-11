@@ -1,6 +1,4 @@
 ;; Title: BDE001 Proposal Voting
-;; Author: mijoco.btc
-;; Depends-On: BDE000
 ;; Synopsis:
 ;; Allows governance token
 ;; holders to vote on and conclude proposals.

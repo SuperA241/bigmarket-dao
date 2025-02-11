@@ -1,6 +1,4 @@
 ;; Title: BDE021 Poll Gating
-;; Author: mijoco.btc
-;; Depends-On: 
 ;; Synopsis:
 ;; Efficient verification of access control using merkle roots.
 ;; Description:

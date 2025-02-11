@@ -1,6 +1,4 @@
 ;; Title: EDE006 Treasury
-;; Author: mijoco.btc (based upon work of Marvin Janssen)
-;; Depends-On:
 ;; Synopsis:
 ;; A treasury that can manage STX, SIP009, SIP010, and SIP013 tokens.
 ;; Description:

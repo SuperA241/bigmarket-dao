@@ -1,5 +1,4 @@
 ;; Bitcoin DAO
-;; Author mijoco.btc - based on Marvin Janssen' Executor DAO
 ;; Synopsis:
 ;; bitcoin-dao is the core of the dao framework.
 ;; Description:

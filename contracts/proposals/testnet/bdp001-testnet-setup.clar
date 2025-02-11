@@ -1,5 +1,4 @@
 ;; Title: BDP000 account gating
-;; Author: -
 ;; Description:
 ;; GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION
 

@@ -1,6 +1,4 @@
 ;; Title: bdp023-set-market-data
-;; Author: daoguy
-;; Depends-On: 
 ;; Synopsis:
 ;; Update prediction market variables.
 ;; Description:

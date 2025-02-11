@@ -1,5 +1,4 @@
 ;; Title: BDP001 Dev Fund
-;; Author: Marvin Janssen
 ;; Synopsis:
 ;; This proposal creates a simple dev fund that pays developers on a monthly basis.
 ;; Description:

@@ -1,5 +1,4 @@
 ;; Title: BDP000 Bootstrap
-;; Author: mijoco.btc
 ;; Description:
 ;; Sets up and configure the DAO
 

@@ -1,5 +1,4 @@
 ;; Title: BDP000 Core Sunset Height
-;; Author: mijoco.btc
 ;; Synopsis:
 ;; sets core team sunset height.
 
