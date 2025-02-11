@@ -14,8 +14,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@clarigen/core": "^2.1.2",
-    "@clarigen/test": "^2.1.2",
     "@hirosystems/clarinet-sdk": "^2.12.0",
     "@noble/hashes": "^1.7.1",
     "@stacks/encryption": "^7.0.2",
