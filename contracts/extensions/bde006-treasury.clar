@@ -11,7 +11,7 @@
 ;; Technically, the ExecutorDAO core can hold and transfer tokens
 ;; directly. The treasury extension merely adds a bit of separation.
 
-(impl-trait .extension-trait.extension-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 
 (define-constant err-unauthorised (err u3000))
 

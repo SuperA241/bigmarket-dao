@@ -8,8 +8,8 @@
 ;; decision making processes concerning 
 ;; changes and upgrades to the Stacks Network.
 
-(use-trait proposal-trait .proposal-trait.proposal-trait)
-(use-trait extension-trait .extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
+(use-trait extension-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 
 (define-constant err-unauthorised (err u1000))
 (define-constant err-already-executed (err u1001))

@@ -8,7 +8,7 @@
 ;; with some added functions to make it easier to manage by
 ;; Bitcoin DAO proposals and extensions.
 
-(impl-trait .sip010-ft-trait.sip010-ft-trait)
+(impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-not-token-owner (err u4))
@@ -67,7 +67,7 @@
 
 ;; --- Public functions
 
-;; sip010-ft-trait
+;; sip-010-trait
 
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
 	(begin

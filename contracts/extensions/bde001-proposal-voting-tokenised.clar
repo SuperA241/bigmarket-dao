@@ -12,8 +12,8 @@
 ;; votes in favour exceed the ones against. Votes may additionally be submitted as 
 ;; batched list of signed structured voting messages using SIP-018.
 
-(impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-proposal-already-executed (err u3002))

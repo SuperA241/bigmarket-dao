@@ -14,9 +14,9 @@
 ;; A custom majority of 66% mean the percent of votes for must be greater than 66 for
 ;; the vote to carry.
 
-(impl-trait .extension-trait.extension-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (impl-trait .voting-trait.voting-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-proposal-already-executed (err u3001))

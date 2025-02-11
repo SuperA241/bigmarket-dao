@@ -11,8 +11,8 @@
 ;; proposals can be made - set it to 0 to disable. The core team members, sunset period, and 
 ;; core vote duration can be changed by means of a future proposal.
 
-(impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 (use-trait voting-trait .voting-trait.voting-trait)
 
 (define-data-var core-team-sunset-height uint u0) ;; does not expire by default - can be changed by proposal

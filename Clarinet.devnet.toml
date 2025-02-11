@@ -1,5 +1,5 @@
 [project]
-name = "bitcoin-dao"
+name = "bigmarket-dao"
 description = 'Bitcoin Layer 2 DAO fork of Executor DAO'
 authors = ['mijoco']
 telemetry = false
@@ -18,10 +18,17 @@ path = ".cache"
 #callee_filter = true
 
 [[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip010-ft-trait"
+contract_id = "SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard"
 
 [[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip009-nft-trait"
+contract_id = "SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait"
+
+[[project.requirements]]
+contract_id = "SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait"
+
+[[project.requirements]]
+contract_id = "SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait"
+
 
 [[project.requirements]]
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx"
@@ -30,44 +37,11 @@ contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx"
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc"
 
 [[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.extension-trait"
-
-[[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.proposal-trait"
-
-[[project.requirements]]
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait"
 
 [[project.requirements]]
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.governance-token-trait"
 
-[contracts.sip009-nft-trait]
-path = "contracts/traits/sip009-nft-trait.clar"
-
-[contracts.sip010-ft-trait]
-path = "contracts/traits/sip010-ft-trait.clar"
-
-[contracts.extension-trait]
-path = "contracts/traits/extension-trait.clar"
-
-[contracts.proposal-trait]
-path = "contracts/traits/proposal-trait.clar"
-
-[contracts.prediction-market-trait]
-path = "contracts/traits/prediction-market-trait.clar"
-
-[contracts.governance-token-trait]
-path = "contracts/traits/governance-token-trait.clar"
-
-[contracts.wrapped-stx]
-path = "contracts/external/wrapped-stx.clar"
-clarity_version = 3
-epoch = "3.0"
-
-[contracts.sbtc]
-path = "contracts/external/sbtc.clar"
-clarity_version = 3
-epoch = "3.0"
 
 [contracts.bitcoin-dao]
 path = "contracts/bitcoin-dao.clar"

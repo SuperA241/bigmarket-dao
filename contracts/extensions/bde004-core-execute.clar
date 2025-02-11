@@ -12,8 +12,8 @@
 ;; time, set it to 0 to disable. The core executive team, parameters, and sunset period may be changed
 ;; by means of a future proposal.
 
-(impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-data-var executive-team-sunset-height uint u0) ;; does not expire by default - can be changed by proposal
 

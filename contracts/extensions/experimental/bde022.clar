@@ -3,9 +3,9 @@
 ;; Efficient verification of access control using merkle roots.
 
 ;; Define the SIP-009 and SIP-010 traits
-(use-trait nft-trait .sip009-nft-trait.nft-trait)
-(use-trait ft-trait .sip010-ft-trait.sip010-ft-trait)
-(impl-trait .extension-trait.extension-trait)
+(use-trait nft-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
+(use-trait ft-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 
 ;; ---------------- CONSTANTS & ERRORS ----------------
 (define-constant err-unauthorised (err u2200))

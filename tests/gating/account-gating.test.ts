@@ -11,7 +11,7 @@ const simnet = await setupSimnet();
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
-*/
+*/ 
 
 describe('gating market  creation', () => {
 	it("err-expecting-merkle-root-for-poll", async () => {
@@ -119,7 +119,7 @@ describe('gating market  creation', () => {
 	it("GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION", async () => {
 		constructDao(simnet);
 	  	passProposalByExecutiveSignals(simnet, 'bdp001-gating')
-		const allowedCreators = ["ST37GR4292BERRGXYVK317DQ1VCKJKZM375SQVBJZ", "STV37B0DG2K89FXDY1GJQWWGH4VGRBK6941GG849", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
+		const allowedCreators = ["ST2CS5XAA3FNHEQZRDVF6YY0NTAK7JFV7PKF1CPVM", "ST1W59M686N2VZE37TGJYJCYMR018NSZJV05WZ4CY", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
 		const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
 		let merklProof = generateMerkleProof(tree, "ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV");
 		const lookupRootKey = contractId2Key('ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV.bde023-market-predicting');

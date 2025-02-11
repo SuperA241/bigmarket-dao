@@ -3,7 +3,7 @@
 ;; Description:
 ;; Sets up and configure the DAO
 
-(impl-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant token-supply u10000000000000)
 
@@ -42,8 +42,8 @@
 		(try! (contract-call? .bde023-market-predicting set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
 		(try! (contract-call? .bde023-market-predicting set-dao-treasury .bde006-treasury))
 		(try! (contract-call? .bde023-market-predicting set-creation-gated true))
-		(try! (contract-call? .bde023-market-predicting set-allowed-token .wrapped-stx true))
-		(try! (contract-call? .bde023-market-predicting set-allowed-token .sbtc true))
+		(try! (contract-call? .bde023-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx true))
+		(try! (contract-call? .bde023-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc true))
 		
 		(try! (contract-call? .bde023-market-predicting set-market-fee-bips-max u300))
 		(try! (contract-call? .bde023-market-predicting set-market-create-fee u100000000))
@@ -55,7 +55,7 @@
 		(try! (contract-call? .bde010-token-sale initialize-ido))
 
 		;;(try! (contract-call? .bde023-market-predicting set-allowed-token .bde000-governance-token true))
-		(try! (contract-call? .sbtc sbtc-mint-many
+		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc sbtc-mint-many
 			(list
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}

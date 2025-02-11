@@ -11,8 +11,8 @@
 ;; stake in the market and disputes are resolved by dao / community
 ;; voting
 
-(use-trait ft-token .sip010-ft-trait.sip010-ft-trait)
-(impl-trait .prediction-market-trait.prediction-market-trait)
+(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait.prediction-market-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 ;; Market Types (1 => categorical market)

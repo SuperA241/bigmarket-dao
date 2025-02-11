@@ -14,8 +14,8 @@
 ;; custom majority for voting. This changes the threshold from the 
 ;; default of 50% to anything up to 100%.
 
-(impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant err-unauthorised (err u3100))
 (define-constant err-not-governance-token (err u3101))

@@ -6,7 +6,7 @@
 ;; traits
 ;;
 (impl-trait .payment-gateway-trait.payment-gateway-trait)
-(impl-trait .extension-trait.extension-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (impl-trait .resource-provider-trait.resource-provider-trait)
 
 ;; constants

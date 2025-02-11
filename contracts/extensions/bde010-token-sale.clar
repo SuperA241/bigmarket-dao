@@ -6,7 +6,7 @@
 ;; Description:
 ;; Allows to token sale over 6 stages with token price set at each stage by the current DAO.
 
-(impl-trait .extension-trait.extension-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 
 (define-constant err-unauthorised (err u5000))
 (define-constant err-invalid-stage (err u5001))
