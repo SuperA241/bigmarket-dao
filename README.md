@@ -1,6 +1,5 @@
 <img src="https://brightblock.org/logo/bm-logo-kight-blue.png" alt="BigMarket Logo" style="width: auto; max-width: 500px; display: inline-block; margin: 1rem auto;align:left;" />
 
-<br/>
 # BigMarket Contracts
 
 ## Description
