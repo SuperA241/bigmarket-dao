@@ -1,10 +1,6 @@
-;; Title: BDE000 Governance Token
-;; Synopsis:
-;; This extension defines the governance token of Bitcoin DAO.
+;; Title: sbtc test
 ;; Description:
-;; The governance token is a simple SIP010-compliant fungible token
-;; with some added functions to make it easier to manage by
-;; Bitcoin DAO proposals and extensions.
+;; simple sbtc sip 10 for testing market creation and staking.
 
 (impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
@@ -21,7 +17,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 (define-public (set-name (new-name (string-ascii 32)))

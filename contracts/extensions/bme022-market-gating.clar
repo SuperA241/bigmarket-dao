@@ -1,12 +1,12 @@
-;; Title: BDE021 Poll Gating
+;; Title: BME021 Market Gating
 ;; Synopsis:
-;; Efficient verification of access control using merkle roots.
+;; Efficient access control using merkle proofs.
 ;; Description:
-;; If the owner of a poll uploads a merkle root on poll creation the 
-;; voting contract can call into this contract to determine if the current 
-;; voter is allowed to vote - the rule are 1) the user must own eithr the 
-;; nft token or the amount of ft provided and the nft/ft contract id hash
-;; must be a hash leading to the merkle root and proven by the passed in proof.
+;; Provides gating functionality based on account (can-access-by-account) and
+;; ownership (can-access-by-ownership). The map of keys / roots are DAO managed.
+;; Keys can by any data hash or a specific contract id hash. For ownership the user
+;; must pass either an NFT or FT token and a merkle proof of ownership. For access
+;; by account the account principal is passed along with the proof.
 
 ;; Define the SIP-009 and SIP-010 traits
 (use-trait nft-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
@@ -30,8 +30,7 @@
 (define-constant err-account-proof-invalid (err u2214))
 (define-constant err-ownership-proof-invalid (err u2215))
 
-;; Merkle roots for each type of gated data
-;; key is a hash of a known identifier for example
+;; Merkle roots for gated data
 (define-map merkle-roots
   (buff 32)
   {
@@ -40,7 +39,7 @@
 )
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 (define-public (set-merkle-root (hashed-id (buff 32)) (root (buff 32)))
@@ -169,7 +168,7 @@
   ))
 
 (define-public (can-access-by-account
-    (sender principal)     ;; The hashed ID
+    (sender principal)
     (proof (list 10 (tuple (position bool) (hash (buff 32)))))       ;; The Merkle proof
   )
   (let

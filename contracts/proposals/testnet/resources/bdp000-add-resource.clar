@@ -7,7 +7,7 @@
 (define-public (execute (sender principal))
 	(begin
 
-		(try! (contract-call? .bde020-resource-manager add-resource u"edg-token-mint" u"Resource mints 10 EDG to recipient" u100))
+		(try! (contract-call? .bme020-resource-manager add-resource u"edg-token-mint" u"Resource mints 10 EDG to recipient" u100))
 
 		(ok true)
 	)

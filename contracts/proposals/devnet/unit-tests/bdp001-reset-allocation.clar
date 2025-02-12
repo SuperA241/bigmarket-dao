@@ -7,7 +7,7 @@
 
 (define-public (execute (sender principal))
 	(begin
-		(try! (contract-call? .bde000-governance-token set-core-team-vesting
+		(try! (contract-call? .bme000-governance-token set-core-team-vesting
 			(list
 			;; wallets 1 5 6 
 				{recipient: 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB, start-block: burn-block-height, duration: u100}

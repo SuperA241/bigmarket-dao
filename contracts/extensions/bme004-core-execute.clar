@@ -1,4 +1,4 @@
-;; Title: BDE004 Core Execute
+;; Title: BME04 Core Execute
 ;; Synopsis:
 ;; This extension allows a small number of very trusted principals to immediately
 ;; execute a proposal once a super majority is reached.
@@ -30,7 +30,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; --- Internal DAO functions
@@ -84,7 +84,7 @@
 		(asserts! (is-executive-team-member tx-sender) err-not-executive-team-member)
 		(asserts! (or (is-eq (var-get executive-team-sunset-height) u0) (< burn-block-height (var-get executive-team-sunset-height))) err-sunset-height-reached)
 		(and (>= signals (var-get executive-signals-required))
-			(try! (contract-call? .bitcoin-dao execute proposal tx-sender))
+			(try! (contract-call? .bigmarket-dao execute proposal tx-sender))
 		)
 		(map-set executive-action-signals {proposal: proposal-principal, team-member: tx-sender} true)
 		(map-set executive-action-signal-count proposal-principal signals)

@@ -1,21 +1,20 @@
 [project]
 name = "bigmarket-dao"
-description = 'Bitcoin Layer 2 DAO fork of Executor DAO'
-authors = ['mijoco']
-telemetry = false
+description = 'Prediction markets on Stacks'
+authors = []
+telemetry = true
 cache_dir = '.cache'
 clarity_version = 3
 epoch = "3.0"
 
-[project.cache_location]
-path = ".cache"
+[repl.analysis]
+passes = []
 
-#[repl.analysis]
-#passes = ["check_checker"]
-#strict = false
-#trusted_sender = true
-#trusted_caller = true
-#callee_filter = true
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
 
 [[project.requirements]]
 contract_id = "SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard"
@@ -36,60 +35,63 @@ contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx"
 [[project.requirements]]
 contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc"
 
-[[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait"
-
-[[project.requirements]]
-contract_id = "ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.governance-token-trait"
-
-
-[contracts.bitcoin-dao]
-path = "contracts/bitcoin-dao.clar"
+[contracts.prediction-market-trait]
+path = "contracts/traits/prediction-market-trait.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde000-governance-token]
-path = "contracts/extensions/bde000-governance-token.clar"
+[contracts.governance-token-trait]
+path = "contracts/traits/governance-token-trait.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde001-proposal-voting-tokenised]
-path = "contracts/extensions/bde001-proposal-voting-tokenised.clar"
+[contracts.bigmarket-dao]
+path = "contracts/bigmarket-dao.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde003-core-proposals-tokenised]
-path = "contracts/extensions/bde003-core-proposals-tokenised.clar"
+[contracts.bme000-governance-token]
+path = "contracts/extensions/bme000-governance-token.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde004-core-execute]
-path = "contracts/extensions/bde004-core-execute.clar"
+[contracts.bme001-proposal-voting]
+path = "contracts/extensions/bme001-proposal-voting.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde006-treasury]
-path = "contracts/extensions/bde006-treasury.clar"
+[contracts.bme003-core-proposals]
+path = "contracts/extensions/bme003-core-proposals.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde010-token-sale]
-path = "contracts/extensions/bde010-token-sale.clar"
+[contracts.bme004-core-execute]
+path = "contracts/extensions/bme004-core-execute.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde023-market-predicting]
-path = "contracts/extensions/bde023-market-predicting.clar"
+[contracts.bme006-treasury]
+path = "contracts/extensions/bme006-treasury.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde021-market-voting]
-path = "contracts/extensions/bde021-market-voting.clar"
+[contracts.bme010-token-sale]
+path = "contracts/extensions/bme010-token-sale.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bde022-market-gating]
-path = "contracts/extensions/bde022-market-gating.clar"
+[contracts.bme023-market-predicting]
+path = "contracts/extensions/bme023-market-predicting.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bme021-market-voting]
+path = "contracts/extensions/bme021-market-voting.clar"
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.bme022-market-gating]
+path = "contracts/extensions/bme022-market-gating.clar"
 clarity_version = 3
 epoch = "3.0"
 

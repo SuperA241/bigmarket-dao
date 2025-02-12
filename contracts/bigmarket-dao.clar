@@ -1,6 +1,6 @@
-;; Bitcoin DAO
+;; BigMarket DAO
 ;; Synopsis:
-;; bitcoin-dao is the core of the dao framework.
+;; bigmarket-dao is the core of the dao framework.
 ;; Description:
 ;; Valid extensions must be registered here. The DAO is bootstrapped
 ;; by calling construct with a bootstrap proposal.

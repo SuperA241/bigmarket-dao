@@ -1,19 +1,19 @@
-;; Title: BDE000 Governance Token
+;; Title: BME00 Governance Token
 ;; Synopsis:
-;; This extension defines the governance token of Bitcoin DAO.
+;; This extension defines the governance token of BigMarket DAO.
 ;; Description:
 ;; The governance token is a simple SIP010-compliant fungible token
 ;; with some added functions to make it easier to manage by
-;; Bitcoin DAO proposals and extensions.
+;; BigMarket DAO proposals and extensions.
 
-(impl-trait 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.governance-token-trait.governance-token-trait)
+(impl-trait .governance-token-trait.governance-token-trait)
 (impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
  
-(define-fungible-token bdg-token u10000000000000)
-(define-fungible-token bdg-token-locked)
+(define-fungible-token bmg-token u10000000000000)
+(define-fungible-token bmg-token-locked)
 
-(define-constant core-team-max-vesting u1500000000000) ;; 15% of total supply (10,000,000 BDG)
+(define-constant core-team-max-vesting u1500000000000) ;; 15% of total supply (10,000,000 BMG)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-not-token-owner (err u3001))
@@ -25,8 +25,8 @@
 (define-constant err-recipients-are-locked (err u3007))
 (define-constant err-transfers-blocked (err u3008))
 
-(define-data-var token-name (string-ascii 32) "BitcoinDAO Governance Token")
-(define-data-var token-symbol (string-ascii 10) "BDG")
+(define-data-var token-name (string-ascii 32) "BigMarket DAO Governance Token")
+(define-data-var token-symbol (string-ascii 10) "BMG")
 (define-data-var token-uri (optional (string-utf8 256)) none)
 (define-data-var token-decimals uint u6)
 (define-data-var core-team-size uint u0)
@@ -46,7 +46,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; ---- Vesting Methods ----
@@ -80,7 +80,7 @@
 (define-private (set-core-team-vesting-iter (item {recipient: principal, start-block: uint, duration: uint}) (previous-result (response bool uint)))
 	(begin
 		(try! previous-result)
-		;;(asserts! (as-contract (contract-call? .bde004-core-execute is-executive-team-member (get recipient item))) err-not-core-team)
+		;;(asserts! (as-contract (contract-call? .bme004-core-execute is-executive-team-member (get recipient item))) err-not-core-team)
 		(let (
 				(amount (/ core-team-max-vesting (var-get core-team-size)))
 			)
@@ -110,7 +110,7 @@
     
 	(asserts! (> burn-block-height midpoint) err-cliff-not-reached) 
 	(asserts! (> claimable u0) err-nothing-to-claim) 
-	(try! (as-contract (ft-mint? bdg-token claimable tx-sender)))
+	(try! (as-contract (ft-mint? bmg-token claimable tx-sender)))
 
     (map-set core-team-vesting {current-key: (var-get current-key), recipient: tx-sender}
         (merge vesting {claimed: (+ claimed claimable)}))
@@ -128,40 +128,40 @@
 
 ;; governance-token-trait
 
-(define-public (bdg-transfer (amount uint) (sender principal) (recipient principal))
+(define-public (bmg-transfer (amount uint) (sender principal) (recipient principal))
 	(begin
 		(try! (is-dao-or-extension))
-		(ft-transfer? bdg-token amount sender recipient)
+		(ft-transfer? bmg-token amount sender recipient)
 	)
 )
 
-(define-public (bdg-lock (amount uint) (owner principal))
+(define-public (bmg-lock (amount uint) (owner principal))
 	(begin
 		(try! (is-dao-or-extension))
-		(try! (ft-burn? bdg-token amount owner))
-		(ft-mint? bdg-token-locked amount owner)
+		(try! (ft-burn? bmg-token amount owner))
+		(ft-mint? bmg-token-locked amount owner)
 	)
 )
 
-(define-public (bdg-unlock (amount uint) (owner principal))
+(define-public (bmg-unlock (amount uint) (owner principal))
 	(begin
 		(try! (is-dao-or-extension))
-		(try! (ft-burn? bdg-token-locked amount owner))
-		(ft-mint? bdg-token amount owner)
+		(try! (ft-burn? bmg-token-locked amount owner))
+		(ft-mint? bmg-token amount owner)
 	)
 )
 
-(define-public (bdg-mint (amount uint) (recipient principal))
+(define-public (bmg-mint (amount uint) (recipient principal))
 	(begin
 		(try! (is-dao-or-extension))
-		(ft-mint? bdg-token amount recipient)
+		(ft-mint? bmg-token amount recipient)
 	)
 )
 
-(define-public (bdg-burn (amount uint) (owner principal))
+(define-public (bmg-burn (amount uint) (owner principal))
 	(begin
 		(try! (is-dao-or-extension))
-		(ft-burn? bdg-token amount owner)
+		(ft-burn? bmg-token amount owner)
 		
 	)
 )
@@ -196,14 +196,14 @@
 	)
 )
 
-(define-private (bdg-mint-many-iter (item {amount: uint, recipient: principal}))
-	(ft-mint? bdg-token (get amount item) (get recipient item))
+(define-private (bmg-mint-many-iter (item {amount: uint, recipient: principal}))
+	(ft-mint? bmg-token (get amount item) (get recipient item))
 )
 
-(define-public (bdg-mint-many (recipients (list 200 {amount: uint, recipient: principal})))
+(define-public (bmg-mint-many (recipients (list 200 {amount: uint, recipient: principal})))
 	(begin
 		(try! (is-dao-or-extension))
-		(ok (map bdg-mint-many-iter recipients))
+		(ok (map bmg-mint-many-iter recipients))
 	)
 )
 
@@ -215,7 +215,7 @@
 	(begin
 		(asserts! (or (is-eq tx-sender sender) (is-eq contract-caller sender)) err-not-token-owner)
 		(asserts! (var-get transfers-active) err-transfers-blocked)
-		(ft-transfer? bdg-token amount sender recipient)
+		(ft-transfer? bmg-token amount sender recipient)
 	)
 )
 
@@ -232,11 +232,11 @@
 )
 
 (define-read-only (get-balance (who principal))
-	(ok (+ (ft-get-balance bdg-token who) (ft-get-balance bdg-token-locked who)))
+	(ok (+ (ft-get-balance bmg-token who) (ft-get-balance bmg-token-locked who)))
 )
 
 (define-read-only (get-total-supply)
-	(ok (+ (ft-get-supply bdg-token) (ft-get-supply bdg-token-locked)))
+	(ok (+ (ft-get-supply bmg-token) (ft-get-supply bmg-token-locked)))
 )
 
 (define-read-only (get-token-uri)
@@ -245,16 +245,16 @@
 
 ;; governance-token-trait
 
-(define-read-only (bdg-get-balance (who principal))
+(define-read-only (bmg-get-balance (who principal))
 	(get-balance who)
 )
 
-(define-read-only (bdg-has-percentage-balance (who principal) (factor uint))
+(define-read-only (bmg-has-percentage-balance (who principal) (factor uint))
 	(ok (>= (* (unwrap-panic (get-balance who)) factor) (* (unwrap-panic (get-total-supply)) u1000)))
 )
 
-(define-read-only (bdg-get-locked (owner principal))
-	(ok (ft-get-balance bdg-token-locked owner))
+(define-read-only (bmg-get-locked (owner principal))
+	(ok (ft-get-balance bmg-token-locked owner))
 )
 
 ;; --- Extension callback

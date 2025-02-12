@@ -1,14 +1,16 @@
-;; Title: BDE001 Proposal Voting
+;; Title: BME01 Proposal Voting
 ;; Synopsis:
-;; Allows governance token
-;; holders to vote on and conclude proposals.
+;; Allows governance token holders to vote on and conclude proposals.
 ;; Description:
 ;; Once proposals are submitted, they are open for voting after a lead up time
 ;; passes. Any token holder may vote on an open proposal, where one token equals
 ;; one vote. Members can vote until the voting period is over. After this period
 ;; anyone may trigger a conclusion. The proposal will then be executed if the
-;; votes in favour exceed the ones against. Votes may additionally be submitted as 
-;; batched list of signed structured voting messages using SIP-018.
+;; votes in favour exceed the ones against by the custom majority if set or simple majority
+;; otherwise. Votes may additionally be submitted as batched list of signed structured 
+;; voting messages using SIP-018.
+;; The mechanism for voting requires Governance tokens to be burned in exchange for the 
+;; equivalent number of lock tokens - these can be re-exchanged after the vote is concluded.
 
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
@@ -24,6 +26,7 @@
 (define-constant err-end-block-height-not-reached (err u3009))
 (define-constant err-disabled (err u3010))
 (define-constant err-not-majority (err u3011))
+
 (define-constant structured-data-prefix 0x534950303138)
 (define-constant message-domain-hash (sha256 (unwrap! (to-consensus-buff?
 	{
@@ -33,7 +36,7 @@
 	}
     ) err-unauthorised)
 ))
-
+(define-constant custom-majority-upper u10000)
 (define-constant structured-data-header (concat structured-data-prefix message-domain-hash))
 
 (define-map proposals
@@ -55,7 +58,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; --- Internal DAO functions
@@ -65,7 +68,7 @@
 (define-public (add-proposal (proposal <proposal-trait>) (data {start-burn-height: uint, end-burn-height: uint, proposer: principal, custom-majority: (optional uint)}))
 	(begin
 		(try! (is-dao-or-extension))
-		(asserts! (is-none (contract-call? .bitcoin-dao executed-at proposal)) err-proposal-already-executed)
+		(asserts! (is-none (contract-call? .bigmarket-dao executed-at proposal)) err-proposal-already-executed)
 		(asserts! (match (get custom-majority data) majority (> majority u5000) true) err-not-majority)
 		(print {event: "propose", proposal: proposal, proposer: tx-sender})
 		(ok (asserts! (map-insert proposals (contract-of proposal) (merge {votes-for: u0, votes-against: u0, concluded: false, passed: false} data)) err-proposal-already-exists))
@@ -167,7 +170,7 @@
 			)
 		)
 		(print {event: "vote", proposal: proposal, voter: voter, for: for, amount: amount})
-		(contract-call? .bde000-governance-token bdg-lock amount voter)
+		(contract-call? .bme000-governance-token bmg-lock amount voter)
 	)
 )
 
@@ -177,13 +180,18 @@
 	(let
 		(
 			(proposal-data (unwrap! (map-get? proposals (contract-of proposal)) err-unknown-proposal))
-			(passed (> (get votes-for proposal-data) (get votes-against proposal-data)))
+			(passed
+				(match (get custom-majority proposal-data)
+					majority (> (* (get votes-for proposal-data) custom-majority-upper) (* (+ (get votes-for proposal-data) (get votes-against proposal-data)) majority))
+					(> (get votes-for proposal-data) (get votes-against proposal-data))
+				)
+			)
 		)
 		(asserts! (not (get concluded proposal-data)) err-proposal-already-concluded)
 		(asserts! (>= burn-block-height (get end-burn-height proposal-data)) err-end-block-height-not-reached)
 		(map-set proposals (contract-of proposal) (merge proposal-data {concluded: true, passed: passed}))
 		(print {event: "conclude", proposal: proposal, passed: passed})
-		(and passed (try! (contract-call? .bitcoin-dao execute proposal tx-sender)))
+		(and passed (try! (contract-call? .bigmarket-dao execute proposal tx-sender)))
 		(ok passed)
 	)
 )
@@ -199,7 +207,7 @@
 		)
 		(asserts! (get concluded proposal-data) err-proposal-not-concluded)
 		(map-delete member-total-votes {proposal: reclaim-proposal, voter: tx-sender})
-		(contract-call? .bde000-governance-token bdg-unlock votes tx-sender)
+		(contract-call? .bme000-governance-token bmg-unlock votes tx-sender)
 	)
 )
 

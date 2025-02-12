@@ -24,7 +24,7 @@ describe("prediction contract", () => {
         {
           amount: "1000", 
           memo: "",
-          recipient: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde006-treasury",
+          recipient: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme006-treasury",
           sender: "ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND",
         }
       );
@@ -46,7 +46,7 @@ describe("prediction contract", () => {
         {
           amount: "1000",
           memo: "",
-          recipient: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde006-treasury",
+          recipient: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme006-treasury",
           sender: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
         }
       );
@@ -80,7 +80,7 @@ describe("prediction contract", () => {
       response = await predictCategory(alice, 0, 'yay', 10000, 1);
       expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "resolve-market",
         [Cl.uint(0), Cl.stringAscii('yay')],
         bob 
@@ -89,7 +89,7 @@ describe("prediction contract", () => {
   
       simnet.mineEmptyBlocks(146);
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "resolve-market-undisputed",
         [Cl.uint(0)],
         deployer
@@ -100,7 +100,7 @@ describe("prediction contract", () => {
       assertContractBalance(marketPredicting, 9500n) 
 
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "claim-winnings",
         [Cl.uint(0), Cl.principal(stxToken)],
         alice
@@ -109,7 +109,7 @@ describe("prediction contract", () => {
 
       // betty pays thed market creat fee of 1000 but receives 10% of alice winnings
       assertUserBalance(alice, 99999999998075n)
-      assertUserBalance(`${deployer}.bde022-market-gating`, 950n)
+      assertUserBalance(`${deployer}.bme022-market-gating`, 950n)
       assertUserBalance(deployer, 100000000000000n)
       assertStakeBalance(alice, 0, 0)
       assertContractBalance(marketPredicting, 0n)
@@ -136,7 +136,7 @@ describe("prediction contract", () => {
       response = await predictCategory(wallace, 0, 'nay', 100_000_000, 0);
       // ----- resolving ------------------------
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "resolve-market",
         [Cl.uint(0), Cl.stringAscii('nay')], 
         bob
@@ -145,7 +145,7 @@ describe("prediction contract", () => {
   
       simnet.mineEmptyBlocks(146);
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "resolve-market-undisputed",
         [Cl.uint(0)],
         deployer
@@ -156,14 +156,14 @@ describe("prediction contract", () => {
       assertContractBalance(marketPredicting, 380000000n) 
 
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "claim-winnings",
         [Cl.uint(0), Cl.principal(stxToken)],
         alice
       );
       expect(response.result).toEqual(Cl.error(Cl.uint(10006)));
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "claim-winnings",
         [Cl.uint(0), Cl.principal(stxToken)],
         bob
@@ -176,14 +176,14 @@ describe("prediction contract", () => {
       assertStakeBalance(wallace, 0, 95000000) 
 
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "claim-winnings",
         [Cl.uint(0), Cl.principal(stxToken)],
         fred
       );
       expect(response.result).toEqual(Cl.ok(Cl.uint(180500000n)));
       response = await simnet.callPublicFn(
-        "bde023-market-predicting",
+        "bme023-market-predicting",
         "claim-winnings",
         [Cl.uint(0), Cl.principal(stxToken)],
         wallace

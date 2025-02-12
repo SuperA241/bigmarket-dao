@@ -1,42 +1,33 @@
-# Bitcoin DAO
+<img src="https://brightblock.org/logo/bm-logo-kight-blue.png" alt="BigMarket Logo" style="width: auto; max-width: 500px; display: inline-block; margin: 1rem auto;align:left;" />
 
-A DAO for exploring payment gateways and resource providers
+<br/><br/>
 
-See also;
+# BigMarket Contracts
 
-- [stxeco-launcher](https://github.com/radicleart/stxeco-launcher)
-- [ai-flow](https://github.com/radicleart/ai-flow)
-- [bitcoin-dao](https://github.com/radicleart/bitcoin-dao)
+## Description
 
-Note: this is experimental code - use at your own risk
+A system of smart contracts, based on [Executor DAO](https://github.com/Clarity-Innovation-Lab/executor-dao), 
+for community ownership and management of on-chain prediction market machinery.
 
-## Extensions
+## Development
 
-Bitcoin DAO will launch with the following additional features;
+- Vite
+- Clarinet SDK
+- Stacks.js
 
-- bde000-governance-token
-- bde001-proposal-voting-tokenised
-- bde003-core-proposals-tokenised
-- bde004-core-execute
-- bde006-treasury
-
-## Clarigen
-
-Project uses [Clarigen](https://www.clarigen.dev/docs/documentation). To keep the test framerwork up to date with clarity run;
+To run tests:
 
 ```bash
-npx clarigen --watch
+git clone ..
+npm install
+npm run test
 ```
+## Deployment
 
-## Running containers
+Thje project is deployed with the following keys;
 
-Two scripts wrap the clarinet tools for starting and stopping docker containers
+- testnet: [ST2CS5XAA3FNHEQZRDVF6YY0NTAK7JFV7PKF1CPVM](https://explorer.hiro.so/address/ST2CS5XAA3FNHEQZRDVF6YY0NTAK7JFV7PKF1CPVM?chain=testnet)
+- mainnet: [TBD]
 
-```bash
-bin/up.sh
-bin/down.sh
-```
-
-## License
-
-MIT license, all good as long as the copyright and permission notice are included.
+Once deployed the DAO is constructed with a bootstrap proposal. This proposal configures many aspects of the DAO with the initial
+parameters and configuration.

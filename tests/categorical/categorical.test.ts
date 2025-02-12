@@ -10,7 +10,7 @@ const simnet = await setupSimnet();
 */
 async function printMarketBalances(marketId:number) {
   let data = await simnet.callReadOnlyFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "get-market-data",
     [Cl.uint(marketId)],
     alice
@@ -22,7 +22,7 @@ async function printMarketBalances(marketId:number) {
 
 async function printStakeBalances(user:string, marketId:number) {
   let data = await simnet.callReadOnlyFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "get-stake-balances",
     [Cl.uint(marketId), Cl.principal(user)],
     alice
@@ -32,13 +32,13 @@ async function printStakeBalances(user:string, marketId:number) {
 }
 export async function createBinaryMarketWithGating(marketId:number, proof:any, key?: any, creator?: string, token?: string, fee?:number) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "create-market",
     [
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), (fee) ? Cl.some(Cl.uint(fee)) : Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex((key) ? key : metadataHash()),
-      proof, Cl.principal(`${deployer}.bde022-market-gating`)
+      proof, Cl.principal(`${deployer}.bme022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -51,13 +51,13 @@ export async function createBinaryMarketWithGating(marketId:number, proof:any, k
 }
 export async function createBinaryMarketWithFees(marketId:number, fee:number, creator?: string, token?: string) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "create-market",
     [
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), Cl.some(Cl.uint(fee)),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
+      Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -66,13 +66,13 @@ export async function createBinaryMarketWithFees(marketId:number, fee:number, cr
 }
 export async function createBinaryMarketWithErrorCode(errorCode:number, fee?:number, creator?: string, token?: string) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "create-market",
     [
       Cl.list([Cl.stringAscii('lion'), Cl.stringAscii('tiger')]), (fee) ? Cl.some(Cl.uint(fee)) : Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
+      Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -81,13 +81,13 @@ export async function createBinaryMarketWithErrorCode(errorCode:number, fee?:num
 }
 export async function createBinaryMarket(marketId:number, creator?: string, token?: string) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "create-market",
     [
       Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
+      Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -97,13 +97,13 @@ export async function createBinaryMarket(marketId:number, creator?: string, toke
 async function createCategoricalMarket(marketId:number, creator?: string, token?: string) {
   constructDao(simnet);
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "create-market",
     [
       Cl.list([Cl.stringAscii('lion'), Cl.stringAscii('tiger'), Cl.stringAscii('cheetah')]), Cl.none(),
       Cl.principal((token) ? token : stxToken),
       Cl.bufferFromHex(metadataHash()),
-      Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
+      Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
     ], 
     (creator) ? creator : deployer
   );
@@ -111,7 +111,7 @@ async function createCategoricalMarket(marketId:number, creator?: string, token?
 }
 export async function predictCategory(user:string, marketId:number, category:string, amount:number, code:number, token?: string) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "predict-category",
     [ 
       Cl.uint(marketId), 
@@ -134,7 +134,7 @@ export async function predictCategory(user:string, marketId:number, category:str
 }
 async function resolveMarket(marketId:number, category:string, winner: number, token?: string) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "resolve-market",
     [Cl.uint(marketId), Cl.stringAscii(category)],
     bob
@@ -144,7 +144,7 @@ async function resolveMarket(marketId:number, category:string, winner: number, t
 }
 async function resolveMarketUndisputed(marketId:number, code?:number) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "resolve-market-undisputed",
     [Cl.uint(marketId)],
     bob 
@@ -157,7 +157,7 @@ async function resolveMarketUndisputed(marketId:number, code?:number) {
 }
 async function claim(user:string, marketId:number, share:number, code?:number) {
   let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "claim-winnings",
       [Cl.uint(marketId), Cl.principal(stxToken)],
       user
@@ -174,13 +174,13 @@ describe("claiming errors", () => {
   it("err too few categories", async () => { 
     constructDao(simnet);
     let response = await simnet.callPublicFn(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "create-market",
       [
         Cl.list([Cl.stringAscii('lion')]), Cl.none(),
         Cl.principal(stxToken),
         Cl.bufferFromHex(metadataHash()),
-        Cl.list([]), Cl.principal(`${deployer}.bde022-market-gating`)
+        Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
       ],
       deployer
     ); 

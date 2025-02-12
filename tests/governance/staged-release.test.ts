@@ -6,7 +6,7 @@ const simnet = await setupSimnet();
 
 async function checkIsNotRecipient(user:string) {
   let response = await simnet.callReadOnlyFn(
-    "bde000-governance-token",
+    "bme000-governance-token",
     "get-vesting-schedule",
     [Cl.principal(betty)],
     deployer
@@ -16,7 +16,7 @@ async function checkIsNotRecipient(user:string) {
 
 async function buyIdoTokensError(user:string, amount:number, code:number) {
   let response = await simnet.callPublicFn(
-    "bde010-token-sale",
+    "bme010-token-sale",
     "buy-ido-tokens",
     [Cl.uint(amount)],
     user
@@ -27,7 +27,7 @@ async function buyIdoTokensError(user:string, amount:number, code:number) {
 
 async function initialize() {
   let response = await simnet.callPublicFn(
-    "bde010-token-sale",
+    "bme010-token-sale",
     "initialize-ido",
     [],
     deployer
@@ -50,62 +50,62 @@ describe("initial distribution", () => {
   it("check initial variables", async () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
-    let response = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response).toEqual(Cl.uint(1));
-    response = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage-start")
+    response = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage-start")
     //expect(response).toEqual(Cl.uint(0));
-    response = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(1))
+    response = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(1))
     expect(response).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(5), "max-supply": Cl.uint(600000000000), "tokens-sold": Cl.uint(0), cancelled: Cl.bool(false)})));
-    response = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(6))
+    response = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(6))
     expect(response).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(20), "max-supply": Cl.uint(1000000000000), "tokens-sold": Cl.uint(0), cancelled: Cl.bool(false)})));
   });
 
   it("cannot claim before initialisation", async () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
-    let response = await simnet.callPublicFn(`${deployer}.bde010-token-sale`, "claim-ido-refund", [], alice)
+    let response = await simnet.callPublicFn(`${deployer}.bme010-token-sale`, "claim-ido-refund", [], alice)
     expect(response.result).toEqual(Cl.error(Cl.uint(5007)));
   });
 
   it("only dao can advance stage", async () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
-    let response = await simnet.callPublicFn(`${deployer}.bde010-token-sale`, "advance-ido-stage", [], alice)
+    let response = await simnet.callPublicFn(`${deployer}.bme010-token-sale`, "advance-ido-stage", [], alice)
     expect(response.result).toEqual(Cl.error(Cl.uint(5000)));
     //await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
   });
  
   it("cannot advance beyond last stage", async () => {
     constructDao(simnet); 
     await passProposalByCoreVote('bdp001-initialise-token-sale')
-    let response = await simnet.callPublicFn(`${deployer}.bde010-token-sale`, "advance-ido-stage", [], alice)
+    let response = await simnet.callPublicFn(`${deployer}.bme010-token-sale`, "advance-ido-stage", [], alice)
     expect(response.result).toEqual(Cl.error(Cl.uint(5000)));
 
     //response = await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
-    let data = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(1))
+    let data = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(1))
     expect(data).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(5), "max-supply": Cl.uint(600000000000), "tokens-sold": Cl.uint(0), cancelled: Cl.bool(false)})));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-2')
-    response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(2));
-    data = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(2))
+    data = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(2))
     expect(data).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(6), "max-supply": Cl.uint(833333000000), "tokens-sold": Cl.uint(0), cancelled: Cl.bool(false)})));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-3')
-    response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(3));
     response = await passProposalByCoreVote('bdp001-advance-stage-4')
-    response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(4));
     response = await passProposalByCoreVote('bdp001-advance-stage-5')
-    response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(5));
     response = await passProposalByCoreVote('bdp001-advance-stage-6')
-    response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(6));
     try {
       response = await passProposalByCoreVote('bdp001-advance-stage-7')
@@ -119,15 +119,15 @@ describe("initial distribution", () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
     //let response = await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
 
-    let response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    let response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000 * 5)));
-    let data = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(1))
+    let data = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(1))
     expect(data).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(5), "max-supply": Cl.uint(600000000000), "tokens-sold": Cl.uint(2500000000), cancelled: Cl.bool(false)})));
 
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(5*600000000000)], bob)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(5*600000000000)], bob)
     expect(response.result).toEqual(Cl.error(Cl.uint(5002)));
   }); 
 
@@ -135,32 +135,32 @@ describe("initial distribution", () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
     //let response = await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
 
-    let response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    let response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000 * 5)));
-    let data = await simnet.getMapEntry(`${deployer}.bde010-token-sale`, "ido-stage-details", Cl.uint(1))
+    let data = await simnet.getMapEntry(`${deployer}.bme010-token-sale`, "ido-stage-details", Cl.uint(1))
     expect(data).toMatchObject(Cl.some(Cl.tuple({price: Cl.uint(5), "max-supply": Cl.uint(600000000000), "tokens-sold": Cl.uint(2500000000n), cancelled: Cl.bool(false)})));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-2')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000n * 6n)));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-3')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000n * 7n)));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-4')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000n * 8n)));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-5')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000n * 10n)));
 
     response = await passProposalByCoreVote('bdp001-advance-stage-6')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(500000000n * 20n)));
   }); 
 
@@ -168,11 +168,11 @@ describe("initial distribution", () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
     //let response = await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
 
     let response = await passProposalByCoreVote('bdp001-cancel-stage')
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(500000000)], alice)
     expect(response.result).toEqual(Cl.error(Cl.uint(5009)));
 
   }); 
@@ -181,29 +181,29 @@ describe("initial distribution", () => {
     constructDao(simnet);
     await passProposalByCoreVote('bdp001-initialise-token-sale')
     //let response = await passProposalByCoreVote('bdp001-advance-stage-1')
-    let response1 = await simnet.getDataVar(`${deployer}.bde010-token-sale`, "current-stage")
+    let response1 = await simnet.getDataVar(`${deployer}.bme010-token-sale`, "current-stage")
     expect(response1).toEqual(Cl.uint(1));
 
-    let response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(5000)], alice)
+    let response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(5000)], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(5000n * 5n)));
 
-    const bal = simnet.callReadOnlyFn(`${deployer}.bde000-governance-token`, "get-balance", [Cl.principal(alice)], alice)
+    const bal = simnet.callReadOnlyFn(`${deployer}.bme000-governance-token`, "get-balance", [Cl.principal(alice)], alice)
     console.log("balance: bdg: ", bal.result.value?.value); 
-    let idoPurchase = simnet.getMapEntry(`${deployer}.bde010-token-sale`, 'ido-purchases', Cl.tuple({stage: Cl.uint(1), buyer: Cl.principal(alice)}))
+    let idoPurchase = simnet.getMapEntry(`${deployer}.bme010-token-sale`, 'ido-purchases', Cl.tuple({stage: Cl.uint(1), buyer: Cl.principal(alice)}))
     console.log("balance: idoPurchase: ", idoPurchase);
     console.log("balance: stx: " + simnet.getAssetsMap().get("STX")?.get(alice));
-    idoPurchase = simnet.getMapEntry(`${deployer}.bde010-token-sale`, 'ido-purchases', Cl.tuple({stage: Cl.uint(1), buyer: Cl.principal(alice)}))
+    idoPurchase = simnet.getMapEntry(`${deployer}.bme010-token-sale`, 'ido-purchases', Cl.tuple({stage: Cl.uint(1), buyer: Cl.principal(alice)}))
     console.log("balance: idoPurchase: ", idoPurchase);
 
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "buy-ido-tokens", [Cl.uint(300000)], bob)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "buy-ido-tokens", [Cl.uint(300000)], bob)
     expect(response.result).toEqual(Cl.ok(Cl.uint(300000n * 5n)));
  
     response = await passProposalByCoreVote('bdp001-cancel-stage')
 
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "claim-ido-refund", [], alice)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "claim-ido-refund", [], alice)
     expect(response.result).toEqual(Cl.ok(Cl.uint(5000n * 5n)));
 
-    response = simnet.callPublicFn(`${deployer}.bde010-token-sale`, "claim-ido-refund", [], bob)
+    response = simnet.callPublicFn(`${deployer}.bme010-token-sale`, "claim-ido-refund", [], bob)
     expect(response.result).toEqual(Cl.error(Cl.uint(1)));
  
   });  

@@ -6,7 +6,7 @@ const simnet = await setupSimnet();
 
 export async function resolveUndisputed(marketId: number, outcome: boolean) {
   let response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "resolve-market",
     [Cl.uint(marketId), Cl.stringAscii(outcome ? 'yay' : 'nay')],
     bob
@@ -14,7 +14,7 @@ export async function resolveUndisputed(marketId: number, outcome: boolean) {
   expect(response.result).toEqual(Cl.ok(Cl.uint(outcome ? 1 : 0)));
   simnet.mineEmptyBlocks(145);
   response = await simnet.callPublicFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "resolve-market-undisputed",
     [Cl.uint(marketId)],
     bob

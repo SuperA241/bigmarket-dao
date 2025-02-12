@@ -10,12 +10,12 @@
 (define-public (execute (sender principal))
 	(begin
 		;; Enable genesis extensions.
-		(try! (contract-call? .bitcoin-dao set-extensions
+		(try! (contract-call? .bigmarket-dao set-extensions
 			(list
-				{extension: .bde021-market-voting, enabled: true}
+				{extension: .bme021-market-voting, enabled: true}
 			)
 		))
-		(print "Bitcoin DAO opinion polls are enabled.")
+		(print "BigMarket DAO markets are enabled.")
 		(ok true)
 	)
 )

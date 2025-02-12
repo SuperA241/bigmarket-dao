@@ -7,9 +7,9 @@
     {
       "type": "clarinet",
       "request": "launch",
-      "name": "Call .bde001-proposal-voting.conclude",
+      "name": "Call .bme001-proposal-voting.conclude",
       "manifest": "${workspaceFolder}/Clarinet.toml",
-      "expression": "(contract-call? .bde001-proposal-voting-tokenised conclude bdp000-bootstrap)"
+      "expression": "(contract-call? .bme001-proposal-voting conclude bdp000-bootstrap)"
     }
   ]
 }

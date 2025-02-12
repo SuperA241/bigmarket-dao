@@ -9,17 +9,17 @@ const acc = simnet.getAccounts();
 const alice = acc.get("wallet_1")!;
 const bob = acc.get("wallet_2")!;
 const deployer = accounts.get("deployer")!;
-const coreProposals = "bde003-core-proposals-tokenised"; // Replace with actual contract name
-const proposalVoting = "bde001-proposal-voting-tokenised"; // Replace with actual contract name
+const coreProposals = "bme003-core-proposals"; // Replace with actual contract name
+const proposalVoting = "bme001-proposal-voting"; // Replace with actual contract name
 
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
 */
 
-describe("bde001-proposal-voting contract", () => {
+describe("bme001-proposal-voting contract", () => {
   it("ensures the contract is deployed", () => {
-    const contractSource = simnet.getContractSource("bde001-proposal-voting-tokenised");
+    const contractSource = simnet.getContractSource("bme001-proposal-voting");
     expect(contractSource).toBeDefined();
     //console.log(contractSource);
   });
@@ -28,7 +28,7 @@ describe("bde001-proposal-voting contract", () => {
     // Step 1: Construct DAO
     const daoProposal = `${deployer}.bdp000-bootstrap`;
     const constructResponse = await simnet.callPublicFn(
-      "bitcoin-dao", // Replace with actual DAO contract name
+      "bigmarket-dao", // Replace with actual DAO contract name
       "construct",
       [Cl.principal(daoProposal)],
       deployer
@@ -97,7 +97,7 @@ describe("bde001-proposal-voting contract", () => {
 //   ]);
 
 //   const result = await simnet.callPublicFn(
-//     "bde001-proposal-voting",
+//     "bme001-proposal-voting",
 //     "batch-vote",
 //     [Cl.principal(proposal), votes],
 //     wallet1

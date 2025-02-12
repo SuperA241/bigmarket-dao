@@ -18,11 +18,11 @@ export const piedro = accounts.get('wallet_7')!;
 export const annie = accounts.get("wallet_4")!;
 export const developer = accounts.get("wallet_8")!;
 
-export const coreProposals = "bde003-core-proposals-tokenised"; 
-export const marketVoting = "bde021-market-voting";
-export const marketGating = "bde022-market-gating";
-export const marketPredicting = "bde023-market-predicting";
-export const treasury = "bde006-treasury";
+export const coreProposals = "bme003-core-proposals"; 
+export const marketVoting = "bme021-market-voting";
+export const marketGating = "bme022-market-gating";
+export const marketPredicting = "bme023-market-predicting";
+export const treasury = "bme006-treasury";
 
 export async function setupSimnet() {
   return await initSimnet();
@@ -48,7 +48,7 @@ export function dataHash(message: string) {
 export async function constructDao(simnet: any) {
   const proposal = simnet.deployer + "." + "bdp000-bootstrap";
   const result = await simnet.callPublicFn(
-    "bitcoin-dao", // Replace with actual contract name
+    "bigmarket-dao", // Replace with actual contract name
     "construct",
     [Cl.principal(proposal)],
     simnet.deployer
@@ -80,7 +80,7 @@ export async function allowMarketCreators(user:string) {
   const allowedCreators = [alice, bob, tom, betty, wallace];
   const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
   // console.log('Leaves (Tree):', tree.getLeaves().map(bytesToHex));
-  const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde023-market-predicting');
+  const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-market-predicting');
   console.log('root=' + root)
   console.log('lookupRootKey=' + lookupRootKey)
   const proposal = `bdp001-gating`;
@@ -93,7 +93,7 @@ export async function allowMarketCreators(user:string) {
 
 export async function assertStakeBalance(user:string, againstValue:number, forValue:number) {
   let data = await simnet.callReadOnlyFn(
-    "bde023-market-predicting",
+    "bme023-market-predicting",
     "get-stake-balances",
     [Cl.uint(0), Cl.principal(user)],
     alice
@@ -135,7 +135,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
   // Signal 1 by Alice
   const response2 = await simnet.callPublicFn(
-    "bde004-core-execute", // Replace with actual contract name
+    "bme004-core-execute", // Replace with actual contract name
     "executive-action",
     [Cl.principal(proposal)],
     alice
@@ -144,7 +144,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
   // Signal 2 by Bob
   await simnet.callPublicFn(
-    "bde004-core-execute",
+    "bme004-core-execute",
     "executive-action",
     [Cl.principal(proposal)],
     bob
@@ -153,7 +153,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
   // Check if the proposal is executed
   const executedAt = await simnet.callReadOnlyFn(
-    "bitcoin-dao",
+    "bigmarket-dao",
     "executed-at",
     [Cl.principal(proposal)],
     deployer
@@ -165,7 +165,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
 export async function isValidExtension(extension: string) {
   let data = await simnet.callReadOnlyFn(
-    "bitcoin-dao",
+    "bigmarket-dao",
     "is-extension",
     [Cl.principal(extension)],
     alice
@@ -198,16 +198,16 @@ export function prepareVotes(
 }
 
 export async function passProposalByCoreVote(proposal: string, errorCode?: number) {
-  await isValidExtension(`${deployer}.bde000-governance-token`);
-  await isValidExtension(`${deployer}.bde001-proposal-voting-tokenised`);
-  await isValidExtension(`${deployer}.bde004-core-execute`);
-  await isValidExtension(`${deployer}.bde003-core-proposals-tokenised`);
-  await isValidExtension(`${deployer}.bde006-treasury`);
-  await isValidExtension(`${deployer}.bde022-market-gating`);
-  await isValidExtension(`${deployer}.bde021-market-voting`);
-  await isValidExtension(`${deployer}.bde023-market-predicting`);
+  await isValidExtension(`${deployer}.bme000-governance-token`);
+  await isValidExtension(`${deployer}.bme001-proposal-voting`);
+  await isValidExtension(`${deployer}.bme004-core-execute`);
+  await isValidExtension(`${deployer}.bme003-core-proposals`);
+  await isValidExtension(`${deployer}.bme006-treasury`);
+  await isValidExtension(`${deployer}.bme022-market-gating`);
+  await isValidExtension(`${deployer}.bme021-market-voting`);
+  await isValidExtension(`${deployer}.bme023-market-predicting`);
 
-  const votingContract = "bde001-proposal-voting-tokenised";
+  const votingContract = "bme001-proposal-voting";
   const coreProposeResponse = await simnet.callPublicFn(
     coreProposals,
     "core-propose",

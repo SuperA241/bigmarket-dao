@@ -1,14 +1,19 @@
-;; Title: BDE021 Opinion Polling
+;; Title: BME021 Market Voting
 ;; Synopsis:
-;; Enables quick opinion polling functionality.
+;; Intended for prediction market resolution via community voting.
 ;; Description:
-;; A more streamlined type of voting designed to quickly gauge community opinion.
-;; Unlike DAO proposals, opinion polls cannot change the configuration of the DAO.
+;; Market votes are connected to a specific market via the market data hash and
+;; votes are created via challenges to the market outcome. Any user with a stake in the market
+;; can challenge the outcome. Voting begins on challenge and runs for a DAO configured window.
+;; DAO governance voting resolves the market - either confirmaing or changing hte original 
+;; outcome based on a simple majority.
+;; Unlike proposal voting - market voting is categorical - voters are voting to select an
+;; outcome from at least 2 and up to 10 potential outcomes.
 
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (use-trait nft-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
 (use-trait ft-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
-(use-trait prediction-market-trait 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait.prediction-market-trait)
+(use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)
 
 (define-constant err-unauthorised (err u2100))
 (define-constant err-poll-already-exists (err u2102))
@@ -35,9 +40,7 @@
 ))
 
 (define-constant structured-data-header (concat structured-data-prefix message-domain-hash))
-(define-constant custom-majority-upper u10000)
 
-(define-data-var custom-majority (optional uint) none)
 (define-data-var voting-duration uint u72)
 
 (define-map resolution-polls
@@ -57,7 +60,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; --- Internal DAO functions
@@ -68,15 +71,6 @@
     (ok true)
   )
 )
-(define-public (set-custom-majority (new-majority (optional uint)))
-  (begin
-    (try! (is-dao-or-extension))
-    (var-set custom-majority new-majority)
-    (ok true)
-  )
-)
-
-;; Proposals
 
 ;; called by a staker in a market to begin dispute resolution process
 (define-public (create-market-vote
@@ -92,7 +86,7 @@
     )
     (asserts! (is-none (map-get? resolution-polls market-id)) err-invalid-category)
     (asserts! (is-eq (len empty-votes) num-categories) err-poll-already-exists)
-		;; a user with stake can propose but only for a market in the correct state in bde023. 
+		;; a user with stake can propose but only for a market in the correct state in bme023. 
     (try! (as-contract (contract-call? market dispute-resolution market-id market-data-hash original-sender)))
 
     ;; Register the poll
@@ -244,7 +238,7 @@
       ;; Emit an event for the vote
       (print {event: "market-vote", market-id: market-id, voter: voter, category-for: category-for, sip18: sip18, amount: amount, prev-market-id: prev-market-id})
 
-		  (contract-call? .bde000-governance-token bdg-lock amount voter)
+		  (contract-call? .bme000-governance-token bmg-lock amount voter)
     )
   ))
 
@@ -302,7 +296,7 @@
 		)
 		(asserts! (get concluded poll-data) err-not-concluded)
 		(map-delete member-total-votes {market-id: market-id, voter: tx-sender})
-		(contract-call? .bde000-governance-token bdg-unlock votes tx-sender)
+		(contract-call? .bme000-governance-token bmg-unlock votes tx-sender)
 	)
 )
 

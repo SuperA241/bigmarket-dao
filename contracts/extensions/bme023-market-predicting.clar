@@ -1,16 +1,23 @@
-;; Title: BDE023 categorical market preditions
+;; Title: BME023 Market Predicting
 ;; Synopsis:
-;; Implements a categorical prediciton market.
+;; Implements binary and categorical prediciton markets.
 ;; Description:
-;; Enables market creation and category based operation where users
-;; stake on the the outcome they think most likely to happen.
-;; The contract is part of the dao and parameters are controlled by
-;; dao proposals. Market resolution can be disputed by anyone with a 
-;; stake in the market and disputes are resolved by dao / community
-;; voting
+;; Market creation allows a new binary or categorical market to be set up.
+;; Off chain market data is verifiable via the markets data hash.
+;; Markets run in a specific token (stx, sbtc, bmg etc) the market is created
+;; with an allowed token. Allowed tokens are controlled by the DAO.
+;; Market creation can be gated via market proof and a market creator can
+;; set their own fee up to a max fee amount determined by the DAO.
+;; Anyone with the required token can stake as many times as they wish and for any choice 
+;; of outcome. Resolution process begins via a call gated to the DAO controlled resolution agent 
+;; address. The resolution can be challenged by anyone with a stake in the market
+;; If a challenge is made the dispute resolution process begins which requires a DAO vote
+;; to resolve - the outcome of the vote resolve the market and sets the outcome. 
+;; If the dispute window passes without challenge or once the vote concludes the market is fully
+;; resolved and claims can then be made.
 
 (use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
-(impl-trait 'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait.prediction-market-trait)
+(impl-trait .prediction-market-trait.prediction-market-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 ;; Market Types (1 => categorical market)
@@ -84,11 +91,12 @@
 )
 (define-map allowed-tokens principal bool)
 
-;; ---------------- PUBLIC FUNCTIONS ----------------
+;; ---------------- access control ----------------
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
+;; ---------------- getters / setters ----------------
 (define-public (set-allowed-token (token principal) (enabled bool))
 	(begin
 		(try! (is-dao-or-extension))
@@ -175,9 +183,17 @@
   )
 )
 
-;; ---------- Market Functions ----------
+(define-read-only (get-market-data (market-id uint))
+	(map-get? markets market-id)
+)
 
-;; Create a new categorical market
+(define-read-only (get-stake-balances (market-id uint) (user principal))
+	(map-get? stake-balances { market-id: market-id, user: user })
+)
+
+
+;; ---------------- public functions ----------------
+
 (define-public (create-market (categories (list 10 (string-ascii 32))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal))
     (let (
         (sender tx-sender)
@@ -194,7 +210,7 @@
         true
       )
       ;; ensure the user is allowed to create if gating by merkle proof is required
-      (if (var-get creation-gated) (try! (as-contract (contract-call? .bde022-market-gating can-access-by-account sender proof))) true)
+      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-market-gating can-access-by-account sender proof))) true)
 
       ;; all checks pass - insert market data
       (map-set markets
@@ -219,14 +235,6 @@
       (ok new-id)
   )
 )
-(define-read-only (get-market-data (market-id uint))
-	(map-get? markets market-id)
-)
-
-(define-read-only (get-stake-balances (market-id uint) (user principal))
-	(map-get? stake-balances { market-id: market-id, user: user })
-)
-
 (define-public (predict-category (market-id uint) (amount uint) (category (string-ascii 32)) (token <ft-token>))
   (let (
         (amount-less-fee (try! (process-stake-transfer amount token)))
@@ -368,6 +376,7 @@
   )
 )
 
+;; needed for markets with no winner - in this case, tokens accrued are transferred to the dao treasury
 (define-public (transfer-losing-stakes (market-id uint) (token <ft-token>))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
@@ -461,7 +470,7 @@
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
       
-      (try! (contract-call? token transfer transfer-amount tx-sender .bde023-market-predicting none))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-market-predicting none))
       (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
 
       (ok transfer-amount)

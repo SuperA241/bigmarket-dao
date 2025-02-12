@@ -1,8 +1,10 @@
-;; Title: BDE010 Token Sale
+;; Title: BME010 Token Sale
 ;; Synopsis:
 ;; Enables token sale for govenernance tokens.
 ;; Description:
 ;; Allows to token sale over 6 stages with token price set at each stage by the current DAO.
+;; Contract allows any stage to be cancelled and for tokens to be reclaimed.
+;; Listing via a DEX is not supported but can be enabled at any stage
 
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 
@@ -26,7 +28,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 (define-read-only (get-ido-stages)
@@ -77,13 +79,13 @@
   (let (
     (stage (var-get current-stage))
     (stage-info (unwrap! (map-get? ido-stage-details stage) err-invalid-stage))
-    (bdg-price (get price stage-info))
+    (bmg-price (get price stage-info))
     (max-supply (get max-supply stage-info))
     (tokens-sold (get tokens-sold stage-info))
     (sender tx-sender)
 		(cancelled (get cancelled stage-info))
     (current-stake (default-to u0 (map-get? ido-purchases {stage: stage, buyer: tx-sender})))
-    (tokens-to-buy (* stx-amount bdg-price))
+    (tokens-to-buy (* stx-amount bmg-price))
 	)
 
     ;; Ensure enough supply remains
@@ -91,10 +93,10 @@
     (asserts! (not cancelled) err-stage-cancelled)
 
     ;; Accept STX payment
-    (try! (stx-transfer? stx-amount tx-sender .bde006-treasury))
+    (try! (stx-transfer? stx-amount tx-sender .bme006-treasury))
 
     ;; Mint tokens directly to the buyer
-    (try! (as-contract (contract-call? .bde000-governance-token bdg-mint tokens-to-buy sender)))
+    (try! (as-contract (contract-call? .bme000-governance-token bmg-mint tokens-to-buy sender)))
 
     ;; Update stage details
     (map-set ido-stage-details stage (merge stage-info {tokens-sold: (+ tokens-sold tokens-to-buy)}))
@@ -156,8 +158,8 @@
     ;; Ensure stage is actually cancelled
     (asserts! (get cancelled stage-info) err-stage-not-cancelled)
     ;; Transfer STX back to the buyer / burn the bdg
-    (try! (as-contract (contract-call? .bde006-treasury stx-transfer (* purchase-amount price) sender none)))
-    (try! (as-contract (contract-call? .bde000-governance-token bdg-burn purchase-amount sender)))
+    (try! (as-contract (contract-call? .bme006-treasury stx-transfer (* purchase-amount price) sender none)))
+    (try! (as-contract (contract-call? .bme000-governance-token bmg-burn purchase-amount sender)))
     ;; Remove the purchase record
     (map-delete ido-purchases {stage: stage, buyer: tx-sender})
     (print {event: "ido-refund", buyer: tx-sender, refunded: purchase-amount, stage: stage})

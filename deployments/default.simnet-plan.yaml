@@ -48,136 +48,132 @@ genesis:
 plan:
   batches:
     - id: 0
-      transactions: []
+      transactions:
+        - emulated-contract-publish:
+            contract-name: nft-trait
+            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
+            path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
+            clarity-version: 1
+        - emulated-contract-publish:
+            contract-name: sip-010-trait-ft-standard
+            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
+            path: ".cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
+            clarity-version: 1
       epoch: "2.0"
     - id: 1
-      transactions: []
+      transactions:
+        - emulated-contract-publish:
+            contract-name: extension-trait
+            emulated-sender: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z
+            path: ".cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.clar"
+            clarity-version: 1
+        - emulated-contract-publish:
+            contract-name: proposal-trait
+            emulated-sender: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z
+            path: ".cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.clar"
+            clarity-version: 1
       epoch: "2.05"
     - id: 2
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
-            emulated-sender: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z
-            path: "./.cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: proposal-trait
-            emulated-sender: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z
-            path: "./.cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: nft-trait
-            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
-            path: "./.cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
-            path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
-            clarity-version: 1
-      epoch: "2.1"
-    - id: 3
-      transactions:
-        - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            emulated-sender: ST3VXT52QEQPZ5246A16RFNMR1PRJ96JK6YYX37N8
-            path: "./.cache/requirements/ST3VXT52QEQPZ5246A16RFNMR1PRJ96JK6YYX37N8.sip-010-trait-ft-standard.clar"
-            clarity-version: 2
-      epoch: "2.5"
-    - id: 4
-      transactions: []
-      epoch: "2.5"
-    - id: 5
-      transactions:
-        - emulated-contract-publish:
-            contract-name: extension-trait
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.extension-trait.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.extension-trait.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: proposal-trait
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.proposal-trait.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.proposal-trait.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bitcoin-dao
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.bitcoin-dao.clar"
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: governance-token-trait
-            emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.governance-token-trait.clar"
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: prediction-market-trait
-            emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.prediction-market-trait.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.bitcoin-dao.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sip010-ft-trait
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip010-ft-trait.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sip010-ft-trait.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sbtc
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.sbtc.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: wrapped-stx
             emulated-sender: ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6
-            path: "./.cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx.clar"
+            path: ".cache/requirements/ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.wrapped-stx.clar"
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bitcoin-dao
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/bitcoin-dao.clar
+            contract-name: nft-trait
+            emulated-sender: ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT
+            path: ".cache/requirements/ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.nft-trait.clar"
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde000-governance-token
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde000-governance-token.clar
+            contract-name: sip-010-trait-ft-standard
+            emulated-sender: ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT
+            path: ".cache/requirements/ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.clar"
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde001-proposal-voting-tokenised
+            contract-name: bigmarket-dao
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde001-proposal-voting-tokenised.clar
+            path: contracts/bigmarket-dao.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde003-core-proposals-tokenised
+            contract-name: governance-token-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde003-core-proposals-tokenised.clar
+            path: contracts/traits/governance-token-trait.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde004-core-execute
+            contract-name: bme000-governance-token
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde004-core-execute.clar
+            path: contracts/extensions/bme000-governance-token.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde006-treasury
+            contract-name: bme001-proposal-voting
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde006-treasury.clar
+            path: contracts/extensions/bme001-proposal-voting.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde010-token-sale
+            contract-name: bme003-core-proposals
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde010-token-sale.clar
+            path: contracts/extensions/bme003-core-proposals.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde021-market-voting
+            contract-name: bme004-core-execute
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde021-market-voting.clar
+            path: contracts/extensions/bme004-core-execute.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde022-market-gating
+            contract-name: bme006-treasury
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde022-market-gating.clar
+            path: contracts/extensions/bme006-treasury.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bde023-market-predicting
+            contract-name: bme010-token-sale
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bde023-market-predicting.clar
+            path: contracts/extensions/bme010-token-sale.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: prediction-market-trait
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/traits/prediction-market-trait.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme021-market-voting
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme021-market-voting.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme022-market-gating
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme022-market-gating.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme023-market-predicting
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme023-market-predicting.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sbtc
@@ -204,6 +200,9 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-2.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 3
+      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-3
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -214,9 +213,6 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 6
-      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-5
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -273,31 +269,8 @@ plan:
             path: contracts/proposals/devnet/unit-tests/bdp001-reset-allocation.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: extension-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/extension-trait.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: governance-token-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/governance-token-trait.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: prediction-market-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/prediction-market-trait.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: proposal-trait
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/traits/proposal-trait.clar
-            clarity-version: 3
-        - emulated-contract-publish:
             contract-name: wrapped-stx
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/wrapped-stx.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 7
-      transactions: []
       epoch: "3.0"

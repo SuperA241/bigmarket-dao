@@ -1,4 +1,4 @@
-;; Title: EDE006 Treasury
+;; Title: BME006 Treasury
 ;; Synopsis:
 ;; A treasury that can manage STX, SIP009, SIP010, and SIP013 tokens.
 ;; Description:
@@ -44,7 +44,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; --- Internal DAO functions

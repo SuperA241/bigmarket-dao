@@ -1,4 +1,4 @@
-;; Title: BDE003 Core Proposals
+;; Title: BME03 Core Proposals
 ;; Synopsis:
 ;; This extension allows for the creation of core proposals by a few trusted
 ;; principals.
@@ -24,7 +24,7 @@
 ;; --- Authorisation check
 
 (define-public (is-dao-or-extension)
-	(ok (asserts! (or (is-eq tx-sender .bitcoin-dao) (contract-call? .bitcoin-dao is-extension contract-caller)) err-unauthorised))
+	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
 )
 
 ;; --- Internal DAO functions
@@ -55,7 +55,7 @@
 	(begin
 		(asserts! (is-core-team-member tx-sender) err-not-core-team-member)
 		(asserts! (or (is-eq (var-get core-team-sunset-height) u0) (< burn-block-height (var-get core-team-sunset-height))) err-sunset-height-reached)
-		(contract-call? .bde001-proposal-voting-tokenised add-proposal proposal
+		(contract-call? .bme001-proposal-voting add-proposal proposal
 			{
 				start-burn-height: start-burn-height,
 				end-burn-height: (+ start-burn-height duration),

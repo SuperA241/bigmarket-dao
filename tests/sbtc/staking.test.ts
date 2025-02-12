@@ -29,7 +29,7 @@ describe("prediction errors", () => {
     response = await predictCategory(alice, 0, 'yay', 1000000, 1, sbtcToken);
     // conclude
     response = await simnet.callPublicFn(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('yay')],
       bob
@@ -53,7 +53,7 @@ describe("prediction fees and stakes", () => {
 
     response = await predictCategory(bob, 0, 'nay', 10000000, 0, sbtcToken);
     const data = await simnet.callReadOnlyFn(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -71,7 +71,7 @@ describe("prediction fees and stakes", () => {
           "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","sbtc"),
-          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bde022-market-gating")
+          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bme022-market-gating")
         })
       )
     );
@@ -83,7 +83,7 @@ describe("prediction fees and stakes", () => {
     response = await predictCategory(alice, 0, 'yay', 2000000, 1, sbtcToken);
     response = await predictCategory(bob, 0, 'nay', 10000000, 0, sbtcToken);
     const data = await simnet.callReadOnlyFn(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -101,7 +101,7 @@ describe("prediction fees and stakes", () => {
           "market-fee-bips": uintCV(0),
           concluded: boolCV(false),
           token: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","sbtc"),
-          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bde022-market-gating")
+          treasury: Cl.contractPrincipal("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM","bme022-market-gating")
         })
       )
     );
@@ -114,7 +114,7 @@ describe("prediction fees and stakes", () => {
 
     // check stake
     let aliceStake = simnet.getMapEntry(
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "stake-balances",
       Cl.tuple({
         "market-id": uintCV(0),
@@ -130,7 +130,7 @@ describe("prediction fees and stakes", () => {
   response = await predictCategory(alice, 0, 'nay', 4000000, 0, sbtcToken);
 
     aliceStake = simnet.getMapEntry( 
-      "bde023-market-predicting",
+      "bme023-market-predicting",
       "stake-balances",
       Cl.tuple({
         "market-id": uintCV(0),
