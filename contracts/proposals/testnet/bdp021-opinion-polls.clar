@@ -12,7 +12,7 @@
 		;; Enable genesis extensions.
 		(try! (contract-call? .bigmarket-dao set-extensions
 			(list
-				{extension: .bme021-market-voting, enabled: true}
+				{extension: .bme021-0-market-voting, enabled: true}
 			)
 		))
 		(print "BigMarket DAO markets are enabled.")

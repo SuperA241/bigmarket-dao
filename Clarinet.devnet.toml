@@ -50,48 +50,48 @@ path = "contracts/bigmarket-dao.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme000-governance-token]
-path = "contracts/extensions/bme000-governance-token.clar"
+[contracts.bme000-0-governance-token]
+path = "contracts/extensions/bme000-0-governance-token.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme001-proposal-voting]
-path = "contracts/extensions/bme001-proposal-voting.clar"
+[contracts.bme001-0-proposal-voting]
+path = "contracts/extensions/bme001-0-proposal-voting.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme003-core-proposals]
-path = "contracts/extensions/bme003-core-proposals.clar"
+[contracts.bme003-0-core-proposals]
+path = "contracts/extensions/bme003-0-core-proposals.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme004-core-execute]
-path = "contracts/extensions/bme004-core-execute.clar"
+[contracts.bme004-0-core-execute]
+path = "contracts/extensions/bme004-0-core-execute.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme006-treasury]
-path = "contracts/extensions/bme006-treasury.clar"
+[contracts.bme006-0-treasury]
+path = "contracts/extensions/bme006-0-treasury.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme010-token-sale]
-path = "contracts/extensions/bme010-token-sale.clar"
+[contracts.bme010-0-token-sale]
+path = "contracts/extensions/bme010-0-token-sale.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme023-market-predicting]
-path = "contracts/extensions/bme023-market-predicting.clar"
+[contracts.bme023-0-market-predicting]
+path = "contracts/extensions/bme023-0-market-predicting.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme021-market-voting]
-path = "contracts/extensions/bme021-market-voting.clar"
+[contracts.bme021-0-market-voting]
+path = "contracts/extensions/bme021-0-market-voting.clar"
 clarity_version = 3
 epoch = "3.0"
 
-[contracts.bme022-market-gating]
-path = "contracts/extensions/bme022-market-gating.clar"
+[contracts.bme022-0-market-gating]
+path = "contracts/extensions/bme022-0-market-gating.clar"
 clarity_version = 3
 epoch = "3.0"
 

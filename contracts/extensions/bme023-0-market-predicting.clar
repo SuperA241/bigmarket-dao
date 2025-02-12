@@ -210,7 +210,7 @@
         true
       )
       ;; ensure the user is allowed to create if gating by merkle proof is required
-      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-market-gating can-access-by-account sender proof))) true)
+      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-0-market-gating can-access-by-account sender proof))) true)
 
       ;; all checks pass - insert market data
       (map-set markets
@@ -470,7 +470,7 @@
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
       
-      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-market-predicting none))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-predicting none))
       (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
 
       (ok transfer-amount)

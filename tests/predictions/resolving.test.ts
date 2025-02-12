@@ -18,7 +18,7 @@ describe("resolving errors", () => {
     let response = await createBinaryMarket(0, deployer, stxToken);
     // not deployer
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('nay')],
       alice
@@ -26,7 +26,7 @@ describe("resolving errors", () => {
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
     // not bob
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('nay')],
       tom
@@ -34,7 +34,7 @@ describe("resolving errors", () => {
     expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
     // only alice
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('nay')],
       bob
@@ -46,7 +46,7 @@ describe("resolving errors", () => {
     constructDao(simnet);
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(2), Cl.stringAscii('nay')],
       deployer
@@ -58,14 +58,14 @@ describe("resolving errors", () => {
     constructDao(simnet);
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting", 
+      "bme023-0-market-predicting", 
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('yay')],
       bob 
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market", 
       [Cl.uint(0), Cl.stringAscii('nay')], 
       bob
@@ -83,7 +83,7 @@ describe("resolve market", () => {
     await resolveUndisputed(0, true);
 
     const data = await simnet.callReadOnlyFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "get-market-data", 
       [Cl.uint(0)],
       alice
@@ -111,7 +111,7 @@ describe("resolve market", () => {
     await resolveUndisputed(0, false);
 
     let data = await simnet.callReadOnlyFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "get-market-data",
       [Cl.uint(0)],
       alice
@@ -133,7 +133,7 @@ describe("resolve market", () => {
     response = await createBinaryMarket(1, deployer, stxToken);
     await resolveUndisputed(1, true);
     data = await simnet.callReadOnlyFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "get-market-data",
       [Cl.uint(1)],
       alice 

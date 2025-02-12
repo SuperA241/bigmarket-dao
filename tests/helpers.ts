@@ -18,11 +18,11 @@ export const piedro = accounts.get('wallet_7')!;
 export const annie = accounts.get("wallet_4")!;
 export const developer = accounts.get("wallet_8")!;
 
-export const coreProposals = "bme003-core-proposals"; 
-export const marketVoting = "bme021-market-voting";
-export const marketGating = "bme022-market-gating";
-export const marketPredicting = "bme023-market-predicting";
-export const treasury = "bme006-treasury";
+export const coreProposals = "bme003-0-core-proposals"; 
+export const marketVoting = "bme021-0-market-voting";
+export const marketGating = "bme022-0-market-gating";
+export const marketPredicting = "bme023-0-market-predicting";
+export const treasury = "bme006-0-treasury";
 
 export async function setupSimnet() {
   return await initSimnet();
@@ -80,7 +80,7 @@ export async function allowMarketCreators(user:string) {
   const allowedCreators = [alice, bob, tom, betty, wallace];
   const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
   // console.log('Leaves (Tree):', tree.getLeaves().map(bytesToHex));
-  const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-market-predicting');
+  const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-0-market-predicting');
   console.log('root=' + root)
   console.log('lookupRootKey=' + lookupRootKey)
   const proposal = `bdp001-gating`;
@@ -93,7 +93,7 @@ export async function allowMarketCreators(user:string) {
 
 export async function assertStakeBalance(user:string, againstValue:number, forValue:number) {
   let data = await simnet.callReadOnlyFn(
-    "bme023-market-predicting",
+    "bme023-0-market-predicting",
     "get-stake-balances",
     [Cl.uint(0), Cl.principal(user)],
     alice
@@ -135,7 +135,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
   // Signal 1 by Alice
   const response2 = await simnet.callPublicFn(
-    "bme004-core-execute", // Replace with actual contract name
+    "bme004-0-core-execute", // Replace with actual contract name
     "executive-action",
     [Cl.principal(proposal)],
     alice
@@ -144,7 +144,7 @@ export async function passProposalByExecutiveSignals(simnet: any, proposalName: 
 
   // Signal 2 by Bob
   await simnet.callPublicFn(
-    "bme004-core-execute",
+    "bme004-0-core-execute",
     "executive-action",
     [Cl.principal(proposal)],
     bob
@@ -198,16 +198,16 @@ export function prepareVotes(
 }
 
 export async function passProposalByCoreVote(proposal: string, errorCode?: number) {
-  await isValidExtension(`${deployer}.bme000-governance-token`);
-  await isValidExtension(`${deployer}.bme001-proposal-voting`);
-  await isValidExtension(`${deployer}.bme004-core-execute`);
-  await isValidExtension(`${deployer}.bme003-core-proposals`);
-  await isValidExtension(`${deployer}.bme006-treasury`);
-  await isValidExtension(`${deployer}.bme022-market-gating`);
-  await isValidExtension(`${deployer}.bme021-market-voting`);
-  await isValidExtension(`${deployer}.bme023-market-predicting`);
+  await isValidExtension(`${deployer}.bme000-0-governance-token`);
+  await isValidExtension(`${deployer}.bme001-0-proposal-voting`);
+  await isValidExtension(`${deployer}.bme004-0-core-execute`);
+  await isValidExtension(`${deployer}.bme003-0-core-proposals`);
+  await isValidExtension(`${deployer}.bme006-0-treasury`);
+  await isValidExtension(`${deployer}.bme022-0-market-gating`);
+  await isValidExtension(`${deployer}.bme021-0-market-voting`);
+  await isValidExtension(`${deployer}.bme023-0-market-predicting`);
 
-  const votingContract = "bme001-proposal-voting";
+  const votingContract = "bme001-0-proposal-voting";
   const coreProposeResponse = await simnet.callPublicFn(
     coreProposals,
     "core-propose",

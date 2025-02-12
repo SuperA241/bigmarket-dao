@@ -7,7 +7,7 @@
 
 (define-public (execute (sender principal))
 	(begin
-		(try! (contract-call? .bme010-token-sale initialize-ido))
+		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 		(ok true)
 	)
 )

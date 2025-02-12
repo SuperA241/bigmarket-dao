@@ -125,45 +125,45 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme000-governance-token
+            contract-name: bme000-0-governance-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 82850
-            path: contracts/extensions/bme000-governance-token.clar
+            path: contracts/extensions/bme000-0-governance-token.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme001-proposal-voting
+            contract-name: bme001-0-proposal-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 93290
-            path: contracts/extensions/bme001-proposal-voting.clar
+            path: contracts/extensions/bme001-0-proposal-voting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme003-core-proposals
+            contract-name: bme003-0-core-proposals
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 26020
-            path: contracts/extensions/bme003-core-proposals.clar
+            path: contracts/extensions/bme003-0-core-proposals.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme004-core-execute
+            contract-name: bme004-0-core-execute
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 37080
-            path: contracts/extensions/bme004-core-execute.clar
+            path: contracts/extensions/bme004-0-core-execute.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme006-treasury
+            contract-name: bme006-0-treasury
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 50410
-            path: contracts/extensions/bme006-treasury.clar
+            path: contracts/extensions/bme006-0-treasury.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme010-token-sale
+            contract-name: bme010-0-token-sale
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 65290
-            path: contracts/extensions/bme010-token-sale.clar
+            path: contracts/extensions/bme010-0-token-sale.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -174,24 +174,24 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme021-market-voting
+            contract-name: bme021-0-market-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 128500
-            path: contracts/extensions/bme021-market-voting.clar
+            path: contracts/extensions/bme021-0-market-voting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme022-market-gating
+            contract-name: bme022-0-market-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 82320
-            path: contracts/extensions/bme022-market-gating.clar
+            path: contracts/extensions/bme022-0-market-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: bme023-market-predicting
+            contract-name: bme023-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 192520
-            path: contracts/extensions/bme023-market-predicting.clar
+            path: contracts/extensions/bme023-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:

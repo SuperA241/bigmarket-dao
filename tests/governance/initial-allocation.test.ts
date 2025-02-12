@@ -6,7 +6,7 @@ const simnet = await setupSimnet();
 
 async function checkIsNotRecipient(user:string) {
   let response = await simnet.callReadOnlyFn(
-    "bme000-governance-token",
+    "bme000-0-governance-token",
     "get-vesting-schedule",
     [Cl.principal(betty)],
     deployer
@@ -16,7 +16,7 @@ async function checkIsNotRecipient(user:string) {
 
 async function checkIsRecipient(user:string, amount:number, duration:number, claimed:number) {
   let response = await simnet.callReadOnlyFn(
-    "bme000-governance-token",
+    "bme000-0-governance-token",
     "get-vesting-schedule",
     [Cl.standardPrincipal(user)],
     deployer
@@ -26,7 +26,7 @@ async function checkIsRecipient(user:string, amount:number, duration:number, cla
 
 async function makeClaim(user:string) {
   let response = await simnet.callPublicFn(
-    "bme000-governance-token",
+    "bme000-0-governance-token",
     "core-claim",
     [],
     user
@@ -51,7 +51,7 @@ describe("initial distribution", () => {
   it("cannot reset allocation directly", async () => { 
     constructDao(simnet);
     let response = simnet.callPublicFn(
-      "bme000-governance-token",
+      "bme000-0-governance-token",
       "set-core-team-vesting", 
       [Cl.list([Cl.tuple({"start-block": Cl.uint(100), recipient: Cl.standardPrincipal(deployer), duration: Cl.uint(105120)})])],
       deployer)
@@ -61,7 +61,7 @@ describe("initial distribution", () => {
   it("can reset allocation via dao", async () => {
     constructDao(simnet);
     let response = await passProposalByCoreVote('bdp001-reset-allocation');
-    //const id = response.events.findIndex((o) => { o.data.contract_identifier === 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme000-governance-token' })
+    //const id = response.events.findIndex((o) => { o.data.contract_identifier === 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme000-0-governance-token' })
     //console.log(response.events)
     checkIsRecipient(deployer, 500000000000, 100, 0)
     checkIsRecipient(wallace, 500000000000, 100, 0)

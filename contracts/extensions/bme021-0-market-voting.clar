@@ -238,7 +238,7 @@
       ;; Emit an event for the vote
       (print {event: "market-vote", market-id: market-id, voter: voter, category-for: category-for, sip18: sip18, amount: amount, prev-market-id: prev-market-id})
 
-		  (contract-call? .bme000-governance-token bmg-lock amount voter)
+		  (contract-call? .bme000-0-governance-token bmg-lock amount voter)
     )
   ))
 
@@ -296,7 +296,7 @@
 		)
 		(asserts! (get concluded poll-data) err-not-concluded)
 		(map-delete member-total-votes {market-id: market-id, voter: tx-sender})
-		(contract-call? .bme000-governance-token bmg-unlock votes tx-sender)
+		(contract-call? .bme000-0-governance-token bmg-unlock votes tx-sender)
 	)
 )
 

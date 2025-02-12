@@ -80,7 +80,7 @@
 (define-private (set-core-team-vesting-iter (item {recipient: principal, start-block: uint, duration: uint}) (previous-result (response bool uint)))
 	(begin
 		(try! previous-result)
-		;;(asserts! (as-contract (contract-call? .bme004-core-execute is-executive-team-member (get recipient item))) err-not-core-team)
+		;;(asserts! (as-contract (contract-call? .bme004-0-core-execute is-executive-team-member (get recipient item))) err-not-core-team)
 		(let (
 				(amount (/ core-team-max-vesting (var-get core-team-size)))
 			)

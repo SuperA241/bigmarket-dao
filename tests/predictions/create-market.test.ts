@@ -15,7 +15,7 @@ const simnet = await setupSimnet();
 describe("prediction contract", () => { 
   it("ensures the contract is deployed", () => { 
     const contractSource = simnet.getContractSource( 
-      "bme023-market-predicting"
+      "bme023-0-market-predicting"
     ); 
     expect(contractSource).toBeDefined(); 
   }); 
@@ -24,13 +24,13 @@ describe("prediction contract", () => {
     constructDao(simnet);
     //let response = await createBinaryMarket(0, deployer, stxToken);
       let response = await simnet.callPublicFn(
-        "bme023-market-predicting", 
+        "bme023-0-market-predicting", 
         "create-market",
         [
           Cl.list([Cl.stringAscii('nay'), Cl.stringAscii('yay')]), Cl.none(),
           Cl.principal((stxToken) ? stxToken : stxToken),
           Cl.bufferFromHex(metadataHash()),
-          Cl.list([]), Cl.principal(`${deployer}.bme022-market-gating`)
+          Cl.list([]), Cl.principal(`${deployer}.bme022-0-market-gating`)
         ], 
         deployer
       );
@@ -62,7 +62,7 @@ describe("prediction contract", () => {
   //   response = await createBinaryMarketWithGating(1, proofToClarityValue(merdat.proof), metadataHash(), bob, stxToken)
 
   //   const data = await simnet.callReadOnlyFn(
-  //     "bme023-market-predicting",
+  //     "bme023-0-market-predicting",
   //     "get-market-data",
   //     [Cl.uint(0)], 
   //     bob

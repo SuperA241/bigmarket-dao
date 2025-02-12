@@ -12,7 +12,7 @@ const simnet = await setupSimnet();
 
 async function assertMarketData(user:string, yesPool:number, noPool:number, resolutionState:number, concluded:boolean, passed:boolean) {
   const data = await simnet.callReadOnlyFn(
-    "bme023-market-predicting",
+    "bme023-0-market-predicting",
     "get-market-data",
     [Cl.uint(0)], 
     tom
@@ -23,7 +23,7 @@ async function assertMarketData(user:string, yesPool:number, noPool:number, reso
 async function assertVotingData(proposer:string, votesFor:number, votesAg:number, concluded:boolean, passed:boolean, testName?:string) {
   if (testName) console.log(testName)
   const data = await simnet.callReadOnlyFn(
-    "bme021-market-voting",
+    "bme021-0-market-voting",
     "get-poll-data",
     [Cl.uint(0)], 
     tom
@@ -57,7 +57,7 @@ async function setUpmarketAndResolve(resolve:boolean) {
   response = await predictCategory(alice, 0, 'yay', 5000, 1, stxToken);
   
   response = await simnet.callPublicFn(
-    "bme023-market-predicting",
+    "bme023-0-market-predicting",
     "resolve-market",
     [Cl.uint(0), Cl.stringAscii('yay')],
     bob
@@ -75,14 +75,14 @@ describe("voting on resolution", () => {
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market", 
       [Cl.uint(0), Cl.stringAscii('yay')],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "dispute-resolution",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.principal(alice)],
       bob
@@ -115,7 +115,7 @@ describe("voting on resolution", () => {
     response = await predictCategory(alice, 0, 'yay', 5000, 1, stxToken);
     
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('yay')],
       bob
@@ -123,7 +123,7 @@ describe("voting on resolution", () => {
     expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
 
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "dispute-resolution",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.principal(alice)],
       bob
@@ -135,7 +135,7 @@ describe("voting on resolution", () => {
   it("staker can create market vote", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -146,7 +146,7 @@ describe("voting on resolution", () => {
   it("staker can create market vote", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -185,7 +185,7 @@ describe("voting on resolution", () => {
   it("vote cant close before voting window", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -221,7 +221,7 @@ describe("voting on resolution", () => {
       )
     );
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "conclude-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
@@ -233,7 +233,7 @@ describe("voting on resolution", () => {
   it("vote can close after voting window with no votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -269,7 +269,7 @@ describe("voting on resolution", () => {
     );
     simnet.mineEmptyBlocks(11);
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "conclude-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
@@ -278,7 +278,7 @@ describe("voting on resolution", () => {
 
     simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "conclude-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
@@ -318,7 +318,7 @@ describe("voting on resolution", () => {
   it("vote cant vote after end", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -356,7 +356,7 @@ describe("voting on resolution", () => {
     simnet.mineEmptyBlocks(25);
 
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
@@ -381,7 +381,7 @@ describe("voting on resolution", () => {
   it("cant vote with more than current unlocked bdg balance", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -417,14 +417,14 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(1000000000), Cl.none()],
       alice
@@ -464,7 +464,7 @@ describe("voting on resolution", () => {
   it("can vote before end", async () => {
     await setUpmarketAndResolve(false)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -500,21 +500,21 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       deployer
@@ -553,7 +553,7 @@ describe("voting on resolution", () => {
   it("vote closes true with for votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -590,7 +590,7 @@ describe("voting on resolution", () => {
 
 
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
@@ -627,7 +627,7 @@ describe("voting on resolution", () => {
 
     simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "conclude-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice
@@ -666,7 +666,7 @@ describe("voting on resolution", () => {
   it("vote closes true with against votes", async () => {
     await setUpmarketAndResolve(true)
     let response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "create-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.list([Cl.uint(0), Cl.uint(0)]), Cl.uint(2)],
       alice
@@ -703,21 +703,21 @@ describe("voting on resolution", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(1), Cl.uint(100), Cl.none()],
       alice
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       tom
     );
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "vote",
       [Cl.uint(0), Cl.bufferFromHex(metadataHash()), Cl.uint(0), Cl.uint(100), Cl.none()],
       deployer
@@ -754,7 +754,7 @@ describe("voting on resolution", () => {
 
     simnet.mineEmptyBlocks(25);
     response = await simnet.callPublicFn(
-      "bme021-market-voting",
+      "bme021-0-market-voting",
       "conclude-market-vote",
       [Cl.principal(`${deployer}.${marketPredicting}`), Cl.uint(0)],
       alice

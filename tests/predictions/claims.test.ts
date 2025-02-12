@@ -16,7 +16,7 @@ describe("claiming errors", () => {
     let response = await createBinaryMarket(0, deployer, stxToken);
     // not deployer
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(1), Cl.principal(stxToken)],
       deployer
@@ -28,7 +28,7 @@ describe("claiming errors", () => {
     constructDao(simnet);
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       alice
@@ -41,7 +41,7 @@ describe("claiming errors", () => {
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await predictCategory(alice, 0, 'yay', 2000000, 1);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       alice
@@ -54,14 +54,14 @@ describe("claiming errors", () => {
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('nay')],
       bob
     );
     expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       bob
@@ -78,7 +78,7 @@ describe("claiming errors", () => {
     let response = await createBinaryMarket(0, deployer, stxToken);
     response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       bob
@@ -95,7 +95,7 @@ describe("successful claim", () => {
     response = await predictCategory(alice, 0, 'yay', 5000, 1);
 
     let aliceStake = simnet.getMapEntry(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "stake-balances",
       Cl.tuple({ 
         "market-id": uintCV(0),
@@ -109,7 +109,7 @@ describe("successful claim", () => {
     );
 
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market",
       [Cl.uint(0), Cl.stringAscii('yay')],
       bob
@@ -118,7 +118,7 @@ describe("successful claim", () => {
 
     simnet.mineEmptyBlocks(10);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market-undisputed",
       [Cl.uint(0)],
       deployer 
@@ -127,7 +127,7 @@ describe("successful claim", () => {
 
     simnet.mineEmptyBlocks(145);
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "resolve-market-undisputed",
       [Cl.uint(0)],
       deployer
@@ -135,7 +135,7 @@ describe("successful claim", () => {
     expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 
     let data = await simnet.callReadOnlyFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "get-stake-balances", 
       [Cl.uint(0), Cl.principal(alice)],
       alice
@@ -148,11 +148,11 @@ describe("successful claim", () => {
     let stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
     console.log(
       "contractBalance 215: " +
-        stxBalances?.get(deployer + ".bme023-market-predicting")
+        stxBalances?.get(deployer + ".bme023-0-market-predicting")
     );
 
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       alice
@@ -162,11 +162,11 @@ describe("successful claim", () => {
     stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
     console.log(
       "contractBalance 272: " +
-        stxBalances?.get(deployer + ".bme023-market-predicting")
+        stxBalances?.get(deployer + ".bme023-0-market-predicting")
     );
 
     response = await simnet.callPublicFn(
-      "bme023-market-predicting",
+      "bme023-0-market-predicting",
       "claim-winnings",
       [Cl.uint(0), Cl.principal(stxToken)],
       bob
@@ -175,7 +175,7 @@ describe("successful claim", () => {
     stxBalances = simnet.getAssetsMap().get("STX"); // Replace if contract's principal
     console.log(
       "contractBalance 285: " +
-        stxBalances?.get(deployer + ".bme023-market-predicting")
+        stxBalances?.get(deployer + ".bme023-0-market-predicting")
     );
   });
   

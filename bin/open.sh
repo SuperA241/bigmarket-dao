@@ -5,9 +5,9 @@ urls=(
   "http://localhost:8000/transactions?chain=testnet&api=http://localhost:3999"
 
   "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bigmarket-dao?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme001-proposal-voting?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme003-core-proposals?chain=testnet&api=http://localhost:3999"
-  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme004-core-execute?chain=testnet&api=http://localhost:3999"
+  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme001-0-proposal-voting?chain=testnet&api=http://localhost:3999"
+  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme003-0-core-proposals?chain=testnet&api=http://localhost:3999"
+  "http://localhost:8000/txid/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme004-0-core-execute?chain=testnet&api=http://localhost:3999"
 
   #"http://localhost:8000/txid/ST000000000000000000002AMW42H.pox-4?chain=testnet&api=http://localhost:3999"
   #"http://localhost:8000/txid/ST000000000000000000002AMW42H.signers-1-12?chain=testnet&api=http://localhost:3999"

@@ -170,7 +170,7 @@
 			)
 		)
 		(print {event: "vote", proposal: proposal, voter: voter, for: for, amount: amount})
-		(contract-call? .bme000-governance-token bmg-lock amount voter)
+		(contract-call? .bme000-0-governance-token bmg-lock amount voter)
 	)
 )
 
@@ -207,7 +207,7 @@
 		)
 		(asserts! (get concluded proposal-data) err-proposal-not-concluded)
 		(map-delete member-total-votes {proposal: reclaim-proposal, voter: tx-sender})
-		(contract-call? .bme000-governance-token bmg-unlock votes tx-sender)
+		(contract-call? .bme000-0-governance-token bmg-unlock votes tx-sender)
 	)
 )
 

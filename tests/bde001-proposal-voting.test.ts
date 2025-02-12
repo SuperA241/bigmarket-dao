@@ -9,17 +9,17 @@ const acc = simnet.getAccounts();
 const alice = acc.get("wallet_1")!;
 const bob = acc.get("wallet_2")!;
 const deployer = accounts.get("deployer")!;
-const coreProposals = "bme003-core-proposals"; // Replace with actual contract name
-const proposalVoting = "bme001-proposal-voting"; // Replace with actual contract name
+const coreProposals = "bme003-0-core-proposals"; // Replace with actual contract name
+const proposalVoting = "bme001-0-proposal-voting"; // Replace with actual contract name
 
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
 */
 
-describe("bme001-proposal-voting contract", () => {
+describe("bme001-0-proposal-voting contract", () => {
   it("ensures the contract is deployed", () => {
-    const contractSource = simnet.getContractSource("bme001-proposal-voting");
+    const contractSource = simnet.getContractSource("bme001-0-proposal-voting");
     expect(contractSource).toBeDefined();
     //console.log(contractSource);
   });
@@ -97,7 +97,7 @@ describe("bme001-proposal-voting contract", () => {
 //   ]);
 
 //   const result = await simnet.callPublicFn(
-//     "bme001-proposal-voting",
+//     "bme001-0-proposal-voting",
 //     "batch-vote",
 //     [Cl.principal(proposal), votes],
 //     wallet1

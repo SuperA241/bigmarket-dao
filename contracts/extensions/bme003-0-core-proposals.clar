@@ -55,7 +55,7 @@
 	(begin
 		(asserts! (is-core-team-member tx-sender) err-not-core-team-member)
 		(asserts! (or (is-eq (var-get core-team-sunset-height) u0) (< burn-block-height (var-get core-team-sunset-height))) err-sunset-height-reached)
-		(contract-call? .bme001-proposal-voting add-proposal proposal
+		(contract-call? .bme001-0-proposal-voting add-proposal proposal
 			{
 				start-burn-height: start-burn-height,
 				end-burn-height: (+ start-burn-height duration),
