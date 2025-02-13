@@ -13,7 +13,7 @@
 (define-fungible-token bmg-token u10000000000000)
 (define-fungible-token bmg-token-locked)
 
-(define-constant core-team-max-vesting u1500000000000) ;; 15% of total supply (10,000,000 BMG)
+(define-constant core-team-max-vesting u1500000000000) ;; 15% of total supply (10,000,000 BIG)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-not-token-owner (err u3001))
@@ -25,8 +25,8 @@
 (define-constant err-recipients-are-locked (err u3007))
 (define-constant err-transfers-blocked (err u3008))
 
-(define-data-var token-name (string-ascii 32) "BigMarket DAO Governance Token")
-(define-data-var token-symbol (string-ascii 10) "BMG")
+(define-data-var token-name (string-ascii 32) "BigMarket Governance Token")
+(define-data-var token-symbol (string-ascii 10) "BIG")
 (define-data-var token-uri (optional (string-utf8 256)) none)
 (define-data-var token-decimals uint u6)
 (define-data-var core-team-size uint u0)
