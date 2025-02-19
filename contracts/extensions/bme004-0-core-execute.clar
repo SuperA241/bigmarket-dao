@@ -11,7 +11,7 @@
 ;; by means of a future proposal.
 
 (impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait  'ST11804SFNTNRKZQBWB1R3F5YHEXSTXXEWZDXTMH6.proposal-trait.proposal-trait)
+(use-trait proposal-trait  .proposal-trait.proposal-trait)
 
 (define-data-var executive-team-sunset-height uint u0) ;; does not expire by default - can be changed by proposal
 

@@ -48,22 +48,6 @@ genesis:
 plan:
   batches:
     - id: 0
-      transactions: []
-      epoch: "2.0"
-    - id: 1
-      transactions:
-        - emulated-contract-publish:
-            contract-name: nft-trait
-            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
-            path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
-            path: ".cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
-            clarity-version: 1
-      epoch: "2.1"
-    - id: 2
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
@@ -84,6 +68,11 @@ plan:
             contract-name: governance-token-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/governance-token-trait.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: sip-010-trait-ft-standard
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/traits/sips/sip-010-trait-ft-standard.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme000-0-governance-token
@@ -116,14 +105,24 @@ plan:
             path: contracts/extensions/bme010-0-token-sale.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme022-0-market-gating
+            contract-name: nft-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bme022-0-market-gating.clar
+            path: contracts/traits/sips/nft-trait.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: prediction-market-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/prediction-market-trait.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme021-0-market-voting
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme021-0-market-voting.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme022-0-market-gating
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme022-0-market-gating.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme023-0-market-predicting
@@ -133,7 +132,7 @@ plan:
         - emulated-contract-publish:
             contract-name: dia-oracle
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/devnet/dia-oracle.clar
+            path: contracts/external/dia-oracle.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme023-0-market-scalar
@@ -148,12 +147,90 @@ plan:
         - emulated-contract-publish:
             contract-name: bdp000-bootstrap
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/testnet/bdp000-bootstrap.clar
+            path: contracts/proposals/devnet/bdp000-bootstrap.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme021-0-market-voting
+            contract-name: bdp000-core-team-sunset-height
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bme021-0-market-voting.clar
+            path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-1
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-1.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-2
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-2.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-3
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-3.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-4
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar
+            clarity-version: 3
+      epoch: "3.0"
+    - id: 1
+      transactions:
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-5
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-5.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-6
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-6.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-advance-stage-7
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-7.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-cancel-stage
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-cancel-stage.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-gating
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/bdp001-gating.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-gating-false
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/bdp001-gating-false.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-gating-true-testnet
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/bdp001-gating-true-testnet.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-initialise-token-sale
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-initialise-token-sale.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-market-fees
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-market-fees.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-market-fees-1
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-market-fees-1.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bdp001-reset-allocation
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/bdp001-reset-allocation.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: wrapped-stx

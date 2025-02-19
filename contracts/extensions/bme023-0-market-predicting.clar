@@ -78,7 +78,7 @@
     market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
     resolution-burn-height: uint,
-    categories: (list 10 (string-ascii 32)), ;; List of available categories
+    categories: (list 10 (string-ascii 64)), ;; List of available categories
     stakes: (list 10 uint), ;; Total staked per category
     outcome: (optional uint),
     concluded: bool
@@ -194,7 +194,7 @@
 
 ;; ---------------- public functions ----------------
 
-(define-public (create-market (categories (list 10 (string-ascii 32))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal))
+(define-public (create-market (categories (list 10 (string-ascii 64))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
@@ -235,7 +235,7 @@
       (ok new-id)
   )
 )
-(define-public (predict-category (market-id uint) (amount uint) (category (string-ascii 32)) (token <ft-token>))
+(define-public (predict-category (market-id uint) (amount uint) (category (string-ascii 64)) (token <ft-token>))
   (let (
         (amount-less-fee (try! (process-stake-transfer amount token)))
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
@@ -266,7 +266,7 @@
 )
 
 ;; Resolve a market invoked by ai-agent.
-(define-public (resolve-market (market-id uint) (category (string-ascii 32)))
+(define-public (resolve-market (market-id uint) (category (string-ascii 64)))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (index (unwrap! (index-of? (get categories md) category) err-category-not-found))

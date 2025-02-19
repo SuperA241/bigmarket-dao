@@ -16,12 +16,12 @@ cache_dir = '.cache'
 # contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3'
 
 [contracts.nft-trait]
-path = 'contracts/nft-trait.clar'
+path = 'contracts/traits/sips/nft-trait.clar'
 clarity_version = 3
 epoch = 3.0
 
 [contracts.sip-010-trait-ft-standard]
-path = 'contracts/sip-010-trait-ft-standard.clar'
+path = 'contracts/traits/sips/sip-010-trait-ft-standard.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -82,7 +82,7 @@ clarity_version = 3
 epoch = 3.0
 
 [contracts.dia-oracle]
-path = 'contracts/proposals/devnet/dia-oracle.clar'
+path = 'contracts/external/dia-oracle.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -97,7 +97,8 @@ clarity_version = 3
 epoch = 3.0
 
 [contracts.bdp000-bootstrap]
-path = 'contracts/proposals/testnet/bdp000-bootstrap.clar'
+#path = 'contracts/proposals/testnet/bdp000-bootstrap.clar'
+path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -129,3 +130,86 @@ strict = false
 trusted_sender = false
 trusted_caller = false
 callee_filter = false
+
+
+
+[contracts.bdp000-core-team-sunset-height]
+path = 'contracts/proposals/devnet/bdp000-core-team-sunset-height.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-1]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-1.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-2]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-2.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-3]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-4]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-5]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-5.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-6]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-6.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-advance-stage-7]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-advance-stage-7.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-cancel-stage]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-cancel-stage.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-gating]
+path = 'contracts/proposals/devnet/bdp001-gating.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-gating-false]
+path = 'contracts/proposals/devnet/bdp001-gating-false.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-gating-true-testnet]
+path = 'contracts/proposals/devnet/bdp001-gating-true-testnet.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-initialise-token-sale]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-initialise-token-sale.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-market-fees]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-market-fees.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-market-fees-1]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-market-fees-1.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bdp001-reset-allocation]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-reset-allocation.clar'
+clarity_version = 3
+epoch = 3.0
+
