@@ -10,9 +10,9 @@
 ;; Unlike proposal voting - market voting is categorical - voters are voting to select an
 ;; outcome from at least 2 and up to 10 potential outcomes.
 
-(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
-(use-trait nft-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
-(use-trait ft-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait .extension-trait.extension-trait)
+(use-trait nft-trait .nft-trait.nft-trait)
+(use-trait ft-trait .sip-010-trait-ft-standard.sip-010-trait)
 (use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)
 
 (define-constant err-unauthorised (err u2100))
@@ -41,7 +41,7 @@
 
 (define-constant structured-data-header (concat structured-data-prefix message-domain-hash))
 
-(define-data-var voting-duration uint u72)
+(define-data-var voting-duration uint u288)
 
 (define-map resolution-polls
 	uint
@@ -78,11 +78,11 @@
     (market-id uint)
     (market-data-hash (buff 32))
     (empty-votes (list 10 uint))
-    (num-categories uint) 
+    (num-categories uint)
   )
   (let
     (
-      (original-sender tx-sender) 
+      (original-sender tx-sender)
     )
     (asserts! (is-none (map-get? resolution-polls market-id)) err-invalid-category)
     (asserts! (is-eq (len empty-votes) num-categories) err-poll-already-exists)

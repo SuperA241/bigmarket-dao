@@ -4,7 +4,7 @@
 ;; Allowed = ["ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV", "ST2RPDWF6N939Y32C4ZEVC74SCRTGSJBFBPJP05H5", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY"];
 ;; For ContractID = ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV.bme023-0-market-predicting => 0x61db988c6dfd25447d5df0406acca12463ef3aebecb95feba6ef2752d5a20aa3
 
-(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
+(impl-trait  .proposal-trait.proposal-trait)
 
 (define-public (execute (sender principal))
 	(begin

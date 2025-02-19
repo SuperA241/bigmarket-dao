@@ -23,6 +23,7 @@ export const coreProposals = 'bme003-0-core-proposals';
 export const marketVoting = 'bme021-0-market-voting';
 export const marketGating = 'bme022-0-market-gating';
 export const marketPredicting = 'bme023-0-market-predicting';
+export const marketScalar = 'bme023-0-market-scalar';
 export const treasury = 'bme006-0-treasury';
 
 export async function setupSimnet() {

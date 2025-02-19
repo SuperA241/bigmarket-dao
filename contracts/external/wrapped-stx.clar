@@ -2,7 +2,7 @@
 ;; Description:
 ;; simple wrapped stx sip 10 for testing market creation and staking.
 
-(impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait .sip-010-trait-ft-standard.sip-010-trait)
 
 (define-read-only (get-balance (owner principal))
     (ok (stx-get-balance owner))

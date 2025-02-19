@@ -7,8 +7,8 @@
 ;; BigMarket DAO proposals and extensions.
 
 (impl-trait .governance-token-trait.governance-token-trait)
-(impl-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
-(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(impl-trait .sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait .extension-trait.extension-trait)
  
 (define-fungible-token bmg-token u10000000000000)
 (define-fungible-token bmg-token-locked)
