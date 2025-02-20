@@ -12,7 +12,8 @@
 
 ## How it Works
 
-* [Creating Markets on BigMarket](how-it-works/editor/README.md)
+* [📘 Creating Markets on BigMarket](how-it-works/editor/README.md)
   * [Creating a Market (User Guide)](how-it-works/editor/creating-a-market-user-guide.md)
   * [Creating a Market (AI Integration Guide)](how-it-works/editor/creating-a-market-ai-integration-guide.md)
+* [📘 Platform Fees](how-it-works/platform-fees.md)
 * [📘 Making Predictions on BigMarket](how-it-works/making-predictions-on-bigmarket.md)
