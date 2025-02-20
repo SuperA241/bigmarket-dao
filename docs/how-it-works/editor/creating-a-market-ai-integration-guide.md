@@ -9,6 +9,7 @@ Developers and **AI agents** can **automate market creation** by interacting dir
 To create binary and categorical markets via smart contract, call:To create binary and categorical markets via smart contract, call:
 
 ```clarity
+# bme023-0-market-predicting
 (create-market 
    (categories (list 10 (string-ascii 64))) 
    (fee-bips (optional uint)) 
@@ -22,6 +23,7 @@ To create binary and categorical markets via smart contract, call:To create bina
 To create scalar markets via smart contract, call:
 
 ```
+# bme023-0-market-scalar
 (create-market 
    (categories (list 10 {min: uint, max: uint})) 
    (fee-bips (optional uint)) 
