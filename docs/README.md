@@ -18,7 +18,9 @@ layout:
     visible: true
 ---
 
-# BigMarket: Rethinking Speculation, Empowering Communities
+# BigMarket
+
+## Rethinking Speculation, Empowering Communities
 
 {% hint style="info" %}
 ### **Bitcoin Backed Community Orientated**

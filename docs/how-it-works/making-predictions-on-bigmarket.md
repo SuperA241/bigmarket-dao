@@ -1,4 +1,4 @@
-# 📘 Making Predictions on BigMarket
+# 📘 Making Predictions
 
 Welcome to BigMarket’s prediction platform! This guide walks you through the steps to find, analyze, and place predictions on markets using your connected wallet.
 
