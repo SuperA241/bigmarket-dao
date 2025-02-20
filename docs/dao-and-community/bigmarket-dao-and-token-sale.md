@@ -10,49 +10,47 @@ icon: monero
 
 ### 📌 Overview
 
-The **BigMarket DAO Governance (BDG) Token** will be distributed in multiple stages to fund the ecosystem and provide governance access to early supporters.
+The **BigMarket DAO Governance (BIG) Token** will be distributed in multiple stages to fund the ecosystem and provide governance access to early supporters.
 
 * **Blockchain:** Stacks L2
 * **Token Standard:** SIP-010 Fungible Token
-* **Total Supply:** 10,000,000 BDG
+* **Total Supply:** 10,000,000 **BIG**
 * **Decimals:** 6
 * **Token Utilities:**
-  * Market Creation
   * Dispute Resolution
   * Governance
-  * Staking Rewards
-  * Fee Distribution
 
 ***
 
 ### 🚀 IDO Sale Mechanics
 
-| Stage | Raise (USD) | Price (USD) | Tokens    | Lockup  |
-| ----- | ----------- | ----------- | --------- | ------- |
-| **1** | $30,000     | $0.05       | 600,000   | 1 Month |
-| **2** | $50,000     | $0.06       | 833,333   | 1 Month |
-| **3** | $75,000     | $0.07       | 1,071,429 | 1 Month |
-| **4** | $100,000    | $0.08       | 1,250,000 | 1 Month |
-| **5** | $150,000    | $0.10       | 1,500,000 | 1 Month |
-| **6** | $200,000    | $0.20       | 1,000,000 | 1 Month |
+<table><thead><tr><th>Stage</th><th>Raise (USD)</th><th>Price (USD)</th><th>Tokens</th><th data-hidden>Lockup</th></tr></thead><tbody><tr><td><strong>1</strong></td><td>$30,000</td><td>$0.05</td><td>600,000</td><td>1 Month</td></tr><tr><td><strong>2</strong></td><td>$50,000</td><td>$0.06</td><td>833,333</td><td>1 Month</td></tr><tr><td><strong>3</strong></td><td>$75,000</td><td>$0.07</td><td>1,071,429</td><td>1 Month</td></tr><tr><td><strong>4</strong></td><td>$100,000</td><td>$0.08</td><td>1,250,000</td><td>1 Month</td></tr><tr><td><strong>5</strong></td><td>$150,000</td><td>$0.10</td><td>1,500,000</td><td>1 Month</td></tr><tr><td><strong>6</strong></td><td>$200,000</td><td>$0.20</td><td>1,000,000</td><td>1 Month</td></tr></tbody></table>
 
 * **Total Raised:** $605,000
-* **Total Tokens Sold:** 6,000,000 BDG
-* **Vesting:** 1-month lockup after each sale stage, followed by full distribution
+* **Total Tokens Sold:** 6,000,000 **BIG**
+* **Vesting:** tokens are minted directly but transfers are locked until DAO unlocks
+
+Note: locking the transfer of the bdg-token allows two things;
+
+1. enables immediate voting/utility e.g. to resolve market disputes
+2. prevents tokens being dumped during sale period
 
 ***
 
 ### 🔐 Team & Advisor Vesting Schedule
 
-| Category            | Percentage | Amount        | Vesting Period                      |
-| ------------------- | ---------- | ------------- | ----------------------------------- |
-| **Community/IDO**   | 60%        | 6,000,000 BDG | According to sale stages            |
-| **Staking Rewards** | 15%        | 1,500,000 BDG | Linear release over 3 years         |
-| **Team & Council**  | 15%        | 1,500,000 BDG | 1-year cliff, 2-year linear vesting |
-| **Treasury**        | 10%        | 1,000,000 BDG | Controlled by governance            |
+| Category           | Percentage | Amount            | Vesting Period                      |
+| ------------------ | ---------- | ----------------- | ----------------------------------- |
+| **Community/IDO**  | 75%        | 7,500,000 **BIG** | According to sale stages            |
+| **Team & Council** | 15%        | 1,500,000 **BIG** | 1-year cliff, 2-year linear vesting |
+| **Treasury**       | 10%        | 1,000,000 **BIG** | Controlled by governance            |
 
 * **Team & Council Vesting Details**:
   * **1-Year Cliff**: No tokens unlocked in the first year.
   * **Linear Release Over 2 Years**: Gradual release of tokens every month over the next 24 months.
 
 This approach ensures long-term alignment with the project’s vision and prevents immediate token dumping by the team.
+
+### Token Contract
+
+Latest implementation of this sale can be [found on testnet](https://explorer.hiro.so/txid/0x5c8e4fa8747e99529d7390b661788d9e3eab1c892c85e854b17b2c30e64c8325?chain=testnet).
