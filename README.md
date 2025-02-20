@@ -1,40 +1,32 @@
----
-icon: bullseye-arrow
-cover: .gitbook/assets/dreambig-banner.jpeg
-coverY: 0
-layout:
-  cover:
-    visible: true
-    size: full
-  title:
-    visible: true
-  description:
-    visible: true
-  tableOfContents:
-    visible: true
-  outline:
-    visible: true
-  pagination:
-    visible: true
----
+<img src="https://brightblock.org/logo/bm-logo-kight-blue.png" alt="BigMarket Logo" style="width: auto; max-width: 500px; display: inline-block; margin: 1rem auto;align:left;" />
 
-# BigMarket: Rethinking Speculation, Empowering Communities
+# BigMarket Contracts
 
-{% hint style="info" %}
-### **Bitcoin Backed Community Orientated**
-{% endhint %}
+## Description
 
-Speculation is a fundamental human instinct—from the earliest recorded examples - drawing tiles - described in the Book of Song, \~2000 B.C. Fast forward to the current day and the Traditional Betting Industry has emerged as a dominant, highly efficient and centralised machine for extracting **huge profits** from everyday people and concentrating wealth in the hands of a few. **BigMarket is here to challenge this story.**
+A system of smart contracts, based on [Executor DAO](https://github.com/Clarity-Innovation-Lab/executor-dao),
+for community ownership and management of on-chain prediction market machinery.
 
-We believe prediction markets can be used to express peoples desire to speculate while also **giving back** to the communities that create and use them. BigMarket is a **decentralized, AI-driven prediction market** that **puts people first**, recycling market profits into **grassroots communities, independent creators, and real-world causes**.
+## Development
 
-Imagine:\
-🎶 **Music markets** that **fund emerging musicians.**\
-🌍 **Climate markets** where **profits drive sustainability projects.**\
-📰 **Geopolitical prediction markets** that **support independent journalism.**
+- Vite
+- Clarinet SDK
+- Stacks.js
 
-Built on **Bitcoin for security**, BigMarket ensures **fairness, and transparency**—while unlocking a future where **both users and AI agents** can autonomously create and resolve markets.
+To run tests:
 
-This isn’t just about betting. **This is about changing the economics of speculation.** 🚀
+```bash
+git clone ..
+npm install
+npm run test
+```
 
-###
+## Deployment
+
+Thje project is deployed with the following keys;
+
+- testnet: [STTXG1F9BN6FP0Z2BNM1MSZTKE3D445F9KDSZWZT](https://explorer.hiro.so/address/STTXG1F9BN6FP0Z2BNM1MSZTKE3D445F9KDSZWZT?chain=testnet)
+- mainnet: [TBD]
+
+Once deployed the DAO is constructed with a bootstrap proposal. This proposal configures many aspects of the DAO with the initial
+parameters and configuration.
