@@ -6,7 +6,8 @@ Proposals for Integration with AIBTC project.&#x20;
 
 1. **Integration A**: Separate core dao projects
    1. BigMarket dao token sale takes place independently
-   2. integrations focus on using AIBTC agents to interract with prediction markets.
+   2. integrations focus on using AIBTC agents to interract with prediction markets
+   3. time to market considerations
 2. **Integration B**: BigMarket forks AIBTC DEV core dao
    1. BigMarket aligns with AIBTC token sale/distribution approach
    2. BigMarket aligns with AIBTC voting and proposal mechanisms
