@@ -130,7 +130,7 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 233760
+            cost: 233780
             path: contracts/extensions/bme023-0-market-scalar.clar
             anchor-block-only: true
             clarity-version: 3

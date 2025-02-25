@@ -25,7 +25,7 @@ npm run test
 
 Thje project is deployed with the following keys;
 
-- testnet: [STTXG1F9BN6FP0Z2BNM1MSZTKE3D445F9KDSZWZT](https://explorer.hiro.so/address/STTXG1F9BN6FP0Z2BNM1MSZTKE3D445F9KDSZWZT?chain=testnet)
+- testnet: [ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R](https://explorer.hiro.so/address/ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R?chain=testnet)
 - mainnet: [TBD]
 
 Once deployed the DAO is constructed with a bootstrap proposal. This proposal configures many aspects of the DAO with the initial
