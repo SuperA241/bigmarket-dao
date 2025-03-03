@@ -9,7 +9,8 @@ icon: monero
 ## BigMarket Token Sale & Distribution
 
 ```svelte
-This is a work in progress - the final version will include feedback from early contributors via proposal voting.
+This is a work in progress - the final version will 
+include feedback from early contributors via proposal voting.
 ```
 
 ### 📌 Overview
