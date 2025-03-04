@@ -482,7 +482,6 @@
     (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVED) err-market-not-concluded)
     (asserts! (is-eq u0 (unwrap! (element-at? stakes winning-index) err-element-expected)) err-winning-stake-not-zero)
-    (asserts! (> balance u0) err-losing-stake-is-zero)
     (as-contract
       (begin
         (if (> balance u0)
