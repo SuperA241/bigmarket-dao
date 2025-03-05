@@ -17,3 +17,7 @@
   * [Creating a Market (AI Integration Guide)](how-it-works/editor/creating-a-market-ai-integration-guide.md)
 * [📘 Platform Fees](how-it-works/platform-fees.md)
 * [📘 Making Predictions](how-it-works/making-predictions.md)
+
+## Group 1
+
+* [Bitcoin Markets](group-1/bitcoin-markets.md)
