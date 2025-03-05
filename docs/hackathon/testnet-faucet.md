@@ -11,7 +11,7 @@ Note this needs docs bug raising on Hiro [here](https://docs.hiro.so/stacks/api/
 
 ## Address types
 
-#### **Summary Table of All Bitcoin Address Prefixes**
+#### **Bitcoin Address Prefixes**
 
 | **Transaction Type**       | **Mainnet** | **Testnet** | **Regtest** |
 | -------------------------- | ----------- | ----------- | ----------- |
@@ -21,4 +21,3 @@ Note this needs docs bug raising on Hiro [here](https://docs.hiro.so/stacks/api/
 | **P2WSH** (SegWit Scripts) | `bc1q`      | `tb1q`      | `bcrt1q`    |
 | **P2TR** (Taproot)         | `bc1p`      | `tb1p`      | `bcrt1p`    |
 
-Would you like me to expand on **script construction for each type** or explain how to **decode and generate these addresses**? 🚀
