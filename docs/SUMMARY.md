@@ -18,6 +18,7 @@
 * [📘 Platform Fees](how-it-works/platform-fees.md)
 * [📘 Making Predictions](how-it-works/making-predictions.md)
 
-## Group 1
+## HACKATHON
 
-* [Bitcoin Markets](group-1/bitcoin-markets.md)
+* [Bitcoin Markets](hackathon/bitcoin-markets.md)
+* [Testnet Faucet](hackathon/testnet-faucet.md)
