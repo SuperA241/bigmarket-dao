@@ -12,25 +12,58 @@ Set up and run a local regtest node alongside Clarinet devnet.
 
 ### Part 1: Sync up bitcoin nodes
 
-```
-// as normal
-clarinet devnet start 
-// start local regtest node
-bitcoind -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -datadir=/Users/mijoco/bitcoin-regtest/data -regtest
+Restart process
 
-// check clarinet docker bitcoin
+1. stop clarinet devnet and bitcoin core
+
+```
+bitcoin-cli -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -regtest stop
+```
+
+2. start devnet and bitcoin core
+
+```
+clarinet devnet start
+bitcoind -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -datadir=/Users/mijoco/bitcoin-regtest/data -regtest
+```
+
+3. Check nodes in sync
+
+```
 docker exec -it bitcoin-node.bigmarket-dao.devnet bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet getblockchaininfo
 docker exec -it bitcoin-node.bigmarket-dao.devnet bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet getpeerinfo
 
-// check local node
 bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet getblockchaininfo
 bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet getpeerinfo
-
 ```
 
-### Part 2: Bitcoin Transactions
+4. create non descriptor wallet
 
+```
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet createwallet "big-wallet" false false
+```
 
+5. mine some blocks / check balance
+
+```
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet getnewaddress
+```
+
+```
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet generatetoaddress 101 bcrt1qkt8ggmggzte67g9pfu6wpqu0tzpwyd9exw8ysj
+```
+
+6. check balance
+
+```
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet getbalance
+```
+
+7. send btc to leather wallet
+
+```
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet sendtoaddress bcrt1q3tj2fr9scwmcw3rq5m6jslva65f2rqjxfrjz47 5
+```
 
 ### Configuration
 
