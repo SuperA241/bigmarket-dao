@@ -22,8 +22,10 @@ layout:
 
 ## Rethinking Speculation, Empowering Communities
 
+## Rethinking Speculation, Empowering Communities
+
 {% hint style="info" %}
-### **Bitcoin Backed Community Orientated**
+### **Bitcoin Backed, Community Focused**
 {% endhint %}
 
 Speculation is a fundamental human instinct—from the earliest recorded examples - drawing tiles - described in the Book of Song, \~2000 B.C. Fast forward to the current day and the Traditional Betting Industry has emerged as a dominant, highly efficient and centralised machine for extracting **huge profits** from everyday people and concentrating wealth in the hands of a few. **BigMarket is here to challenge this story.**

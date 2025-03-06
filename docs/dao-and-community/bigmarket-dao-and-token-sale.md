@@ -8,6 +8,13 @@ icon: monero
 
 ## BigMarket Token Sale & Distribution
 
+```svelte
+This is a work in progress - the final version will 
+include feedback from early contributors via proposal voting.
+```
+
+This document is a work in progress - final version will include voting on proposals from early community contributors.
+
 ### 📌 Overview
 
 The **BigMarket DAO Governance (BIG) Token** will be distributed in multiple stages to fund the ecosystem and provide governance access to early supporters.
@@ -39,17 +46,17 @@ Note: locking the transfer of the bdg-token allows two things;
 
 ### 🔐 Team & Advisor Vesting Schedule
 
-| Category           | Percentage | Amount            | Vesting Period                      |
-| ------------------ | ---------- | ----------------- | ----------------------------------- |
-| **Community/IDO**  | 75%        | 7,500,000 **BIG** | According to sale stages            |
-| **Team & Council** | 15%        | 1,500,000 **BIG** | 1-year cliff, 2-year linear vesting |
-| **Treasury**       | 10%        | 1,000,000 **BIG** | Controlled by governance            |
+| Category          | Percentage | Amount            | Vesting Period                      |
+| ----------------- | ---------- | ----------------- | ----------------------------------- |
+| **Community/IDO** | 60%        | 6,00,000 **BIG**  | According to sale stages            |
+| Operations        | 15%        | 1,500,000 **BIG** | 1-year cliff, 2-year linear vesting |
+| **Treasury**      | 25%        | 2,500,000 **BIG** | Controlled by governance            |
 
 * **Team & Council Vesting Details**:
   * **1-Year Cliff**: No tokens unlocked in the first year.
   * **Linear Release Over 2 Years**: Gradual release of tokens every month over the next 24 months.
 
-This approach ensures long-term alignment with the project’s vision and prevents immediate token dumping by the team.
+This approach ensures long-term alignment with the project’s vision and prevents immediate token dumping.
 
 ### Token Contract
 
