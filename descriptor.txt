@@ -1,0 +1,4 @@
+your_mnemonic: now jewel fault pottery tag pond uphold night undo owner split stone
+getdescriptorinfo "tr(tprv8ZgxMBicQKsPecRC2CKvGZtyJpUENvhhvgWHkoVSc4ye16qadK41vFggnqY7CVLSNZCYV1PhAZwSA8EeB3zaZhqwQUnaFoy84SuzY7XyXwR/86'/1'/0'/0/*)"
+importdescriptors "[{\"desc\":\"tr(tprv8ZgxMBicQKsPecRC2CKvGZtyJpUENvhhvgWHkoVSc4ye16qadK41vFggnqY7CVLSNZCYV1PhAZwSA8EeB3zaZhqwQUnaFoy84SuzY7XyXwR/86'/1'/0'/0/*)#u99f0ylg\",\"active\":true,\"timestamp\":\"now\",\"range\":[0,1000],\"next_index\":1}]"
+

@@ -1,89 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="23" failures="0" errors="0" time="137.93">
-    <testsuite name="tests/gating/account-gating.test.ts" timestamp="2025-02-25T14:55:28.476Z" hostname="Mikes-MacBook-Pro.local" tests="23" failures="0" errors="0" skipped="0" time="0.751">
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; err too few categories" time="0.036">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create binary market ok" time="0.034">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create ok" time="0.042">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.033">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake ok" time="0.031">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.031">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.032">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve ok" time="0.033">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.034">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.035">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.035">
-            <system-out>
-contractBalance : bme023-0-market-predicting : 2970
+<testsuites name="vitest tests" tests="1" failures="1" errors="0" time="2017.778">
+    <testsuite name="tests/claritybitcoin/segwit_tx.test.ts" timestamp="2025-03-05T17:44:11.808Z" hostname="Mikes-MacBook-Pro.local" tests="1" failures="1" errors="0" skipped="0" time="0.014">
+        <testcase classname="tests/claritybitcoin/segwit_tx.test.ts" name="clarity bitcoin &gt; segwit transaction" time="0.014">
+            <failure message="expected { type: 8, value: { type: 1, …(1) } } to deeply equal { type: 8, …(1) }" type="AssertionError">
+AssertionError: expected { type: 8, value: { type: 1, …(1) } } to deeply equal { type: 8, …(1) }
 
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.034">
-            <system-out>
-contractBalance : bme023-0-market-predicting : 2970
+- Expected
++ Received
 
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim loser ok" time="0.035">
-            <system-out>
-contractBalance : bme023-0-market-predicting : 2970
+  Object {
+    &quot;type&quot;: 8,
+    &quot;value&quot;: Object {
+      &quot;type&quot;: 1,
+-     &quot;value&quot;: 2200n,
++     &quot;value&quot;: 8n,
+    },
+  }
 
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim winner ok" time="0.038">
-            <system-out>
-contractBalance : bme023-0-market-predicting : 2970
+ ❯ tests/claritybitcoin/segwit_tx.test.ts:59:27
 
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-expecting-merkle-root-for-poll" time="0.026">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-unauthorised" time="0.026">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; ensure bme022 is valid extension" time="0.025">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can call set-merkle-root via proposal" time="0.031">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can&apos;t call create-market with invalid merkle lookup key" time="0.037">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; deployer can create-market if dao bootstrapped" time="0.027">
-            <system-out>
-bme023-0-market-predicting: 0xa00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; alice cannot create-market if dao bootstrapped" time="0.028">
-            <system-out>
-bme023-0-market-predicting: 0xa00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION" time="0.028">
-            <system-out>
-ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R, ST2ZGXYF58V9D2HXDTP3N02DC3F8G2251PPGRXDQD, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, 
-GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: bme023-0-market-predicting: 0x72d1750e280ec149ee0f7b2186c1dece161d7d16848fb7d7318de0234d24cefe root= 0x70a06106d0aaecb26ab15155dc1d958422d991a5367d446699f9a978e80f12f0
-
-            </system-out>
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can create-market with valid merkle proof" time="0.04">
-            <system-out>
-lookupRootKey=a00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-
-            </system-out>
+            </failure>
         </testcase>
     </testsuite>
 </testsuites>

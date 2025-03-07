@@ -5,6 +5,7 @@
 ;; Allows to token sale over 6 stages with token price set at each stage by the current DAO.
 ;; Contract allows any stage to be cancelled and for tokens to be reclaimed.
 ;; Listing via a DEX is not supported but can be enabled at any stage
+;; 
 
 (impl-trait .extension-trait.extension-trait)
 

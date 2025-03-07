@@ -5,6 +5,9 @@
 ;; The governance token is a simple SIP010-compliant fungible token
 ;; with some added functions to make it easier to manage by
 ;; BigMarket DAO proposals and extensions.
+;; The operations vesting schedule and recipients can be updated (see current-key and 
+;; set-core-team-vesting) up till the first claim. If more recipients are added they 
+;; allocation is proportionally diluted.
 
 (impl-trait .governance-token-trait.governance-token-trait)
 (impl-trait .sip-010-trait-ft-standard.sip-010-trait)
@@ -68,6 +71,7 @@
     (ok true)
   )
 )
+
 (define-public (set-core-team-vesting (core-team (list 200 {recipient: principal, start-block: uint, duration: uint})))
   (begin
 	(try! (is-dao-or-extension))
