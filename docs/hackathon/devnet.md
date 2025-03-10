@@ -20,11 +20,10 @@ Restart process
 bitcoin-cli -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -regtest stop
 ```
 
-2. start devnet and bitcoin core
+2. start devnet (\`clarinet devnet start\`) and bitcoin core
 
 ```
-clarinet devnet start
-bitcoind -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -datadir=/Users/mijoco/bitcoin-regtest/data -regtest
+bitcoind -daemon -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -datadir=/Users/mijoco/bitcoin-regtest/data -regtest
 ```
 
 3. Check nodes in sync
@@ -40,23 +39,23 @@ bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet getpeerinfo
 4. create non descriptor wallet
 
 ```
-bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet createwallet "big-wallet" false false
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcport=18445 createwallet "big-wallet" false false
 ```
 
 5. mine some blocks / check balance
 
 ```
-bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet getnewaddress
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcport=18445 -rpcwallet=big-wallet getnewaddress    
 ```
 
 ```
-bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet generatetoaddress 101 bcrt1qkt8ggmggzte67g9pfu6wpqu0tzpwyd9exw8ysj
+docker exec -it bitcoin-node.bigmarket-dao.devnet bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet generatetoaddress 1 bcrt1qtlye7v8ejj35wpf79qn23wg6ukkhk6se65jlyl
 ```
 
 6. check balance
 
 ```
-bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet getbalance
+bitcoin-cli -regtest -rpcport=18445 -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet getbalance
 ```
 
 7. send btc to leather wallet

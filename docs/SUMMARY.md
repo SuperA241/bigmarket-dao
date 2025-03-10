@@ -21,5 +21,6 @@
 ## HACKATHON
 
 * [Bitcoin Markets](hackathon/bitcoin-markets.md)
+* [Clarity Bitcoin](hackathon/clarity-bitcoin.md)
 * [Testnet Faucet](hackathon/testnet-faucet.md)
 * [Devnet](hackathon/devnet.md)

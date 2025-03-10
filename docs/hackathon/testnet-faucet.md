@@ -3,8 +3,7 @@
 Get bitcoin for testing on stacks bitcoin regtest network;
 
 ```
-curl -X POST "https://api.testnet.hiro.so/extended/v1/faucets/btc?address=bcrt1q9j0660jr3v8leqhr2tptvcw0jtr538n0t3c2fw"
-
+curl -X POST "https://api.testnet.hiro.so/extended/v1/faucets/btc?address=bcrt1q02k2fwu9kupez7ecqj9p489qswg0th98n29hjs"
 ```
 
 Note this needs docs bug raising on Hiro [here](https://docs.hiro.so/stacks/api/faucets/stx)!
