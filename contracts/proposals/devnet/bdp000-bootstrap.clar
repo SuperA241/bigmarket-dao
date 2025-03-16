@@ -33,12 +33,13 @@
 		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 true))
 		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG true))
 		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC true))
-		(try! (contract-call? .bme004-0-core-execute set-signals-required u2)) ;; signal from 3 out of 4 team members requied.
+		(try! (contract-call? .bme004-0-core-execute set-signals-required u1)) ;; signal from 3 out of 4 team members requied.
 
 		;; configure prediction markets
 		;; const allowedCreators = ["ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM"];
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-predicting 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-bitcoin 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
 		
 		(try! (contract-call? .bme023-0-market-predicting set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
 		(try! (contract-call? .bme023-0-market-predicting set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
@@ -64,12 +65,23 @@
 		(try! (contract-call? .bme023-0-market-scalar set-dao-fee-bips u150))
 		(try! (contract-call? .bme023-0-market-scalar set-dispute-window-length u24))
 
+		(try! (contract-call? .bme023-0-market-bitcoin set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dao-treasury .bme006-0-treasury))
+		(try! (contract-call? .bme023-0-market-bitcoin set-creation-gated true))
+		(try! (contract-call? .bme023-0-market-bitcoin set-market-fee-bips-max u300))
+		(try! (contract-call? .bme023-0-market-bitcoin set-market-create-fee u1000000))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fee-bips u100))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dao-fee-bips u150))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dispute-window-length u24))
+
 		(try! (contract-call? .bme021-0-market-voting set-voting-duration u24))
 		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
 		;;(try! (contract-call? .bme023-0-market-predicting set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc sbtc-mint-many
 			(list
+				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-0-market-bitcoin}
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
 				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
