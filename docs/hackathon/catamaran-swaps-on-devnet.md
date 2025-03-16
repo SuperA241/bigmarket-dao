@@ -1,14 +1,14 @@
 ---
-description: Notes for using clarity-bitcoin-lib-v5 on devnet
+description: Notes for interacting with clarity-bitcoin-lib-v5 on devnet
 ---
 
 # Catamaran Swaps on Devnet
 
 Set up and run a local regtest node alongside Clarinet devnet.
 
-1. Configure bitcoin.conf and Devnet.toml to talk to eachother
-2. Send transactions on the local bitcoin regtest node
-3. Confirm they get mined and that clarity-bitcoin lib can verify
+1. set up clarinet devnet and bitcoin-qt regtest node
+2. build, sign and send bitcoin transaction&#x20;
+3. parse transaction in clarity using clarity-bitcoin-client
 
 ## Part 1: Clarinet Devnet / Bitcoin Core
 
