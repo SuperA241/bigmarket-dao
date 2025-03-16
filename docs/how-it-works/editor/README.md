@@ -1,8 +1,4 @@
----
-icon: pen-to-square
----
-
-# Creating Markets on BigMarket
+# 📘 Creating Markets
 
 BigMarket allows users to create their own prediction markets. There are **two ways** to do this:
 

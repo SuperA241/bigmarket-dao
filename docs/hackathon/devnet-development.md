@@ -2,7 +2,7 @@
 description: Notes for using clarity-bitcoin-lib-v5 on devnet
 ---
 
-# Devnet
+# Devnet Development
 
 Set up and run a local regtest node alongside Clarinet devnet.
 
@@ -25,6 +25,14 @@ bitcoin-cli -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -regtest stop
 ```
 bitcoind -daemon -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf -datadir=/Users/mijoco/bitcoin-regtest/data -regtest
 ```
+
+or bitcoin-qt
+
+```
+bitcoin-qt -regtest -conf=/Users/mijoco/bitcoin-regtest/bitcoin.conf
+```
+
+
 
 3. Check nodes in sync
 
@@ -64,7 +72,60 @@ bitcoin-cli -regtest -rpcport=18445 -rpcuser=devnet -rpcpassword=devnet -rpcwall
 bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet -rpcwallet=big-wallet sendtoaddress bcrt1q3tj2fr9scwmcw3rq5m6jslva65f2rqjxfrjz47 5
 ```
 
-### Configuration
+Generate a Wallet
+
+```
+stx make_keychain --backup_phrase "twice kind fence tip hidden tilt action fragile skin nothing glory cousin green tomorrow spring wrist shed math olympic multiply hip blue scout claw"
+```
+
+take the wif and use it to import wallet in bitcoin core
+
+fund deployer btc address..
+
+```
+clarinet deployments apply -p deployments/send-btc.devnet-plan.yaml --no-dashboard
+```
+
+decode this transaction
+
+```
+bitcoin-cli -regtest -rpcport=18445 -rpcuser=devnet -rpcpassword=devnet decoderawtransaction "010000000112528a7588804ca4440735b3bd56ca22b3f5f48644676f97a81dfad834ece3da000000006a473044022009d2da88395d40000348da194cd48cae320e839ddce8743d20fe877aad1013d802207a2a74d4250480a12d71a2852bacafe35408622d36a4c0f264db690e71f52edd012102add319140c528a8955d76d4afe32c4d3143fea57ea353a31ce793cffb77ef861fdffffff0280969800000000001600148ae4a48cb0c3b7874460a6f5287d9dd512a1824610446d29010000001976a9142b19bade75a48768a5ffc142a86490303a95f41388ac00000000"
+```
+
+
+
+deploy devnet
+
+<pre><code>
+<strong>clarinet deployments apply -p deployments/default.devnet-plan.yaml --no-dashboard
+</strong></code></pre>
+
+generate in separate rgetest node
+
+```yaml
+bcrt1qmfp6qc8tyj6va240jt74xmwxp30exuq73srvsn
+
+leather ..GZM address
+bcrt1q3tj2fr9scwmcw3rq5m6jslva65f2rqjxfrjz47
+```
+
+Decode the transaction generated from deployment plan;
+
+```
+-> Transaction HEX
+bitcoin-cli -regtest -rpcuser=devnet -rpcpassword=devnet decoderawtransaction "0100000001c9c5a383ee54bdf6f8faca9d70270acb93ad261aafb400e8dadd1a73e7000fb9000000006a473044022077603b5fad59c1a1687668716ff847940974a218c2caa1bc5099af83a92fd7d0022039eeb664d914cd83660fe2221bbc5dd857fe7666cf001f30426c12248b120383012102add319140c528a8955d76d4afe32c4d3143fea57ea353a31ce793cffb77ef861fdffffff0280969800000000001600148ae4a48cb0c3b7874460a6f5287d9dd512a1824610446d29010000001976a9142b19bade75a48768a5ffc142a86490303a95f41388ac00000000"
+✔ Transactions successfully confirmed on Devnet
+```
+
+Txid: fbdbbe4ebe969ccbe431e29d04b8dd8892fb1f21e91b09e691fd17b1dc21384d
+
+
+
+
+
+
+
+### Appendix A: Configuration
 
 local bitcoin.conf
 
