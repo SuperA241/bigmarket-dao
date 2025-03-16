@@ -23,4 +23,4 @@
 * [Bitcoin Markets](hackathon/bitcoin-markets.md)
 * [Clarity Bitcoin](hackathon/clarity-bitcoin.md)
 * [Testnet Faucet](hackathon/testnet-faucet.md)
-* [Devnet Development](hackathon/devnet-development.md)
+* [Catamaran Swaps on Devnet](hackathon/catamaran-swaps-on-devnet.md)
