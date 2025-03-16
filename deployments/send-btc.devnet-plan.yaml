@@ -1,0 +1,21 @@
+---
+id: 0
+name: Devnet deployment
+network: devnet
+stacks-node: 'http://localhost:20443'
+bitcoin-node: 'http://devnet:devnet@localhost:18443'
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - btc-transfer:
+            expected-sender: mjSrB3wS4xab3kYqFktwBzfTdPg367ZJ2d
+            recipient: bcrt1qwneu6ldaemhhnpphla9mzuwgkwtz3q6vejq4jz
+            sats-amount: 10000000
+            sats-per-byte: 10
+      epoch: '2.1'
+# docker exec -it bitcoin-node.bigmarket-dao.devnet bitcoin-cli -regtest generatetoaddress 10 $(docker exec -it bitcoin-node.bigmarket-dao.devnet bitcoin-cli -regtest getnewaddress)
+# leather bech32 address
+# bcrt1q3tj2fr9scwmcw3rq5m6jslva65f2rqjxfrjz47
+# bitcoin core regtest address
+# bcrt1qwneu6ldaemhhnpphla9mzuwgkwtz3q6vejq4jz

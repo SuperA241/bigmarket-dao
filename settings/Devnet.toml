@@ -7,6 +7,7 @@ balance = 100_000_000_000_000
 # secret_key: 753b7cc01a1a2e86221266a154af739463fce51219d97e4f856cd7200c3bd2a601
 # stx_address: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 # btc_address: mqVnk6NPRdhntvfm4hh9vvjiRkFDUuSYsH
+# L19bUpcNHxbkyJ9inUvAu1MxCkxYgePQpG8uTPb1MS9LT6tqrmZ2
 
 [accounts.wallet_1]
 mnemonic = "sell invite acquire kitten bamboo drastic jelly vivid peace spawn twice guilt pave pen trash pretty park cube fragile unaware remain midnight betray rebuild"
