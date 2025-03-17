@@ -42,14 +42,10 @@ export function getWif(version: string) {
 }
 
 export function buildMockBitcoinSegwitTransaction(): btc.Transaction {
-	// Define a SegWit-compatible UTXO (mocked)
-
-	// Create a new Bitcoin transaction (SegWit enabled)
 	const transaction = new btc.Transaction({
 		allowUnknownInputs: true,
 		allowUnknownOutputs: true
 	});
-	// Serialize OP_RETURN Data
 	const data = Cl.serialize(
 		Cl.tuple({
 			idx: Cl.uint(20),
@@ -60,10 +56,6 @@ export function buildMockBitcoinSegwitTransaction(): btc.Transaction {
 	);
 	const encodedData = hex.encode(data);
 	console.log('buildMockBitcoinSegwitTransaction: encodedData: ' + encodedData);
-
-	// const OP_RETURN_PREFIX = new Uint8Array([0x6e]); // ✅ Correctly represents `0x6E` as a byte
-	// const finalScript = concatBytes(OP_RETURN_PREFIX, hex.decode(encodedData));
-
 	transaction.addOutput({
 		script: btc.Script.encode(['RETURN', hex.decode(encodedData)]),
 		amount: BigInt(0)
@@ -74,7 +66,6 @@ export function buildMockBitcoinSegwitTransaction(): btc.Transaction {
 	const privateKey: Signer = secp256k1.utils.randomPrivateKey();
 	const publicKey = secp256k1.getPublicKey(privateKey, true); // ✅ Derive compressed public key
 	const pubKeyHash = ripemd160(sha256(publicKey));
-	// 4️⃣ Construct the SegWit `scriptPubKey` (0x00 | 0x14 | pubKeyHash)
 	const scriptPubKey = hex.encode(new Uint8Array([0x00, 0x14, ...pubKeyHash]));
 	const utxo = {
 		txid: '7ec19cf11e4f7686aea09273ab01f7584953dad9fc9a57ef8c39ecfb9f71216f',

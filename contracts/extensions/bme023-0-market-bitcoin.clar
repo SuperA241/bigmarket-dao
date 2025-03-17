@@ -2,17 +2,17 @@
 ;; Synopsis:
 ;; Implements prediciton markets for bitcoin users (see also bme023-0-market-predicting).
 ;; Description:
-;; Similar to categorical markets but enabling end users to enagage with only 
-;; bitcoin transactions and signed messages.
+;; Provide binary and categorical prediction markets with 
+;; bitcoin only transactions - no stx needed for gas. Works with 
+;; clarity-bitcoin-lib-v5 for bitcoin catamaran swaps into markets.
 
 (impl-trait  .prediction-market-trait.prediction-market-trait)
 
 (define-constant min-stake u100000) ;; Example: 100,000 satoshis (0.001 BTC)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
-;; Market Types (1 => categorical market) for bitcoiners
-(define-constant MARKET_TYPE u3)
-(define-constant token .sbtc)
+(define-constant MARKET_TYPE u3) ;; bitcoin tx market
+(define-constant token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token)
 
 (define-constant RESOLUTION_OPEN u0)
 (define-constant RESOLUTION_RESOLVING u1)

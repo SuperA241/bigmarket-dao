@@ -11,48 +11,10 @@ contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standa
 [[project.requirements]]
 contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
 
-#[[project.requirements]]
-#contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
-
-[contracts.dia-oracle]
-path = 'contracts/external/dia-oracle.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.extension-trait]
-path = 'contracts/traits/extension-trait.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.governance-token-trait]
-path = 'contracts/traits/governance-token-trait.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.prediction-market-trait]
-path = 'contracts/traits/prediction-market-trait.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.proposal-trait]
-path = 'contracts/traits/proposal-trait.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.sbtc]
-path = 'contracts/external/sbtc.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.wrapped-stx]
-path = 'contracts/external/wrapped-stx.clar'
-clarity_version = 3
-epoch = 3.0
-[repl.analysis]
-passes = []
-
-[contracts.clarity-bitcoin-lib-v5]
-path = 'contracts/external/clarity-bitcoin-lib-v5.clar'
+[[project.requirements]]
+contract_id = 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token'
+[contracts.bdp000-bootstrap]
+path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -116,11 +78,47 @@ path = 'contracts/extensions/bme023-0-market-scalar.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.bdp000-bootstrap]
-path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
+[contracts.clarity-bitcoin-lib-v5]
+path = 'contracts/external/clarity-bitcoin-lib-v5.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.dia-oracle]
+path = 'contracts/external/dia-oracle.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.extension-trait]
+path = 'contracts/traits/extension-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.governance-token-trait]
+path = 'contracts/traits/governance-token-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.prediction-market-trait]
+path = 'contracts/traits/prediction-market-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.proposal-trait]
+path = 'contracts/traits/proposal-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.sbtc]
+path = 'contracts/external/sbtc.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wrapped-stx]
+path = 'contracts/external/wrapped-stx.clar'
+clarity_version = 3
+epoch = 3.0
+[repl.analysis]
+passes = []
 
 [repl.analysis.check_checker]
 strict = false
