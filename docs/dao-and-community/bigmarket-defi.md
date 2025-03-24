@@ -12,7 +12,31 @@ These markets resolve on-chain (via Pyth on-chain oracle) - **no human intervent
 
 The BigMarket DAO can empower any entity to become a Market Creator with the ability to link its own treasury and set fee levels (0-10%), thereby creating funding channels for partner projects in a fully decentralised manner.
 
-### What Makes BigMarket Different
+### **BigMarket vs DeFi & OTC Platforms**
+
+BigMarket is a **fixed-sum prediction market**, not a traditional OTC desk or typical DeFi trading protocol.
+
+On platforms like **Curve** or **dYdX**, trader payout is straightforward:
+
+> **Net = Trade Result – Platform Fees**\
+> Your result is independent of who else trades and relies on deep liquidity, provided by **LPs (Liquidity Providers)**. These platforms function continuously and deterministically—fees are known, and execution is fast, but detached from broader market dynamics.
+
+By contrast, **BigMarket is zero-sum**. There’s **no liquidity requirement** up front.
+
+> **Net = Share of Total Pot Won – Winner Fees**\
+> Your payout depends on how many others took the same position as you—and how many didn’t. It's about conviction, not execution. The **distribution of stakes** across Long, Short, and Neutral outcomes determines how the pot is divided among winners.
+
+This makes BigMarket more like a prediction game with financial skin in the game than a vanilla trading venue.
+
+***
+
+### **What Makes BigMarket Different?**
+
+* ✅ **No LPs required** – no impermanent loss, no slippage, no fragmentation
+* ✅ **Outcome-based payouts** – fees only apply if you win
+* ✅ **Market dynamics matter** – your returns depend on positioning, not just price
+* ✅ **Fully on-chain & DAO-governed** – transparent fees, flexible setup
+* ✅ **Supports low-liquidity, long-tail markets** – viable where AMMs fail
 
 | Feature                              | BM Scalar Markets         | Curve / dYdX              | OTC                 |
 | ------------------------------------ | ------------------------- | ------------------------- | ------------------- |
@@ -42,7 +66,7 @@ Our fee structure is decentralized, flexible, and aligned with stakeholder incen
 * 🔑  **Modular incentives**: Encourages custom markets with aligned local incentives via creator-tuned Market Fund.
 * 🔑  **No LPs needed**: Fee extraction doesn’t depend on liquidity providers like AMMs.
 
-| Feature                              | Your Scalar Markets       | Curve / dYdX              | OTC                 |
+| Feature                              | BM Scalar Markets         | Curve / dYdX              | OTC                 |
 | ------------------------------------ | ------------------------- | ------------------------- | ------------------- |
 | **Fee Control**                      | Fully DAO & creator-tuned | DAO/governance limited    | None (private)      |
 | **Fee Visibility**                   | Transparent, on-chain     | Mostly, yes               | None                |
@@ -55,12 +79,12 @@ Our fee structure is decentralized, flexible, and aligned with stakeholder incen
 
 #### 📈 $10,000 Market Payout — Cross-Platform Comparison
 
-| **Platform**             | **When Fees Are Charged** | **Fee Breakdown**                                                                  | **Recipients**                           | **Total Fees** | **Net to Trader** |
-| ------------------------ | ------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------- | -------------- | ----------------- |
-| **BigMarket (Low Fees)** | ✅ Only on winnings        | <p>Dev Fund: 0.1% ($10)<br>DAO Treasury: 0.2% ($20)<br>Market Fund: 0.5% ($50)</p> | Developers, DAO Treasury, Market Creator | **$80**        | **$9,920**        |
-| **dYdX (Ethereum)**      | ❌ Entry & exit            | \~0.05–0.1% per trade × 2                                                          | Protocol Treasury, LPs, Referrers        | **$10–$20**    | **$9,980–$9,990** |
-| **Curve (Ethereum)**     | ❌ Entry & exit            | \~0.04% per trade × 2                                                              | LPs & veCRV holders                      | **$8**         | **$9,992**        |
-| **OTC Desk (TradFi)**    | ❌ Embedded in spread      | \~1–3% markup                                                                      | Desk’s profit margin                     | **$100–$300**  | **$9,700–$9,900** |
+| **Platform**             | **When Fees Are Charged** | **Fee Breakdown**                                                                  | **Recipients**                           | **Total Fees** | **Net to Trader**               |
+| ------------------------ | ------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------- | -------------- | ------------------------------- |
+| **BigMarket (Low Fees)** | ✅ Only on winnings        | <p>Dev Fund: 0.1% ($10)<br>DAO Treasury: 0.2% ($20)<br>Market Fund: 0.5% ($50)</p> | Developers, DAO Treasury, Market Creator | **$80**        | depends on outcome distribution |
+| **dYdX (Ethereum)**      | ❌ Entry & exit            | \~0.05–0.1% per trade × 2                                                          | Protocol Treasury, LPs, Referrers        | **$10–$20**    | **$9,980–$9,990**               |
+| **Curve (Ethereum)**     | ❌ Entry & exit            | \~0.04% per trade × 2                                                              | LPs & veCRV holders                      | **$8**         | **$9,992**                      |
+| **OTC Desk (TradFi)**    | ❌ Embedded in spread      | \~1–3% markup                                                                      | Desk’s profit margin                     | **$100–$300**  | **$9,700–$9,900**               |
 
 ***
 
