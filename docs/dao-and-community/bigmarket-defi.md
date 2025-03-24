@@ -26,7 +26,7 @@ By contrast, **BigMarket is zero-sum**. There’s **no liquidity requirement** u
 > **Net = Share of Total Pot Won – Winner Fees**\
 > Your payout depends on how many others took the same position as you—and how many didn’t. It's about conviction, not execution. The **distribution of stakes** across Long, Short, and Neutral outcomes determines how the pot is divided among winners.
 
-This makes BigMarket more like a prediction game with rewards than a vanilla trading venue.
+This makes BigMarket somewhere between traditional prediction markets and vanilla trading venues.
 
 ***
 
