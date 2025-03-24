@@ -8,11 +8,26 @@ Our scalar prediction markets are set up on any regular  schedule and take a ran
 
 They can run for a day or a month or longer and traders can stake on the markets taking long / short / neutral positions on price.
 
-markets resolve on-chain (via Pyth on-chain oracle) - no human intervention is required.
+These markets resolve on-chain (via Pyth on-chain oracle) - **no human intervention is required**.
+
+BigMarket scalar prediction markets introduce a hybridized model that blends some of the most useful mechanics of both traditional OTC platforms and DeFi.
+
+#### 🔄 BigMarket compared to traditional OTC Platforms:
+
+| Aspect                  | Scalar Markets                            | Traditional OTC                                |
+| ----------------------- | ----------------------------------------- | ---------------------------------------------- |
+| **Access**              | Open to anyone with STX/BTC/ETH           | Limited to institutional or accredited parties |
+| **Settlement**          | Fully on-chain, rule-based                | Manual, off-chain, with counterparty risk      |
+| **Duration**            | Flexible (1 day to multi-month)           | Often bespoke, negotiated per trade            |
+| **Market Creation**     | Permissionless, recurring                 | Custom, opaque, and slow to set up             |
+| **Transparency**        | Public and auditable                      | Private, often with limited disclosures        |
+| **Price Range Setting** | Algorithmically anchored to current price | Fully negotiated, no automation                |
+
+
 
 ### ✅ BigMarket Fee Model
 
-#### Our fee model is unique;
+Our fee structure is decentralized, flexible, and aligned with stakeholder incentives in a way that is truly distinct from traditional OTC and Ethereum-based derivatives platforms;
 
 * 🔑  **Governance-first**: All fees are on-chain, DAO/community-configurable.
 * 🔑  **Winner-pays**: Most fees are charged on **successful predictions**, not on entry—minimizing friction.
@@ -43,15 +58,3 @@ markets resolve on-chain (via Pyth on-chain oracle) - no human intervention is r
 
 ***
 
-#### ✅ BigMarket Fee Flow (Low-Fee Configuration)
-
-When a trader wins a $10,000 payout:
-
-```
-pgsqlCopy$10      → Developer Fund (0.1%)
-$20      → DAO Treasury (0.2%)
-$50      → Market-Specific Treasury (0.5%)
-----------------------------------------
-$80 Total Fees
-$9,920 Net to Winner
-```
