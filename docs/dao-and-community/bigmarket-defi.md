@@ -1,3 +1,7 @@
+---
+icon: chart-mixed-up-circle-currency
+---
+
 # BigMarket DeFi
 
 Our scalar prediction markets are set up on any regular  schedule and take a range either side of the current price point on BTC/STX/ETH.
