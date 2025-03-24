@@ -4,7 +4,7 @@ icon: chart-mixed-up-circle-currency
 
 # BigMarket DeFi
 
-Our fully automated, scalar prediction markets are set up on any regular schedule and take a range either side of the current price point on BTC/STX/ETH.
+Our fully automated, scalar prediction markets are set up on any regular schedule and take a range either side of the current price point on BTC/STX/ETH/etc.
 
 They can run for a day or a month or longer and traders can stake on the markets taking long / short / neutral positions on price.
 
