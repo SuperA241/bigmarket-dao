@@ -10,9 +10,9 @@ They can run for a day or a month or longer and traders can stake on the markets
 
 These markets resolve on-chain (via Pyth on-chain oracle) - **no human intervention is required**.
 
-The DAO can empower any entity to become a Market Creator and thereby create funding channels for partner projects in a fully decentralised manner.
+The BigMarket DAO can empower any entity to become a Market Creator with the ability to link its own treasury and set fee levels (0-10%), thereby creating funding channels for partner projects in a fully decentralised manner.
 
-### ✅ What Makes BigMarket Different
+### What Makes BigMarket Different
 
 | Feature                              | BM Scalar Markets         | Curve / dYdX              | OTC                 |
 | ------------------------------------ | ------------------------- | ------------------------- | ------------------- |
@@ -33,7 +33,7 @@ BigMarket is a **DeFi-native, outcome-based platform** that:
 
 ***
 
-### ✅ BigMarket Fee Model
+### BigMarket Fee Model
 
 Our fee structure is decentralized, flexible, and aligned with stakeholder incentives in a way that is truly distinct from traditional OTC and Ethereum-based derivatives platforms;
 
@@ -51,7 +51,7 @@ Our fee structure is decentralized, flexible, and aligned with stakeholder incen
 | **Developer Incentive Clarity**      | ✅ Dev Fund on-chain       | ❌ Separate                | ❌ Built into spread |
 | **User Participation in Fee Policy** | ✅ Active role             | ✅ Indirect via tokenomics | ❌ None              |
 
-### 🧾 Fee Structure Comparison
+### Fee Structure Comparison
 
 #### 📈 $10,000 Market Payout — Cross-Platform Comparison
 
