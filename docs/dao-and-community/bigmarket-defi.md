@@ -10,20 +10,28 @@ They can run for a day or a month or longer and traders can stake on the markets
 
 These markets resolve on-chain (via Pyth on-chain oracle) - **no human intervention is required**.
 
-BigMarket scalar prediction markets introduce a hybridized model that blends some of the most useful mechanics of both traditional OTC platforms and DeFi.
+The DAO can empower any entity to become a Market Creator and thereby create funding channels for partner projects in a fully decentralised manner.
 
-#### 🔄 BigMarket compared to traditional OTC Platforms:
+### ✅ What Makes BigMarket Different
 
-| Aspect                  | Scalar Markets                            | Traditional OTC                                |
-| ----------------------- | ----------------------------------------- | ---------------------------------------------- |
-| **Access**              | Open to anyone with STX/BTC/ETH           | Limited to institutional or accredited parties |
-| **Settlement**          | Fully on-chain, rule-based                | Manual, off-chain, with counterparty risk      |
-| **Duration**            | Flexible (1 day to multi-month)           | Often bespoke, negotiated per trade            |
-| **Market Creation**     | Permissionless, recurring                 | Custom, opaque, and slow to set up             |
-| **Transparency**        | Public and auditable                      | Private, often with limited disclosures        |
-| **Price Range Setting** | Algorithmically anchored to current price | Fully negotiated, no automation                |
+| Feature                              | BM Scalar Markets         | Curve / dYdX              | OTC                 |
+| ------------------------------------ | ------------------------- | ------------------------- | ------------------- |
+| **Fee Control**                      | Fully DAO & creator-tuned | DAO/governance limited    | None (private)      |
+| **Fee Visibility**                   | Transparent, on-chain     | Mostly, yes               | None                |
+| **Winner-Based Fees**                | ✅ Yes                     | ❌ No                      | ❌ No                |
+| **Market-Specific Treasury**         | ✅ Yes                     | ❌ No                      | ❌ No                |
+| **Developer Incentive Clarity**      | ✅ Dev Fund on-chain       | ❌ Separate                | ❌ Built into spread |
+| **User Participation in Fee Policy** | ✅ Active role             | ✅ Indirect via tokenomics | ❌ None              |
 
+***
 
+BigMarket is a **DeFi-native, outcome-based platform** that:
+
+* Encourages good market creation,
+* Funds protocol development sustainably,
+* Hands **fine-grained fee control** to the community.
+
+***
 
 ### ✅ BigMarket Fee Model
 
@@ -42,8 +50,6 @@ Our fee structure is decentralized, flexible, and aligned with stakeholder incen
 | **Market-Specific Treasury**         | ✅ Yes                     | ❌ No                      | ❌ No                |
 | **Developer Incentive Clarity**      | ✅ Dev Fund on-chain       | ❌ Separate                | ❌ Built into spread |
 | **User Participation in Fee Policy** | ✅ Active role             | ✅ Indirect via tokenomics | ❌ None              |
-
-
 
 ### 🧾 Fee Structure Comparison
 
