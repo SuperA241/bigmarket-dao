@@ -4,13 +4,13 @@ icon: chart-mixed-up-circle-currency
 
 # BigMarket DeFi
 
-Our scalar prediction markets are set up on any regular  schedule and take a range either side of the current price point on BTC/STX/ETH.
+Our fully automated, scalar prediction markets are set up on any regular schedule and take a range either side of the current price point on BTC/STX/ETH.
 
 They can run for a day or a month or longer and traders can stake on the markets taking long / short / neutral positions on price.
 
 These markets resolve on-chain (via Pyth on-chain oracle) - **no human intervention is required**.
 
-The BigMarket DAO can empower any entity to become a Market Creator with the ability to link its own treasury and set fee levels (0-10%), thereby creating funding channels for partner projects in a fully decentralised manner.
+The BigMarket DAO can empower an entity to become a Market Creator on the platform with its own treasury and fee structure, thereby creating funding channels for partner projects in a fully decentralised and incentive aligned ecosystem.
 
 ### **BigMarket vs DeFi & OTC Platforms**
 
