@@ -9,6 +9,7 @@
 ## DAO & COMMUNITY
 
 * [BigMarket Token Sale](dao-and-community/bigmarket-dao-and-token-sale.md)
+* [BigMarket DeFi](dao-and-community/bigmarket-defi.md)
 
 ## How it Works
 
