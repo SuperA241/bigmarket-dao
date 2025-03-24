@@ -79,12 +79,12 @@ Our fee structure is decentralized, flexible, and aligned with stakeholder incen
 
 #### 📈 $10,000 Market Payout — Cross-Platform Comparison
 
-| **Platform**             | **When Fees Are Charged** | **Fee Breakdown**                                                                  | **Recipients**                           | **Total Fees** | **Net to Trader**               |
-| ------------------------ | ------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------- | -------------- | ------------------------------- |
-| **BigMarket (Low Fees)** | ✅ Only on winnings        | <p>Dev Fund: 0.1% ($10)<br>DAO Treasury: 0.2% ($20)<br>Market Fund: 0.5% ($50)</p> | Developers, DAO Treasury, Market Creator | **$80**        | depends on outcome distribution |
-| **dYdX (Ethereum)**      | ❌ Entry & exit            | \~0.05–0.1% per trade × 2                                                          | Protocol Treasury, LPs, Referrers        | **$10–$20**    | **$9,980–$9,990**               |
-| **Curve (Ethereum)**     | ❌ Entry & exit            | \~0.04% per trade × 2                                                              | LPs & veCRV holders                      | **$8**         | **$9,992**                      |
-| **OTC Desk (TradFi)**    | ❌ Embedded in spread      | \~1–3% markup                                                                      | Desk’s profit margin                     | **$100–$300**  | **$9,700–$9,900**               |
+| **Platform**             | **When Fees Are Charged** | **Fee Breakdown**                                                                                                         | **Recipients**                           | **Total Fees** | **Net to Trader**               |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | -------------- | ------------------------------- |
+| **BigMarket (Low Fees)** | ✅ Mostly on winnings      | <p>Dev Fund: 0.1% ($10)<br>DAO (up front) Treasury: 0.2% ($20) (on winnings)<br>Market Fund: 0.5% ($50) (on winnings)</p> | Developers, DAO Treasury, Market Creator | **$80**        | depends on outcome distribution |
+| **dYdX (Ethereum)**      | ❌ Entry & exit            | \~0.05–0.1% per trade × 2                                                                                                 | Protocol Treasury, LPs, Referrers        | **$10–$20**    | **$9,980–$9,990**               |
+| **Curve (Ethereum)**     | ❌ Entry & exit            | \~0.04% per trade × 2                                                                                                     | LPs & veCRV holders                      | **$8**         | **$9,992**                      |
+| **OTC Desk (TradFi)**    | ❌ Embedded in spread      | \~1–3% markup                                                                                                             | Desk’s profit margin                     | **$100–$300**  | **$9,700–$9,900**               |
 
 ***
 
