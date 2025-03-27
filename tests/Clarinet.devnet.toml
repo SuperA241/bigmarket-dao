@@ -14,6 +14,22 @@ contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
 #[[project.requirements]]
 #contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
 
+[[project.requirements]]
+contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
+
+[[project.requirements]]
+contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-merkle-tree-keccak160-v1'
+
+[contracts.pyth-traits-v1]
+path = 'contracts/external/pyth-traits-v1.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.trait-dia-oracle]
+path = 'contracts/external/trait-dia-oracle.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.dia-oracle]
 path = 'contracts/external/dia-oracle.clar'
 clarity_version = 3
@@ -111,8 +127,8 @@ path = 'contracts/extensions/bme023-0-market-predicting.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.bme023-0-market-scalar]
-path = 'contracts/extensions/bme023-0-market-scalar.clar'
+[contracts.bme023-0-market-scalar-pyth]
+path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
 clarity_version = 3
 epoch = 3.0
 

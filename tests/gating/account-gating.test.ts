@@ -22,7 +22,6 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { createBinaryMarket, createBinaryMarketWithGating } from '../categorical/categorical.test';
 
 const simnet = await setupSimnet();
-
 /*
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
@@ -130,12 +129,12 @@ describe('gating market  creation', () => {
 		];
 		const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
 		let merklProof = generateMerkleProof(tree, 'ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV');
-		const lookupRootKey = contractId2Key('ST3RR3HF25CQ9A5DEWS4R1WKJSBCFKQXFBYPJK3WV.bme023-0-market-predicting');
+		const lookupRootKey = contractId2Key('ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.bme023-0-market-scalar-pyth');
 		console.log(
 			'ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R, ST2ZGXYF58V9D2HXDTP3N02DC3F8G2251PPGRXDQD, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, '
 		);
 		console.log(
-			'GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: bme023-0-market-predicting: 0x' + lookupRootKey + ' root= 0x' + root
+			'GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.bme023-0-market-scalar-pyth: 0x' + lookupRootKey + ' root= 0x' + root
 			//tree
 		);
 		//assert(merklProof.valid)

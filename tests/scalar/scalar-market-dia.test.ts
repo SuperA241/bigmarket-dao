@@ -9,7 +9,7 @@ import {
 	constructDao,
 	deployer,
 	fred,
-	marketScalar,
+	marketScalarDia,
 	metadataHash,
 	setupSimnet,
 	stxToken,
@@ -22,7 +22,7 @@ describe('claiming errors', () => {
 	it('err too few categories', async () => {
 		constructDao(simnet);
 		let response = await simnet.callPublicFn(
-			marketScalar,
+			marketScalarDia,
 			'create-market',
 			[
 				Cl.list([Cl.tuple({ min: Cl.uint(1), max: Cl.uint(2) })]),
@@ -172,7 +172,7 @@ describe('claiming errors', () => {
 		resolveMarket(0, 0, stacksHeightStart);
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 		claim(fred, 0, 80, 10008);
 	});
 
@@ -186,7 +186,7 @@ describe('claiming errors', () => {
 		resolveMarket(0, 1, stacksHeightStart);
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 		claim(alice, 0, 80, 10006);
 	});
 
@@ -200,7 +200,7 @@ describe('claiming errors', () => {
 		resolveMarket(0, 2, stacksHeightStart);
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 		claim(bob, 0, 80, 10006);
 	});
 
@@ -222,11 +222,11 @@ describe('claiming errors', () => {
 
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
-		assertDataVarNumber(marketScalar, 'dev-fee-bips', 100);
-		assertDataVarNumber(marketScalar, 'dao-fee-bips', 150);
-		assertDataVarNumber(marketScalar, 'market-fee-bips-max', 300);
-		assertDataVarNumber(marketScalar, 'market-create-fee', 100000000);
+		assertContractBalance(marketScalarDia, 2970n);
+		assertDataVarNumber(marketScalarDia, 'dev-fee-bips', 100);
+		assertDataVarNumber(marketScalarDia, 'dao-fee-bips', 150);
+		assertDataVarNumber(marketScalarDia, 'market-fee-bips-max', 300);
+		assertDataVarNumber(marketScalarDia, 'market-create-fee', 100000000);
 
 		const response = await claim(alice, 0, 2926);
 		console.log('claim winner ok', response);
@@ -250,7 +250,7 @@ describe('claiming errors', () => {
 
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 
 		let response = await claim(alice, 0, 976);
 		response = await claim(bob, 0, 976);
@@ -276,15 +276,15 @@ describe('claiming errors', () => {
 
 		simnet.mineEmptyBlocks(25);
 		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 
 		let response = await claim(alice, 0, 976, 10006);
 		response = await claim(bob, 0, 976, 10006);
 		response = await claim(betty, 0, 976, 10006);
 		// console.log('claim winner ok', response);
-		assertContractBalance(marketScalar, 2970n);
+		assertContractBalance(marketScalarDia, 2970n);
 		await transferLosingStake(alice, 0);
-		assertContractBalance(marketScalar, 0n);
+		assertContractBalance(marketScalarDia, 0n);
 	});
 });
 
@@ -306,7 +306,7 @@ async function printMarketevents(response: any) {
 }
 
 async function printMarketBalances(marketId: number) {
-	let data = await simnet.callReadOnlyFn(marketScalar, 'get-market-data', [Cl.uint(marketId)], alice);
+	let data = await simnet.callReadOnlyFn(marketScalarDia, 'get-market-data', [Cl.uint(marketId)], alice);
 	console.log('categories', (data.result as any).value.data.categories.list[0]);
 	console.log('categories', (data.result as any).value.data.categories.list[1]);
 	console.log('categories', (data.result as any).value.data.categories.list[2]);
@@ -315,12 +315,12 @@ async function printMarketBalances(marketId: number) {
 }
 
 async function printStakeBalances(user: string, marketId: number) {
-	let data = await simnet.callReadOnlyFn(marketScalar, 'get-stake-balances', [Cl.uint(marketId), Cl.principal(user)], alice);
+	let data = await simnet.callReadOnlyFn(marketScalarDia, 'get-stake-balances', [Cl.uint(marketId), Cl.principal(user)], alice);
 	console.log('get-stake-balances: ' + user, (data.result as any).value);
 }
 export async function createBinaryMarket(marketId: number, creator?: string, token?: string) {
 	let response = await simnet.callPublicFn(
-		marketScalar,
+		marketScalarDia,
 		'create-market',
 		[
 			Cl.list([Cl.tuple({ min: Cl.uint(0), max: Cl.uint(1) }), Cl.tuple({ min: Cl.uint(1), max: Cl.uint(2) })]),
@@ -341,7 +341,7 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 async function createScalarMarket(marketId: number, priceFeed: string, creator?: string, token?: string) {
 	constructDao(simnet);
 	let response = await simnet.callPublicFn(
-		marketScalar,
+		marketScalarDia,
 		'create-market',
 		[
 			// (map-set test-values "STX/USD/0" { value: u950000000, timestamp: u1739355000 })
@@ -363,7 +363,7 @@ async function createScalarMarket(marketId: number, priceFeed: string, creator?:
 }
 export async function predictCategory(user: string, marketId: number, category: number, amount: number, code: number, token?: string) {
 	let response = await simnet.callPublicFn(
-		marketScalar,
+		marketScalarDia,
 		'predict-category',
 		[Cl.uint(marketId), Cl.uint(amount), Cl.uint(category), Cl.principal(token ? token : stxToken)],
 		user
@@ -380,17 +380,17 @@ export async function predictCategory(user: string, marketId: number, category: 
 	return response;
 }
 async function resolveMarket(marketId: number, finalIndex: number, stacksHeight: number) {
-	let response = await simnet.callPublicFn(marketScalar, 'resolve-market', [Cl.uint(marketId), Cl.uint(stacksHeight)], bob);
+	let response = await simnet.callPublicFn(marketScalarDia, 'resolve-market', [Cl.uint(marketId), Cl.uint(stacksHeight)], bob);
 	expect(response.result).toEqual(Cl.ok(Cl.some(Cl.uint(finalIndex))));
 	return response;
 }
 async function resolveMarketError(marketId: number, stacksHeight: number, errorCode: number) {
-	let response = await simnet.callPublicFn(marketScalar, 'resolve-market', [Cl.uint(marketId), Cl.uint(stacksHeight)], bob);
+	let response = await simnet.callPublicFn(marketScalarDia, 'resolve-market', [Cl.uint(marketId), Cl.uint(stacksHeight)], bob);
 	expect(response.result).toEqual(Cl.error(Cl.uint(errorCode)));
 	return response;
 }
 async function resolveMarketUndisputed(marketId: number, code?: number) {
-	let response = await simnet.callPublicFn(marketScalar, 'resolve-market-undisputed', [Cl.uint(marketId)], bob);
+	let response = await simnet.callPublicFn(marketScalarDia, 'resolve-market-undisputed', [Cl.uint(marketId)], bob);
 	if (code) {
 		expect(response.result).toEqual(Cl.error(Cl.uint(code)));
 	} else {
@@ -400,7 +400,7 @@ async function resolveMarketUndisputed(marketId: number, code?: number) {
 }
 
 async function claim(user: string, marketId: number, share: number, code?: number) {
-	let response = await simnet.callPublicFn(marketScalar, 'claim-winnings', [Cl.uint(marketId), Cl.principal(stxToken)], user);
+	let response = await simnet.callPublicFn(marketScalarDia, 'claim-winnings', [Cl.uint(marketId), Cl.principal(stxToken)], user);
 	if (code) {
 		expect(response.result).toEqual(Cl.error(Cl.uint(code)));
 	} else {
@@ -409,7 +409,7 @@ async function claim(user: string, marketId: number, share: number, code?: numbe
 	return response;
 }
 async function transferLosingStake(user: string, marketId: number) {
-	let response = await simnet.callPublicFn(marketScalar, 'transfer-losing-stakes', [Cl.uint(marketId), Cl.principal(stxToken)], user);
+	let response = await simnet.callPublicFn(marketScalarDia, 'transfer-losing-stakes', [Cl.uint(marketId), Cl.principal(stxToken)], user);
 	expect(response.result).toEqual(Cl.ok(Cl.bool(true)));
 	return response;
 }

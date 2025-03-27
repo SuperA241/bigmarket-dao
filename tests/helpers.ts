@@ -23,8 +23,14 @@ export const coreProposals = 'bme003-0-core-proposals';
 export const marketVoting = 'bme021-0-market-voting';
 export const marketGating = 'bme022-0-market-gating';
 export const marketPredicting = 'bme023-0-market-predicting';
-export const marketScalar = 'bme023-0-market-scalar';
+export const marketScalarDia = 'bme023-0-market-scalar-dia';
+export const marketScalarPyth = 'bme023-0-market-scalar-pyth';
 export const treasury = 'bme006-0-treasury';
+
+export const STXUSD = '0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17';
+export const BTCUSD = '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43';
+export const SOLUSD = '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d';
+export const ETHUSD = '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace';
 
 export async function setupSimnet() {
 	return await initSimnet();

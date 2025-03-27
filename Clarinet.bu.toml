@@ -11,14 +11,14 @@ contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standa
 [[project.requirements]]
 contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
 
-#[[project.requirements]]
-#contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
+[[project.requirements]]
+contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
 
-[contracts.clarity-bitcoin-lib-v5]
-path = 'contracts/external/clarity-bitcoin-lib-v5.clar'
-clarity_version = 3
-epoch = 3.0
+[[project.requirements]]
+contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-merkle-tree-keccak160-v1'
 
+[[project.requirements]]
+contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
 [contracts.bdp000-bootstrap]
 path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3
@@ -159,8 +159,13 @@ path = 'contracts/extensions/bme023-0-market-predicting.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.bme023-0-market-scalar]
-path = 'contracts/extensions/bme023-0-market-scalar.clar'
+[contracts.bme023-0-market-scalar-pyth]
+path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.clarity-bitcoin-lib-v5]
+path = 'contracts/external/clarity-bitcoin-lib-v5.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -179,6 +184,11 @@ path = 'contracts/traits/governance-token-trait.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.hk-cursor-v2]
+path = 'contracts/external/pyth/hk/hk-cursor-v2.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.nft-trait]
 path = 'contracts/traits/sips/nft-trait.clar'
 clarity_version = 3
@@ -194,6 +204,31 @@ path = 'contracts/traits/proposal-trait.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.pyth-governance-v2]
+path = 'contracts/external/pyth/pyth-governance-v2.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-oracle-v3]
+path = 'contracts/external/pyth/pyth-oracle-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-pnau-decoder-v2]
+path = 'contracts/external/pyth/pyth-pnau-decoder-v2.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-storage-v3]
+path = 'contracts/external/pyth/pyth-storage-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-traits-v1]
+path = 'contracts/external/pyth/pyth-traits-v1.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.sbtc]
 path = 'contracts/external/sbtc.clar'
 clarity_version = 3
@@ -201,6 +236,21 @@ epoch = 3.0
 
 [contracts.sip-010-trait-ft-standard]
 path = 'contracts/traits/sips/sip-010-trait-ft-standard.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.trait-dia-oracle]
+path = 'contracts/external/trait-dia-oracle.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wormhole-core-v3]
+path = 'contracts/external/pyth/wormhole/wormhole-core-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wormhole-traits-v1]
+path = 'contracts/external/pyth/wormhole/wormhole-traits-v1.clar'
 clarity_version = 3
 epoch = 3.0
 

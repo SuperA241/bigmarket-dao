@@ -1,5 +1,5 @@
-import { assert, describe, expect, it } from 'vitest';
-import { alice, constructDao, deployer, metadataHash, setupSimnet, stxToken } from '../helpers';
+import { describe, expect, it } from 'vitest';
+import { constructDao, deployer, metadataHash, setupSimnet } from '../helpers';
 import { Cl } from '@stacks/transactions';
 import { buildMockBitcoinLegacyTransaction, buildMockBitcoinSegwitTransaction, getWif, REGTEST_NETWORK } from './bitcoin-tx-helper';
 import { hex } from '@scure/base';
@@ -83,7 +83,7 @@ describe('clarity bitcoin', () => {
 				Cl.tuple({
 					value: Cl.uint(0),
 					scriptPubKey: Cl.bufferFromHex(
-						'6a4c5e0c000000040461646472051a7321b74e2b6a7e949e6c4ad313035b166509501703616d7401000000000000000000000000000000030269640100000000000000000000000000000000036964780100000000000000000000000000000014'
+						'6a430c0000000301690100000000000000000000000000000000016f01000000000000000000000000000000140170051a7321b74e2b6a7e949e6c4ad313035b1665095017'
 					)
 				})
 			)
@@ -158,16 +158,18 @@ describe('clarity bitcoin', () => {
 		//let tx = '6a6e48656c6c6f20537461636b73'; // OP_RETURN + custom marker + "Hello Stacks"
 		const txHex = hex.encode(transaction.toBytes(true, false));
 		let response = simnet.callReadOnlyFn('bme023-0-market-bitcoin', 'parse-payload-legacy', [Cl.bufferFromHex(txHex)], deployer);
-		console.log('\n\ncheck parse legacy op_return', (response.result as any).value.data);
+		console.log('\n\n check parse legacy op_return', (response.result as any).value.data);
+
+		const data = Cl.serialize(Cl.tuple({ idx: Cl.uint(2), amt: Cl.uint(3), id: Cl.uint(4), addr: Cl.principal('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM') }));
+		console.log('\n\ncheck parse legacy op_return' + hex.encode(data));
 
 		expect(response.result).toMatchObject(
 			Cl.ok(
 				Cl.some(
 					Cl.tuple({
-						id: Cl.uint(4),
-						idx: Cl.uint(2),
-						amt: Cl.uint(3),
-						addr: Cl.principal('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM')
+						i: Cl.uint(4),
+						o: Cl.uint(2),
+						p: Cl.principal('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM')
 					})
 				)
 			)
@@ -182,10 +184,9 @@ describe('clarity bitcoin', () => {
 			Cl.ok(
 				Cl.some(
 					Cl.tuple({
-						id: Cl.uint(0),
-						idx: Cl.uint(20),
-						amt: Cl.uint(3),
-						addr: Cl.principal('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5')
+						i: Cl.uint(0),
+						o: Cl.uint(20),
+						p: Cl.principal('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5')
 					})
 				)
 			)

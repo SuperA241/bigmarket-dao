@@ -12,7 +12,7 @@
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 (define-constant MARKET_TYPE u3) ;; bitcoin tx market
-(define-constant token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token)
+(define-constant token 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token)
 
 (define-constant RESOLUTION_OPEN u0)
 (define-constant RESOLUTION_RESOLVING u1)
@@ -62,6 +62,7 @@
 (define-data-var dao-treasury principal tx-sender)
 (define-data-var creation-gated bool true)
 (define-data-var market-wallet { version: (buff 1), hashbytes: (buff 32) } { version: 0x00, hashbytes: 0x8ae4a48cb0c3b7874460a6f5287d9dd512a18246 })
+(define-data-var resolution-timeout uint u1000) ;; 1000 blocks (~9 days)
 
 ;; Data structure for each Market
 ;; outcome: winning category
@@ -500,6 +501,22 @@
     (ok true)
   )
 )
+(define-public (force-resolve-market (market-id uint))
+  (let (
+    (md (unwrap! (map-get? markets market-id) err-market-not-found))
+    (elapsed (- burn-block-height (get resolution-burn-height md)))
+  )
+  (begin
+    (asserts! (> elapsed (var-get resolution-timeout)) err-market-wrong-state)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_DISPUTED) err-market-wrong-state)
+
+    (map-set markets market-id
+      (merge md { resolution-state: RESOLUTION_RESOLVED, concluded: true })
+    )
+    (print {event: "force-resolve", market-id: market-id, resolution-state: RESOLUTION_RESOLVED})
+    (ok true)
+  ))
+)
 
 ;; Claim winnings (for users who staked on the correct category)
 (define-public (claim-winnings (market-id uint))
@@ -631,13 +648,6 @@
 )
 (define-private (calculate-fee (amount uint) (fee-bips uint))
   (let ((fee (/ (* amount fee-bips) u10000)))
-    fee
-  )
-)
-(define-private (take-fee (amount uint) (fee-bips uint))
-  (let (
-        (fee (/ (* amount fee-bips) u10000))
-       )
     fee
   )
 )

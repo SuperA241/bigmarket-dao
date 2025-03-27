@@ -48,10 +48,9 @@ export function buildMockBitcoinSegwitTransaction(): btc.Transaction {
 	});
 	const data = Cl.serialize(
 		Cl.tuple({
-			idx: Cl.uint(20),
-			amt: Cl.uint(3),
-			id: Cl.uint(0),
-			addr: Cl.principal('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5')
+			o: Cl.uint(20),
+			i: Cl.uint(0),
+			p: Cl.principal('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5')
 		})
 	);
 	const encodedData = hex.encode(data);
@@ -108,7 +107,7 @@ export function buildMockBitcoinLegacyTransaction(): btc.Transaction {
 		index: utxo.vout,
 		sequence: 0xffffffff
 	});
-	const data = Cl.serialize(Cl.tuple({ idx: Cl.uint(2), amt: Cl.uint(3), id: Cl.uint(4), addr: Cl.principal('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM') }));
+	const data = Cl.serialize(Cl.tuple({ o: Cl.uint(2), i: Cl.uint(4), p: Cl.principal('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM') }));
 
 	transaction.addOutput({
 		script: btc.Script.encode(['RETURN', hex.decode(hex.encode(data))]), // OP_RETURN Data

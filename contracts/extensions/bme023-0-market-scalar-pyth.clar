@@ -1,13 +1,13 @@
-;; Title: BME023 Market scalar predictions
+;; Title: BME023-3 Market scalar predictions
 ;; Synopsis:
-;; Implements scalar prediciton markets (see also bme023-0-market-predicting).
+;; Implements scalar prediciton markets with pyth oracle resolution.
 ;; Description:
 ;; Scalar markets differ from binary/categorical markets (see bme023-0-market-predicting)
 ;; in the type of categories and the mechanism for rsolution:
 ;; Firstly, the categories are contiguous ranges of numbers with a min and max value. The winning
 ;; category is decided by the range that the outcome selects. Secondly, scalar market outcomes
-;; are determined by on-chain oracles. This contract uses the DIA oracle for selecting from
-;; possible outcomes.
+;; are determined by on-chain oracles. 
+;; This contract uses the Pyth oracle for selecting from possible outcomes.
 
 (use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 (impl-trait .prediction-market-trait.prediction-market-trait)
@@ -17,11 +17,8 @@
 (define-constant MARKET_TYPE u2)
 
 ;; Price Feeds
-(define-constant STX_USD_FEED_ID 0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43)
-
-(define-constant DIA_ORACLE .dia-oracle)
-;;(define-constant DIA_ORACLE 'SP1G48FZ4Y7JY8G2Z0N51QTCYGBQ6F4J43J77BQC0.dia-oracle)
-;;(define-constant DIA_ORACLE 'ST3Q982CNNQ00E3FH6853EMTA5FPF1M3ENJTHB8PY.dia-oracle)
+;; PYTH_ORACLE 'ST20M5GABDT6WYJHXBT5CDH4501V1Q65242SPRMXH.pyth-storage-v3
+;; PYTH_ORACLE 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3
 
 (define-constant DEFAULT_MARKET_DURATION u144) ;; ~1 day in Bitcoin blocks
 (define-constant DEFAULT_COOL_DOWN_PERIOD u144) ;; ~1 day in Bitcoin blocks
@@ -69,6 +66,7 @@
 (define-data-var resolution-agent principal tx-sender)
 (define-data-var dao-treasury principal tx-sender)
 (define-data-var creation-gated bool true)
+(define-data-var resolution-timeout uint u1000) ;; 1000 blocks (~9 days)
 
 ;; Data structure for each Market
 ;; outcome: winning category
@@ -88,7 +86,7 @@
     market-start: uint,
     market-duration: uint,
     cool-down-period: uint,
-    price-feed-id: (string-ascii 32), ;; DIA price feed ID (custom per market)
+    price-feed-id: (buff 32), ;; Pyth price feed ID
     price-outcome: (optional uint)
   }
 )
@@ -211,7 +209,7 @@
   (treasury principal) 
   (market-duration (optional uint)) 
   (cool-down-period (optional uint))
-  (price-feed-id (string-ascii 32)))
+  (price-feed-id (buff 32)))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
@@ -296,20 +294,20 @@
 )
 
 ;; Resolve a market invoked by ai-agent.
-(define-public (resolve-market (market-id uint) (stacks-height uint))
+(define-public (resolve-market (market-id uint))
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found))
       (market-end (+ (get market-start md) (get market-duration md)))
-      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
+      (resolution-burn-block (+ market-end (get cool-down-period md)))
       (price-feed-id (get price-feed-id md))
-      (id-header-hash (unwrap! (get-stacks-block-info? id-header-hash stacks-height) err-unknown-stacks-block))
-      (price-data (get-dia-price stacks-height price-feed-id))
-      (parsed-price (parse-dia-price (unwrap! price-data err-unauthorised))) ;; Parse DIA response
+      (current-block-height burn-block-height)
+      (price-data (unwrap! (contract-call? .pyth-oracle-v3 read-price-feed price-feed-id .pyth-storage-v3) err-category-not-found))
+      (parsed-price (to-uint (get price price-data)))
       (categories (get categories md))
       (first-category (unwrap! (element-at? categories u0) err-category-not-found))
       (winning-category-index
         (get winning-index
-          (fold select-winner categories
+          (fold select-winner-pyth categories
             {current-index: u0, winning-index: none, price: parsed-price}
           )
         )
@@ -325,10 +323,8 @@
       )
     )
     (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
-    (asserts! (>= burn-block-height resolution-burn-block) err-market-wrong-state)
-
-      ;; Ensure category was successfully assigned
-    (asserts! (is-some final-index) err-category-not-found)
+    (asserts! (>= current-block-height resolution-burn-block) err-market-wrong-state)
+    (asserts! (is-some final-index) err-category-not-found) ;; Ensure category was assigned
 
       ;; Store the result
     (map-set markets market-id
@@ -336,29 +332,12 @@
         { outcome: final-index, price-outcome: (some parsed-price), resolution-state: RESOLUTION_RESOLVING }
       )
     )
-    (print {event: "resolve-market", market-id: market-id, stacks-height: stacks-height, outcome: final-index, resolver: tx-sender, price: parsed-price})
+    (print {event: "resolve-market", market-id: market-id, outcome: final-index, resolver: tx-sender, price: parsed-price})
     (ok final-index)
   )
-
 )
 
-(define-read-only (get-dia-price (stacks-height uint) (price-feed-id (string-ascii 32)))
-  (let (
-      (id-header-hash (unwrap! (get-stacks-block-info? id-header-hash stacks-height) err-market-wrong-state))
-      ;; DEPLOYMENT - CHANGE TO MAINNET ADDRESS
-      (price-data (at-block id-header-hash (contract-call? .dia-oracle get-value price-feed-id)))
-    )
-    price-data
-  )
-)
-(define-private (parse-dia-price (price-response (tuple (timestamp uint) (value uint))))
-  (let ((price-raw (get value price-response)))
-    ;;(/ price-raw (pow u10 u8)) ;; Convert from DIA's decimal format
-    price-raw
-  )
-)
-;; Helper function: Finds the correct category index based on the price
-(define-private (select-winner 
+(define-private (select-winner-pyth 
       (category (tuple (min uint) (max uint)))
       (acc {current-index: uint, winning-index: (optional uint), price: uint}))
   (let (
@@ -442,6 +421,24 @@
     (ok true)
   )
 )
+(define-public (force-resolve-market (market-id uint))
+  (let (
+    (md (unwrap! (map-get? markets market-id) err-market-not-found))
+    (market-end (+ (get market-start md) (get market-duration md)))
+    (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
+    (elapsed (- burn-block-height resolution-burn-block))
+  )
+  (begin
+    (asserts! (> elapsed (var-get resolution-timeout)) err-market-wrong-state)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_DISPUTED) err-market-wrong-state)
+
+    (map-set markets market-id
+      (merge md { resolution-state: RESOLUTION_RESOLVED, concluded: true })
+    )
+    (print {event: "force-resolve", market-id: market-id, resolution-state: RESOLUTION_RESOLVED})
+    (ok true)
+  ))
+)
 
 ;; Claim winnings (for users who staked on the correct category)
 (define-public (claim-winnings (market-id uint) (token <ft-token>))
@@ -496,10 +493,10 @@
 )
 
 (define-private (claim-winnings-internal 
-  (market-id uint) 
-  (user-stake uint) 
-  (winning-pool uint) 
-  (total-pool uint) 
+  (market-id uint)
+  (user-stake uint)
+  (winning-pool uint)
+  (total-pool uint)
   (index-won uint) (token <ft-token>))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
@@ -563,7 +560,7 @@
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
       
-      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-scalar none))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-scalar-pyth none))
       (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
 
       (ok transfer-amount)
@@ -572,13 +569,6 @@
 )
 (define-private (calculate-fee (amount uint) (fee-bips uint))
   (let ((fee (/ (* amount fee-bips) u10000)))
-    fee
-  )
-)
-(define-private (take-fee (amount uint) (fee-bips uint))
-  (let (
-        (fee (/ (* amount fee-bips) u10000))
-       )
     fee
   )
 )

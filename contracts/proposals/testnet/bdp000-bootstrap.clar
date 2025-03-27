@@ -20,7 +20,7 @@
 				{extension: .bme021-0-market-voting, enabled: true}
 				{extension: .bme022-0-market-gating, enabled: true}
 				{extension: .bme023-0-market-predicting, enabled: true}
-				{extension: .bme023-0-market-scalar, enabled: true}
+				{extension: .bme023-0-market-scalar-pyth, enabled: true}
 			)
 		))
 		;; Set core team members.
@@ -37,7 +37,7 @@
 		;; configure prediction markets
 		;; allowedCreators = ["ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R", "ST2ZGXYF58V9D2HXDTP3N02DC3F8G2251PPGRXDQD", "ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY", "ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ"];
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-predicting 0x70a06106d0aaecb26ab15155dc1d958422d991a5367d446699f9a978e80f12f0))
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar 0x70a06106d0aaecb26ab15155dc1d958422d991a5367d446699f9a978e80f12f0))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-pyth 0x70a06106d0aaecb26ab15155dc1d958422d991a5367d446699f9a978e80f12f0))
 		(try! (contract-call? .bme023-0-market-predicting set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
 		(try! (contract-call? .bme023-0-market-predicting set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
 		(try! (contract-call? .bme023-0-market-predicting set-dao-treasury .bme006-0-treasury))
@@ -45,12 +45,12 @@
 		(try! (contract-call? .bme023-0-market-predicting set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? .bme023-0-market-predicting set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
 
-		(try! (contract-call? .bme023-0-market-scalar set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
-		(try! (contract-call? .bme023-0-market-scalar set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
-		(try! (contract-call? .bme023-0-market-scalar set-dao-treasury .bme006-0-treasury))
-		(try! (contract-call? .bme023-0-market-scalar set-allowed-token .wrapped-stx true))
-		(try! (contract-call? .bme023-0-market-scalar set-allowed-token .bme000-0-governance-token true))
-		(try! (contract-call? .bme023-0-market-scalar set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-dao-treasury .bme006-0-treasury))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token .wrapped-stx true))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token .bme000-0-governance-token true))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
 
 		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
