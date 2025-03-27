@@ -23,6 +23,26 @@ contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3'
 [[project.requirements]]
 contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-oracle-v3'
 
+[[project.requirements]]
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait'
+
+[[project.requirements]]
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait'
+
+[[project.requirements]]
+contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-governance-v2'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.wormhole-traits-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-traits-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-pnau-decoder-v2'
 [contracts.bdp000-bootstrap]
 path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3
@@ -178,6 +198,11 @@ path = 'contracts/external/clarity-bitcoin-lib-v5.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.dia-oracle]
+path = 'contracts/proposals/devnet/unit-tests/dia-oracle.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.extension-trait]
 path = 'contracts/traits/extension-trait.clar'
 clarity_version = 3
@@ -208,23 +233,8 @@ path = 'contracts/traits/proposal-trait.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.pyth-governance-v2]
-path = 'contracts/external/pyth/pyth-governance-v2.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.dia-oracle]
-path = 'contracts/proposals/devnet/unit-tests/dia-oracle.clar'
-clarity_version = 3
-epoch = 3.0
-
 [contracts.pyth-oracle-v3]
 path = 'contracts/external/pyth/pyth-oracle-v3.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.pyth-pnau-decoder-v2]
-path = 'contracts/external/pyth/pyth-pnau-decoder-v2.clar'
 clarity_version = 3
 epoch = 3.0
 

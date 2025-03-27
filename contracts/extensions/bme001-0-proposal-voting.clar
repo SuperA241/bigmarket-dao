@@ -12,8 +12,8 @@
 ;; The mechanism for voting requires Governance tokens to be burned in exchange for the 
 ;; equivalent number of lock tokens - these can be re-exchanged after the vote is concluded.
 
-(impl-trait .extension-trait.extension-trait)
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-proposal-already-executed (err u3002))

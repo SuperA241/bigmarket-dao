@@ -10,7 +10,7 @@
 ;; Unlike proposal voting - market voting is categorical - voters are voting to select an
 ;; outcome from at least 2 and up to 10 potential outcomes.
 
-(impl-trait .extension-trait.extension-trait)
+(impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (use-trait nft-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
 (use-trait ft-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 (use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)

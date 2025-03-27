@@ -2,7 +2,7 @@
 ;; Description:
 ;; Sets up and configure the DAO
 
-(impl-trait  .proposal-trait.proposal-trait)
+(impl-trait  'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant token-supply u10000000000000)
 

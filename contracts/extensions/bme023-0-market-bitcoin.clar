@@ -322,7 +322,7 @@
     (cproof (list 14 (buff 32)))
   )
   ;; commented out for testing on stacks testnet which is running on bitcoin regtest!
-  (match (contract-call? .clarity-bitcoin-lib-v5 was-segwit-tx-mined-compact height wtx header tx-index tree-depth wproof witness-merkle-root witness-reserved-value ctx cproof)
+  (match (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 was-segwit-tx-mined-compact height wtx header tx-index tree-depth wproof witness-merkle-root witness-reserved-value ctx cproof)
     result (ok true)
     err err-transaction-segwit)
 )
@@ -333,7 +333,7 @@
     (header (buff 80))
     (proof { tx-index: uint, hashes: (list 14 (buff 32)), tree-depth: uint})
   )
-  (match (contract-call? .clarity-bitcoin-lib-v5 was-tx-mined-compact height wtx header proof)
+  (match (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 was-tx-mined-compact height wtx header proof)
     result (ok true)
     err err-transaction-legacy)
 )
@@ -341,7 +341,7 @@
 (define-read-only (get-output-legacy (tx (buff 4096)) (index uint))
   (let
     (
-      (parsed-tx (contract-call? .clarity-bitcoin-lib-v5 parse-tx tx))
+      (parsed-tx (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 parse-tx tx))
     )
     (match parsed-tx
       result
@@ -363,7 +363,7 @@
 (define-read-only (get-output-segwit (tx (buff 4096)) (index uint))
   (let
     (
-      (parsed-tx (contract-call? .clarity-bitcoin-lib-v5 parse-wtx tx false))
+      (parsed-tx (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 parse-wtx tx false))
     )
     (match parsed-tx
       result

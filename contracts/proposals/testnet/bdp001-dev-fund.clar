@@ -9,7 +9,7 @@
 ;; Principals can be added and removed, and allowances can be changed via future
 ;; proposals.
 
-(impl-trait  .proposal-trait.proposal-trait)
+(impl-trait  'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
 (define-constant dev-fund-percentage u30)
 

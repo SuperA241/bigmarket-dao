@@ -1,0 +1,144 @@
+[project]
+name = 'bigmarket-dao'
+description = 'Prediction markets on Stacks'
+authors = []
+telemetry = true
+cache_dir = '.cache'
+
+[[project.requirements]]
+contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+
+[[project.requirements]]
+contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
+
+[[project.requirements]]
+contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
+
+[[project.requirements]]
+contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
+
+[[project.requirements]]
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait'
+
+[[project.requirements]]
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait'
+
+[[project.requirements]]
+contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-merkle-tree-keccak160-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-oracle-v3'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-traits-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-governance-v2'
+
+[[project.requirements]]
+contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-cursor-v2'
+
+[[project.requirements]]
+contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-ecc-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.wormhole-traits-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-pnau-decoder-v2'
+
+[contracts.bdp000-bootstrap]
+path = 'contracts/proposals/testnet/bdp000-bootstrap-no-pyth.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bigmarket-dao]
+path = 'contracts/bigmarket-dao.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme000-0-governance-token]
+path = 'contracts/extensions/bme000-0-governance-token.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme001-0-proposal-voting]
+path = 'contracts/extensions/bme001-0-proposal-voting.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme003-0-core-proposals]
+path = 'contracts/extensions/bme003-0-core-proposals.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme004-0-core-execute]
+path = 'contracts/extensions/bme004-0-core-execute.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme006-0-treasury]
+path = 'contracts/extensions/bme006-0-treasury.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme010-0-token-sale]
+path = 'contracts/extensions/bme010-0-token-sale.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme021-0-market-voting]
+path = 'contracts/extensions/bme021-0-market-voting.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme022-0-market-gating]
+path = 'contracts/extensions/bme022-0-market-gating.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme023-0-market-bitcoin]
+path = 'contracts/extensions/bme023-0-market-bitcoin.clar'
+clarity_version = 3
+epoch = 3.0
+
+#[contracts.bme023-0-market-scalar-pyth]
+#path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
+#clarity_version = 3
+#epoch = 3.0
+
+[contracts.bme023-0-market-predicting]
+path = 'contracts/extensions/bme023-0-market-predicting.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.governance-token-trait]
+path = 'contracts/traits/governance-token-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.prediction-market-trait]
+path = 'contracts/traits/prediction-market-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.proposal-trait]
+path = 'contracts/traits/proposal-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wrapped-stx]
+path = 'contracts/external/wrapped-stx.clar'
+clarity_version = 3
+epoch = 3.0
+[repl.analysis]
+passes = []
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false

@@ -1,4 +1,4 @@
-(use-trait proposal-trait .proposal-trait.proposal-trait)
+(use-trait proposal-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 (define-trait voting-trait
   (
     (add-proposal (<proposal-trait>
