@@ -18,7 +18,7 @@
   * [Creating a Market (AI Integration Guide)](how-it-works/editor/creating-a-market-ai-integration-guide.md)
 * [📘 Platform Fees](how-it-works/platform-fees.md)
 * [📘 Making Predictions](how-it-works/making-predictions-on-bigmarket.md)
-* [BigMarket Reputation & Rewards](how-it-works/bigmarket-reputation-and-rewards.md)
+* [📘 Reputation & Rewards](how-it-works/reputation-and-rewards.md)
 
 ## HACKATHON
 

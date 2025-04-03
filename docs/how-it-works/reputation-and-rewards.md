@@ -1,4 +1,4 @@
-# BigMarket Reputation & Rewards
+# 📘 Reputation & Rewards
 
 ### Why Earn Reputation on BigMarket?
 
