@@ -19,13 +19,11 @@ BIG is the project's utility token. You can think of it as your on-chain stake i
 
 It’s a feedback loop: contribute, earn rep, claim BIG, use BIG to deepen your influence.
 
-## How the BIG Reward Pool Works
+## How the BIG Reward Protocol Works
 
-#### Fair. Finite. Funded by the system.
+#### Fair. Finite. Self Funding.
 
 BigMarket rewards participants with BIG tokens based on how much reputation they earn through actual engagement — staking, predicting, building, governing. But unlike many projects that inflate endlessly to drive participation, BigMarket takes a different route: the reward system is **capped, transparent, and designed to sustain itself.**
-
-***
 
 #### 1. Capped Initial Allocation: 1.5% of Supply
 
@@ -37,7 +35,7 @@ No ongoing minting. No hidden emissions. Just a fixed pot.
 
 #### 2. Sustainable by Design
 
-Our reward system don't solely rely on this 1.5% mint - to keep things moving we also swap fee earned from market winners back into BIG
+Our reward system don't solely rely on this 1.5% mint - to keep things moving we also swap fees earned from market winners back into BIG
 
 **The more active the markets, the more sustainable the rewards.**
 
