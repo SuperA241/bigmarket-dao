@@ -9,21 +9,22 @@ icon: monero
 
 #### 🔗 **On-Chain Actions**
 
-| Action                      | Trigger Event           | Suggested Tier | BIGR Earned | Notes                              |
-| --------------------------- | ----------------------- | -------------- | ----------- | ---------------------------------- |
-| 🧩 Stake in market          | `stake`                 | Tier 4–6       | 1–3         | Based on amount and duration       |
-| 🧠 Manual market creation   | `create-market`         | Tier 7         | 5           | One-time per valid market          |
-| 🤖 AI market creation       | `create-ai-market`      | Tier 6         | 3           | One-time per valid AI prompt       |
-| 📊 Market resolution voting | `vote-on-resolution`    | Tier 5         | 1           | Per vote                           |
-| 🏆 Winning staker           | `claim-market-winnings` | Tier 6–8       | 2–5         | Bonus if early staker or high-risk |
-| 🗳️ DAO proposal voting     | `vote-proposal`         | Tier 4–9       | 1–3         | Based on consistency and turnout   |
-| 🧾 DAO proposal submitted   | `submit-proposal`       | Tier 7–10      | 5–8         | Based on impact and discussion     |
-| 💧 Liquidity provision      | `stake-liquidity`       | Tier 5–8       | 3–6         | Weighted by amount contributed     |
+| Action                   | Trigger Event           | Suggested Tier | BIGR Earned | Notes                              |
+| ------------------------ | ----------------------- | -------------- | ----------- | ---------------------------------- |
+| Stake in market          | `stake`                 | Tier 4         | 3           | Based on amount and duration       |
+| Manual market creation   | `create-market`         | Tier 7         | 5           | One-time per valid market          |
+| AI market creation       | `create-ai-market`      | Tier 6         | 3           | One-time per valid AI prompt       |
+| Market resolution voting | `vote-on-resolution`    | Tier 5         | 1           | Per vote                           |
+| Winning staker           | `claim-market-winnings` | Tier 6         | 2           | Bonus if early staker or high-risk |
+| DAO proposal voting      | `vote-proposal`         | Tier 5         | 2           | Based on consistency and turnout   |
+| DAO proposal submitted   | `submit-proposal`       | Tier 8         | 6           | Based on impact and discussion     |
+| 💧 Liquidity provision   | `stake-liquidity`       | Tier 7         | 5           | Weighted by amount contributed     |
 
 #### 🪄 **Off-Chain Contributions**
 
 | Contribution Type               | Recognition Method      | Suggested Tier | BIGR Earned | Notes                              |
 | ------------------------------- | ----------------------- | -------------- | ----------- | ---------------------------------- |
+| Staking                         | bonus BIGR              | 4-6            | 3-5         | Based on how early to stake        |
 | 🧵 Posts on X (Twitter)         | Verified / voted        | Tier 2–4       | 1–2         | Based on engagement + quality      |
 | 🗞️ Content (articles/videos)   | Manual / bounty         | Tier 5–7       | 3–5         | Linked to DAO visibility           |
 | 📈 Growth marketing help        | Nominated or proposal   | Tier 6–8       | 4–6         | Funnels, campaign help, dashboards |
