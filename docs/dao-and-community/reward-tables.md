@@ -18,9 +18,21 @@ icon: monero
 | 🏆 Winning staker           | `claim-market-winnings` | Tier 6–8       | 2–5         | Bonus if early staker or high-risk |
 | 🗳️ DAO proposal voting     | `vote-proposal`         | Tier 4–9       | 1–3         | Based on consistency and turnout   |
 | 🧾 DAO proposal submitted   | `submit-proposal`       | Tier 7–10      | 5–8         | Based on impact and discussion     |
-| 💧 Liquidity provision      | `stake-liquidity`       | Tier 5–8       | 3–6         | Weighted by depth and time locked  |
+| 💧 Liquidity provision      | `stake-liquidity`       | Tier 5–8       | 3–6         | Weighted by amount contributed     |
 
-### Reputation Tiers — BigMarket DAO
+#### 🪄 **Off-Chain Contributions**
+
+| Contribution Type               | Recognition Method      | Suggested Tier | BIGR Earned | Notes                              |
+| ------------------------------- | ----------------------- | -------------- | ----------- | ---------------------------------- |
+| 🧵 Posts on X (Twitter)         | Verified / voted        | Tier 2–4       | 1–2         | Based on engagement + quality      |
+| 🗞️ Content (articles/videos)   | Manual / bounty         | Tier 5–7       | 3–5         | Linked to DAO visibility           |
+| 📈 Growth marketing help        | Nominated or proposal   | Tier 6–8       | 4–6         | Funnels, campaign help, dashboards |
+| 🧪 Beta testing & feedback      | Form + DAO confirmation | Tier 3–5       | 1–3         | Bonus for bugs or user insights    |
+| 🎨 Design contributions         | GitHub or bounty        | Tier 5–8       | 3–6         | UI, infographics, branding         |
+| 🤝 Partnerships / outreach      | DAO report or proposal  | Tier 10–15     | 8–12        | Strategic value & follow-through   |
+| 🧙 Community mod / Discord help | Consistent engagement   | Tier 4–7       | 2–4         | Based on cycles or nomination      |
+
+## Reputation Tiers — BigMarket DAO
 
 To fairly reward contribution the tiers are weighted - these weights are used in our smart contracts to fairly and transparently reward contributions.
 
