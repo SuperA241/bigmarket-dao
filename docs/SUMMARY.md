@@ -8,7 +8,8 @@
 
 ## DAO & COMMUNITY
 
-* [BigMarket Token Sale](dao-and-community/bigmarket-dao-and-token-sale.md)
+* [BigMarket PoU Sale](dao-and-community/bigmarket-pou-sale.md)
+* [Reputation & Rewards](dao-and-community/reputation-and-rewards.md)
 * [BigMarket DeFi](dao-and-community/bigmarket-defi.md)
 
 ## How it Works
@@ -18,7 +19,6 @@
   * [Creating a Market (AI Integration Guide)](how-it-works/editor/creating-a-market-ai-integration-guide.md)
 * [📘 Platform Fees](how-it-works/platform-fees.md)
 * [📘 Making Predictions](how-it-works/making-predictions-on-bigmarket.md)
-* [📘 Reputation & Rewards](how-it-works/reputation-and-rewards.md)
 
 ## HACKATHON
 

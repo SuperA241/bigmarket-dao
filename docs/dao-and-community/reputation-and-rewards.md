@@ -1,4 +1,8 @@
-# 📘 Reputation & Rewards
+---
+icon: monero
+---
+
+# Reputation & Rewards
 
 ## Why Earn Reputation on BigMarket?
 
