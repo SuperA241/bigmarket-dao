@@ -9,16 +9,19 @@ icon: monero
 
 #### 🔗 **On-Chain Actions**
 
-| Action                   | Trigger Event           | Suggested Tier | BIGR Earned | Notes                              |
-| ------------------------ | ----------------------- | -------------- | ----------- | ---------------------------------- |
-| Stake in market          | `stake`                 | Tier 4         | 3           | Based on amount and duration       |
-| Manual market creation   | `create-market`         | Tier 7         | 5           | One-time per valid market          |
-| AI market creation       | `create-ai-market`      | Tier 6         | 3           | One-time per valid AI prompt       |
-| Market resolution voting | `vote-on-resolution`    | Tier 5         | 1           | Per vote                           |
-| Winning staker           | `claim-market-winnings` | Tier 6         | 2           | Bonus if early staker or high-risk |
-| DAO proposal voting      | `vote-proposal`         | Tier 5         | 2           | Based on consistency and turnout   |
-| DAO proposal submitted   | `submit-proposal`       | Tier 8         | 6           | Based on impact and discussion     |
-| 💧 Liquidity provision   | `stake-liquidity`       | Tier 7         | 5           | Weighted by amount contributed     |
+| Action                      | Trigger Event           | Suggested Tier | BIGR Earned | Notes                                               |
+| --------------------------- | ----------------------- | -------------- | ----------- | --------------------------------------------------- |
+| Stake in market             | `stake`                 | Tier 4         | 3           | Based on amount and duration                        |
+| Scalar market creation      | `create-market`         | Tier 6         | 4           | One-time per valid market                           |
+| Categorical market creation | `create-ai-market`      | Tier 7         | 4           | One-time per valid AI prompt                        |
+| Market resolution voting    | `vote-on-resolution`    | Tier 5         | 2           | Per vote                                            |
+| Winning staker              | `claim-market-winnings` | Tier 6         | 2           | Bonus if early staker or high-risk                  |
+| DAO proposal voting         | `vote-proposal`         | Tier 7         | 2           | Based on consistency and turnout                    |
+| DAO reclaim votes           | `vote-reclaim`          | Tier 5         | 3           | Bonus for reclaiming BIG tokens post voting         |
+| DAO conclude proposal       | `conclude-proposal`     | Tier 3         | 5           | Bonus for anyone who calls the public conclude vote |
+| Conclude market vote        | `conclude-market-vote`  | Tier 3         | 3           | Bonus for first person to conclude                  |
+| DAO proposal submitted      | `submit-proposal`       | -              | -           | TBD when public proposals are opened                |
+| Liquidity provision         | `stake-liquidity`       | Tier 7         | 5           | Weighted by amount contributed                      |
 
 #### 🪄 **Off-Chain Contributions**
 
