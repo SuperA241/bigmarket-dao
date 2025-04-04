@@ -8,7 +8,7 @@
 
 ## DAO & COMMUNITY
 
-* [BigMarket PoU Sale](dao-and-community/bigmarket-pou-sale.md)
+* [BigMarket Token Sale Philosophy](dao-and-community/bigmarket-token-sale-philosophy.md)
 * [Reputation & Rewards](dao-and-community/reputation-and-rewards.md)
 * [BigMarket DeFi](dao-and-community/bigmarket-defi.md)
 

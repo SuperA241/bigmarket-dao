@@ -2,9 +2,9 @@
 icon: monero
 ---
 
-# BigMarket PoU Sale
+# BigMarket Token Sale Philosophy
 
-## Proof of Use Sale Mechanics
+## Sale Mechanics
 
 ## BigMarket Proof of Use Sale & Distribution
 
