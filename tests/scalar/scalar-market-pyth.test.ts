@@ -1,11 +1,29 @@
 import { describe, expect, it } from 'vitest';
 import { Cl } from '@stacks/transactions';
-import { alice, assertContractBalance, assertDataVarNumber, betty, bob, constructDao, deployer, fred, marketScalarPyth, metadataHash, stxToken, tom } from '../helpers';
+import {
+	alice,
+	assertContractBalance,
+	assertDataVarNumber,
+	betty,
+	bob,
+	constructDao,
+	deployer,
+	fred,
+	marketScalarPyth,
+	metadataHash,
+	reputationSft,
+	stxToken,
+	tom
+} from '../helpers';
 
 const USD0 = '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43';
 const USD1 = '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace';
 const USD2 = '0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17';
 const USD3 = '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d';
+async function assertBalance(user: string, tier: number, balance: number) {
+	let bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-balance', [Cl.uint(tier), Cl.principal(user)], user);
+	expect(bal.result).toEqual(Cl.ok(Cl.uint(balance)));
+}
 
 describe('claiming errors', () => {
 	it('err too few categories', async () => {
@@ -36,11 +54,13 @@ describe('claiming errors', () => {
 
 	it('create ok', async () => {
 		createScalarMarket(0, USD0);
+		assertBalance(deployer, 6, 4);
 	});
 
 	it('create and stake not ok on unknown category', async () => {
 		createScalarMarket(0, USD0);
 		createScalarMarket(1, USD1);
+		assertBalance(deployer, 6, 8);
 		predictCategory(alice, 0, 5, 1000, 10023);
 	});
 

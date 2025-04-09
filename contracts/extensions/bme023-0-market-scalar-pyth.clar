@@ -254,9 +254,9 @@
           price-outcome: none
         }
       )
-      ;; Increment the counter
-      (print {event: "create-market", market-id: new-id, categories: categories, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
+      (try! (contract-call? .bme030-0-reputation-token mint tx-sender u6 u4))
+      (print {event: "create-market", market-id: new-id, categories: categories, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, creator: tx-sender})
       (ok new-id)
   )
 )
@@ -288,6 +288,7 @@
         (unwrap! (replace-at? current-stake-balances index (+ current-user-stake amount-less-fee)) err-category-not-found)
     )
 
+    (try! (contract-call? .bme030-0-reputation-token mint tx-sender u4 u3))
     (print {event: "market-stake", market-id: market-id, index: index, amount: amount-less-fee, voter: tx-sender})
     (ok index)
   )
@@ -377,13 +378,12 @@
 ;; concludes a market that has been disputed. This method has to be called at least
 ;; dispute-window-length blocks after the dispute was raised - the voting window.
 ;; a proposal with 0 votes will close the market with the outcome false
-(define-public (resolve-market-vote (market-id uint) (meta-data-hash (buff 32)) (outcome uint))
+(define-public (resolve-market-vote (market-id uint) (outcome uint))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
     )
     (try! (is-dao-or-extension))
     (asserts! (< outcome (len (get categories md))) err-market-not-found)
-    (asserts! (is-eq meta-data-hash (get market-data-hash md)) err-market-not-found)
     (asserts! (or (is-eq (get resolution-state md) RESOLUTION_DISPUTED) (is-eq (get resolution-state md) RESOLUTION_RESOLVING)) err-market-wrong-state)
 
     (map-set markets market-id
@@ -398,10 +398,9 @@
 
 ;; Allows a user with a stake in market to contest the resolution
 ;; the call is made via the voting contract 'create-market-vote' function
-(define-public (dispute-resolution (market-id uint) (data-hash (buff 32)) (disputer principal))
+(define-public (dispute-resolution (market-id uint) (disputer principal))
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
-      (market-data-hash (get market-data-hash md)) 
       (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
       (market-end (+ (get market-start md) (get market-duration md)))
       (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
@@ -412,7 +411,6 @@
     ;; prevent market getting locked in unresolved state
     (asserts! (<= burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-elapsed)
 
-    (asserts! (is-eq data-hash market-data-hash) err-market-not-found) 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
 
     (map-set markets market-id
@@ -541,6 +539,7 @@
       (map-set stake-balances { market-id: market-id, user: tx-sender } (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0))
 
       ;; Log and return user share
+      (try! (contract-call? .bme030-0-reputation-token mint tx-sender u6 u2))
       (print {event: "claim-winnings", market-id: market-id, index-won: index-won, claimer: tx-sender, user-stake: user-stake, user-share: user-share-net, marketfee: marketfee, daofee: daofee, winning-pool: winning-pool, total-pool: total-pool})
       (ok user-share-net)
     )

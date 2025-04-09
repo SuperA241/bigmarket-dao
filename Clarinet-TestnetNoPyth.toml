@@ -115,6 +115,11 @@ path = 'contracts/extensions/bme023-0-market-predicting.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.bme030-0-reputation-token]
+path = 'contracts/extensions/bme030-0-reputation-token.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.governance-token-trait]
 path = 'contracts/traits/governance-token-trait.clar'
 clarity_version = 3

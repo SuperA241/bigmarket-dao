@@ -25,6 +25,7 @@ export const marketGating = 'bme022-0-market-gating';
 export const marketPredicting = 'bme023-0-market-predicting';
 export const marketScalarDia = 'bme023-0-market-scalar-dia';
 export const marketScalarPyth = 'bme023-0-market-scalar-pyth';
+export const reputationSft = 'bme030-0-reputation-token';
 export const treasury = 'bme006-0-treasury';
 
 export const STXUSD = '0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17';

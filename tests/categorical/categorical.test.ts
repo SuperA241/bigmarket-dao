@@ -11,12 +11,18 @@ import {
 	fred,
 	marketPredicting,
 	metadataHash,
+	reputationSft,
 	setupSimnet,
 	stxToken,
 	tom
 } from '../helpers';
 
 const simnet = await setupSimnet();
+
+async function assertBalance(user: string, tier: number, balance: number) {
+	let bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-balance', [Cl.uint(tier), Cl.principal(user)], user);
+	expect(bal.result).toEqual(Cl.ok(Cl.uint(balance)));
+}
 
 describe('claiming errors', () => {
 	it('err too few categories', async () => {
@@ -44,11 +50,14 @@ describe('claiming errors', () => {
 
 	it('create ok', async () => {
 		createCategoricalMarket(0);
+		assertBalance(deployer, 7, 4);
 	});
 
 	it('create and stake not ok on unknown category', async () => {
 		createCategoricalMarket(0);
+		assertBalance(deployer, 7, 4);
 		createCategoricalMarket(1);
+		assertBalance(deployer, 7, 8);
 		predictCategory(alice, 0, 'lionness', 1000, 10023);
 	});
 

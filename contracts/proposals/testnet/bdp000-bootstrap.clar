@@ -16,11 +16,13 @@
 				{extension: .bme003-0-core-proposals, enabled: true}
 				{extension: .bme004-0-core-execute, enabled: true}
 				{extension: .bme006-0-treasury, enabled: true}
-				{extension: .bme010-0-token-sale, enabled: true}
+				{extension: .bme010-0-liquidity-contribution, enabled: true}
 				{extension: .bme021-0-market-voting, enabled: true}
 				{extension: .bme022-0-market-gating, enabled: true}
 				{extension: .bme023-0-market-predicting, enabled: true}
 				{extension: .bme023-0-market-scalar-pyth, enabled: true}
+				{extension: .bme023-0-market-bitcoin, enabled: true}
+				{extension: .bme030-0-reputation-token, enabled: true}
 			)
 		))
 		;; Set core team members.
@@ -52,6 +54,16 @@
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
 
+		(try! (contract-call? .bme023-0-market-bitcoin set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dao-treasury .bme006-0-treasury))
+		(try! (contract-call? .bme023-0-market-bitcoin set-creation-gated true))
+		(try! (contract-call? .bme023-0-market-bitcoin set-market-fee-bips-max u300))
+		(try! (contract-call? .bme023-0-market-bitcoin set-market-create-fee u1000000))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fee-bips u100))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dao-fee-bips u150))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dispute-window-length u24))
+
 		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
 		;; core team voting rights unlock over u105120 bitcoin block period 
@@ -69,6 +81,40 @@
 				{amount: (/ (* u1500 token-supply) u10000), recipient: .bme006-0-treasury}
 			)
 		))
+
+		;; Entry levels (weight: 1)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u1 u1))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u2 u1))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u3 u1))
+
+		;; Contributor levels (weight: 2)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u4 u2))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u5 u2))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u6 u2))
+
+		;; Active community (weight: 3)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u7 u3))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u8 u3))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u9 u3))
+
+		;; Project leads (weight: 5)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u10 u5))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u11 u5))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u12 u5))
+
+		;; Strategic contributors (weight: 8)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u13 u8))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u14 u8))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u15 u8))
+
+		;; Core stewards (weight: 13)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u16 u13))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u17 u13))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u18 u13))
+
+		;; Founders / exec level (weight: 21)
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u19 u21))
+		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u20 u21))
 
 		(print "BigMarket DAO has risen.")
 		(ok true)

@@ -218,7 +218,7 @@
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
 	(begin
 		(asserts! (or (is-eq tx-sender sender) (is-eq contract-caller sender)) err-not-token-owner)
-		(asserts! (var-get transfers-active) err-transfers-blocked)
+    	(asserts! (or (var-get transfers-active) (unwrap! (is-dao-or-extension) err-unauthorised)) err-transfers-blocked)
 		(ft-transfer? bmg-token amount sender recipient)
 	)
 )

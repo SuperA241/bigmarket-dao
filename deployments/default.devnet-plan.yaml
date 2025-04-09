@@ -28,6 +28,41 @@ plan:
     - id: 1
       transactions:
         - requirement-publish:
+            contract-id: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 940
+            path: ".cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.clar"
+            clarity-version: 1
+        - requirement-publish:
+            contract-id: SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 820
+            path: ".cache/requirements/SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.clar"
+            clarity-version: 1
+        - requirement-publish:
+            contract-id: SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-semi-fungible-token-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 9620
+            path: ".cache/requirements/SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-semi-fungible-token-trait.clar"
+            clarity-version: 1
+        - requirement-publish:
+            contract-id: SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4010
+            path: ".cache/requirements/SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait.clar"
+            clarity-version: 1
+      epoch: "2.05"
+    - id: 2
+      transactions:
+        - requirement-publish:
             contract-id: SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-cursor-v2
             remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             remap-principals:
@@ -43,8 +78,16 @@ plan:
             cost: 11000
             path: ".cache/requirements/SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-merkle-tree-keccak160-v1.clar"
             clarity-version: 2
+        - requirement-publish:
+            contract-id: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 299750
+            path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5.clar"
+            clarity-version: 2
       epoch: "2.4"
-    - id: 2
+    - id: 3
       transactions:
         - requirement-publish:
             contract-id: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-registry
@@ -71,23 +114,9 @@ plan:
             path: ".cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-deposit.clar"
             clarity-version: 3
         - contract-publish:
-            contract-name: extension-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 940
-            path: contracts/traits/extension-trait.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: proposal-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 820
-            path: contracts/traits/proposal-trait.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
             contract-name: bigmarket-dao
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 27000
+            cost: 27820
             path: contracts/bigmarket-dao.clar
             anchor-block-only: true
             clarity-version: 3
@@ -101,84 +130,77 @@ plan:
         - contract-publish:
             contract-name: bme000-0-governance-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 84570
+            cost: 85550
             path: contracts/extensions/bme000-0-governance-token.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bme006-0-treasury
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 50410
+            path: contracts/extensions/bme006-0-treasury.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bme030-0-reputation-token
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 106370
+            path: contracts/extensions/bme030-0-reputation-token.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme001-0-proposal-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 97560
+            cost: 100710
             path: contracts/extensions/bme001-0-proposal-voting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme003-0-core-proposals
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 25120
+            cost: 25940
             path: contracts/extensions/bme003-0-core-proposals.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme004-0-core-execute
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 36270
+            cost: 37090
             path: contracts/extensions/bme004-0-core-execute.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: bme006-0-treasury
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50000
-            path: contracts/extensions/bme006-0-treasury.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: bme010-0-token-sale
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 66480
-            path: contracts/extensions/bme010-0-token-sale.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: prediction-market-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 1890
+            cost: 1690
             path: contracts/traits/prediction-market-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme021-0-market-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 129270
+            cost: 132400
             path: contracts/extensions/bme021-0-market-voting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme022-0-market-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 81130
+            cost: 81540
             path: contracts/extensions/bme022-0-market-gating.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: clarity-bitcoin-lib-v5
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 299740
-            path: contracts/external/clarity-bitcoin-lib-v5.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme023-0-market-bitcoin
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 250980
+            cost: 252380
             path: contracts/extensions/bme023-0-market-bitcoin.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme023-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 200200
+            cost: 199930
             path: contracts/extensions/bme023-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -192,7 +214,7 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-dia
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 239950
+            cost: 239690
             path: contracts/extensions/bme023-0-market-scalar-dia.clar
             anchor-block-only: true
             clarity-version: 3
@@ -220,13 +242,10 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-pyth
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 230640
+            cost: 230070
             path: contracts/extensions/bme023-0-market-scalar-pyth.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 3
-      transactions:
         - contract-publish:
             contract-name: sbtc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -237,120 +256,186 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 89260
+            cost: 109290
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp000-core-team-sunset-height
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 3070
+            cost: 3480
             path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
+            anchor-block-only: true
+            clarity-version: 3
+      epoch: "3.0"
+    - id: 4
+      transactions:
+        - contract-publish:
+            contract-name: bme010-0-token-sale
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 67130
+            path: contracts/extensions/bme010-0-token-sale.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-1
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-1.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-2
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-2.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-3
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-3.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-4
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-4.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-5
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-5.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-6
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-6.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-advance-stage-7
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2520
+            cost: 2930
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-7.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-cancel-stage
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2510
+            cost: 2920
             path: contracts/proposals/devnet/unit-tests/bdp001-cancel-stage.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 6000
+            cost: 6410
             path: contracts/proposals/devnet/bdp001-gating.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-gating-false
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 5120
+            cost: 5530
             path: contracts/proposals/devnet/bdp001-gating-false.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-gating-true-testnet
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 5110
+            cost: 5520
             path: contracts/proposals/devnet/bdp001-gating-true-testnet.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-initialise-token-sale
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2490
+            cost: 2900
             path: contracts/proposals/devnet/unit-tests/bdp001-initialise-token-sale.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-market-fees
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 5050
+            cost: 5460
             path: contracts/proposals/devnet/unit-tests/bdp001-market-fees.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-market-fees-1
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 4990
+            cost: 5400
             path: contracts/proposals/devnet/unit-tests/bdp001-market-fees-1.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bdp001-reset-allocation
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 6250
+            cost: 6660
             path: contracts/proposals/devnet/unit-tests/bdp001-reset-allocation.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-disable
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4270
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-disable.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-tokens-1
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 6640
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-1.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-tokens-2
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 3380
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-2.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-tokens-3
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4440
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-3.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-tokens-4
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 6020
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-4.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bdp001-sft-tokens-5
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 12960
+            path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: clarity-bitcoin-lib-v5
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 299740
+            path: contracts/external/clarity-bitcoin-lib-v5.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: extension-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 940
+            path: contracts/traits/extension-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -360,6 +445,9 @@ plan:
             path: contracts/external/pyth/hk/hk-cursor-v2.clar
             anchor-block-only: true
             clarity-version: 3
+      epoch: "3.0"
+    - id: 5
+      transactions:
         - contract-publish:
             contract-name: nft-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -368,24 +456,10 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: wormhole-traits-v1
+            contract-name: proposal-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 7070
-            path: contracts/external/pyth/wormhole/wormhole-traits-v1.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: pyth-governance-v2
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 256880
-            path: contracts/external/pyth/pyth-governance-v2.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: pyth-pnau-decoder-v2
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 149410
-            path: contracts/external/pyth/pyth-pnau-decoder-v2.clar
+            cost: 820
+            path: contracts/traits/proposal-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -402,9 +476,13 @@ plan:
             path: contracts/external/trait-dia-oracle.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 4
-      transactions:
+        - contract-publish:
+            contract-name: wormhole-traits-v1
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 7070
+            path: contracts/external/pyth/wormhole/wormhole-traits-v1.clar
+            anchor-block-only: true
+            clarity-version: 3
         - contract-publish:
             contract-name: wormhole-core-v3
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -420,7 +498,7 @@ plan:
             anchor-block-only: true
             clarity-version: 3
       epoch: "3.0"
-    - id: 5
+    - id: 6
       transactions:
         - requirement-publish:
             contract-id: SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.wormhole-traits-v1
@@ -453,6 +531,14 @@ plan:
               SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 35980
             path: ".cache/requirements/SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-oracle-v3.clar"
+            clarity-version: 3
+        - requirement-publish:
+            contract-id: SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-pnau-decoder-v2
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 162850
+            path: ".cache/requirements/SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-pnau-decoder-v2.clar"
             clarity-version: 3
         - requirement-publish:
             contract-id: SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3

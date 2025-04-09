@@ -44,9 +44,8 @@
 (define-data-var voting-duration uint u288)
 
 (define-map resolution-polls
-	uint
+	{market: principal, market-id: uint}
 	{
-		market-data-hash: (buff 32),
     votes: (list 10 uint), ;; votes for each category. NB with 2 categories the votes at 0 are against and 1 = for and 2+ unused 
 		end-burn-height: uint,
 		proposer: principal,
@@ -76,7 +75,6 @@
 (define-public (create-market-vote
     (market <prediction-market-trait>)
     (market-id uint)
-    (market-data-hash (buff 32))
     (empty-votes (list 10 uint))
     (num-categories uint)
   )
@@ -84,14 +82,14 @@
     (
       (original-sender tx-sender)
     )
-    (asserts! (is-none (map-get? resolution-polls market-id)) err-invalid-category)
+    (asserts! (is-none (map-get? resolution-polls {market-id: market-id, market: (contract-of market)})) err-poll-already-exists)
     (asserts! (is-eq (len empty-votes) num-categories) err-poll-already-exists)
 		;; a user with stake can propose but only for a market in the correct state in bme023. 
-    (try! (as-contract (contract-call? market dispute-resolution market-id market-data-hash original-sender)))
+    (try! (as-contract (contract-call? market dispute-resolution market-id original-sender)))
 
     ;; Register the poll
-    (map-set resolution-polls market-id
-      {market-data-hash: market-data-hash,
+    (map-set resolution-polls {market-id: market-id, market: (contract-of market)}
+      {
       votes: empty-votes,
       end-burn-height: (+ burn-block-height (var-get voting-duration)),
       proposer: tx-sender,
@@ -101,35 +99,35 @@
     )
 
     ;; Emit an event for the new poll
-    (print {event: "create-market-vote", market-id: market-id, market-data-hash: market-data-hash, proposer: tx-sender})
+    (print {event: "create-market-vote", market-id: market-id, proposer: tx-sender, market: market})
     (ok true)
   )
 )
 
 ;; --- Public functions
 
-(define-read-only (get-poll-data (market-id uint))
-	(map-get? resolution-polls market-id)
+(define-read-only (get-poll-data (market principal) (market-id uint))
+	(map-get? resolution-polls {market-id: market-id, market: market})
 )
 
 
 ;; Votes
 
 (define-public (vote
-    (market-id uint)
-    (market-data-hash (buff 32)) 
+    (market principal)
+    (market-id uint) 
     (category-for uint)
     (amount uint) 
     (prev-market-id (optional uint))
   )
   ;; Process the vote using shared logic
-  (process-market-vote market-id market-data-hash tx-sender category-for amount false prev-market-id)
+  (process-market-vote market market-id tx-sender category-for amount false prev-market-id)
 )
 
 
 (define-public (batch-vote (votes (list 50 {message: (tuple 
+                                                (market principal)
                                                 (market-id uint)
-                                                (market-data-hash (buff 32))
                                                 (attestation (string-ascii 100)) 
                                                 (timestamp uint) 
                                                 (category-for uint)
@@ -143,8 +141,8 @@
 )
 
 (define-private (fold-vote  (input-vote {message: (tuple 
+                                                (market principal)
                                                 (market-id uint)
-                                                (market-data-hash (buff 32))
                                                 (attestation (string-ascii 100)) 
                                                 (timestamp uint) 
                                                 (category-for uint)
@@ -166,8 +164,8 @@
 
 (define-private (process-vote
     (input-vote {message: (tuple 
+                            (market principal)
                             (market-id uint)
-                            (market-data-hash (buff 32))
                             (attestation (string-ascii 100)) 
                             (timestamp uint) 
                             (category-for uint)
@@ -179,9 +177,9 @@
       (
         ;; Extract relevant fields from the message
         (message-data (get message input-vote))
-        (meta-hash (get market-data-hash message-data))
         (attestation (get attestation message-data))
         (timestamp (get timestamp message-data))
+        (market (get market message-data))
         (market-id (get market-id message-data))
         (voter (get voter message-data))
         (category-for (get category-for message-data))
@@ -192,14 +190,14 @@
         (is-valid-sig (verify-signed-structured-data structured-data-hash (get signature input-vote) voter))
       )
     (if is-valid-sig
-        (process-market-vote market-id meta-hash voter category-for amount true (get prev-market-id message-data) )
+        (process-market-vote market market-id voter category-for amount true (get prev-market-id message-data) )
         (ok false)) ;; Invalid signature
   ))
 
 
 (define-private (process-market-vote
-    (market-id uint)  ;; The poll ID
-    (market-data-hash (buff 32))  ;; hash of off chain poll data
+    (market principal) ;; the market contract
+    (market-id uint)   ;; the market id
     (voter principal)         ;; The voter's principal
     (category-for uint)        ;; category voting for (with two categories, we get simple "for" or "against" binary vote)
     (amount uint)             ;; voting power
@@ -209,13 +207,13 @@
   (let
       (
         ;; Fetch the poll data
-        (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
+        (poll-data (unwrap! (map-get? resolution-polls {market-id: market-id, market: market}) err-unknown-proposal))
         (num-categories (get num-categories poll-data))
         (current-votes (get votes poll-data))
       )
     (begin
       ;; reclaim previously locked tokens
-  		(if (is-some prev-market-id) (try! (reclaim-votes prev-market-id)) true)
+  		(if (is-some prev-market-id) (try! (reclaim-votes market prev-market-id)) true)
 
       ;; Ensure the voting period is active
       (asserts! (< burn-block-height (get end-burn-height poll-data)) err-proposal-inactive)
@@ -229,13 +227,14 @@
       )
 
       ;; update market voting power
-      (map-set resolution-polls market-id
+      (map-set resolution-polls {market-id: market-id, market: market}
         (merge poll-data 
           {votes: (unwrap! (replace-at? current-votes category-for (+ (unwrap! (element-at? current-votes category-for) err-invalid-category) amount)) err-invalid-category)}
         )
       )
 
       ;; Emit an event for the vote
+      (try! (contract-call? .bme030-0-reputation-token mint voter u5 u2))
       (print {event: "market-vote", market-id: market-id, voter: voter, category-for: category-for, sip18: sip18, amount: amount, prev-market-id: prev-market-id})
 
 		  (contract-call? .bme000-0-governance-token bmg-lock amount voter)
@@ -257,41 +256,41 @@
 
 ;; Conclusion
 
-(define-read-only (get-poll-status (market-id uint))
+(define-read-only (get-poll-status (market principal) (market-id uint))
     (let
         (
-            (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
+            (poll-data (unwrap! (map-get? resolution-polls {market-id: market-id, market: market}) err-unknown-proposal))
             (is-active (< burn-block-height (get end-burn-height poll-data)))
         )
         (ok {active: is-active, concluded: (get concluded poll-data), votes: (get votes poll-data)})
     )
-) 
+)
     
 
 (define-public (conclude-market-vote (market <prediction-market-trait>) (market-id uint))
 	(let
 		(
-      (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
-      (market-data-hash (get market-data-hash poll-data))
+      (poll-data (unwrap! (map-get? resolution-polls {market-id: market-id, market: (contract-of market)}) err-unknown-proposal))
       (votes (get votes poll-data))
       (winning-category (get max-index (find-max-category votes)))
       (total-votes (fold + votes u0))
       (winning-votes (unwrap! (element-at? votes winning-category) err-already-voted))
-      (result (try! (contract-call? market resolve-market-vote market-id market-data-hash winning-category)))
+      (result (try! (contract-call? market resolve-market-vote market-id winning-category)))
 		)
 		(asserts! (not (get concluded poll-data)) err-proposal-already-concluded)
 		(asserts! (>= burn-block-height (get end-burn-height poll-data)) err-end-burn-height-not-reached)
-		(map-set resolution-polls market-id (merge poll-data {concluded: true, winning-category: (some winning-category)}))
+		(map-set resolution-polls {market-id: market-id, market: (contract-of market)} (merge poll-data {concluded: true, winning-category: (some winning-category)}))
 		(print {event: "conclude-market-vote", market-id: market-id, winning-category: winning-category, result: result})
+    (try! (contract-call? .bme030-0-reputation-token mint tx-sender u3 u3))
 		(ok winning-category)
 	)
 )
 
-(define-public (reclaim-votes (id (optional uint)))
+(define-public (reclaim-votes (market principal) (id (optional uint)))
 	(let
 		(
 			(market-id (unwrap! id err-unknown-proposal))
-      (poll-data (unwrap! (map-get? resolution-polls market-id) err-unknown-proposal))
+      (poll-data (unwrap! (map-get? resolution-polls {market: market, market-id: market-id}) err-unknown-proposal))
 			(votes (unwrap! (map-get? member-total-votes {market-id: market-id, voter: tx-sender}) err-no-votes-to-return))
 		)
 		(asserts! (get concluded poll-data) err-not-concluded)

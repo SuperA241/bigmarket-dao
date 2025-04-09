@@ -103,7 +103,7 @@
     (map-set ido-stage-details stage (merge stage-info {tokens-sold: (+ tokens-sold tokens-to-buy)}))
     (map-set ido-purchases {stage: stage, buyer: tx-sender} (+ current-stake tokens-to-buy))
 
-    (print {event: "ido-purchase", buyer: tx-sender, stage: stage, tokens: tokens-to-buy})
+    (print {event: "ido-purchase", buyer: tx-sender, stage: stage, tokens: tokens-to-buy, stx-amount: stx-amount})
 
     (ok tokens-to-buy)
   )
