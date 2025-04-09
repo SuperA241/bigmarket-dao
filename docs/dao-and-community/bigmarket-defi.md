@@ -1,5 +1,5 @@
 ---
-icon: chart-mixed-up-circle-currency
+icon: monero
 ---
 
 # BigMarket DeFi

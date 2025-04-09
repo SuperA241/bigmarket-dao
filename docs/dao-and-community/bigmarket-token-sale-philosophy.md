@@ -2,11 +2,11 @@
 icon: monero
 ---
 
-# BigMarket Token Sale
+# BigMarket Token Sale Philosophy
 
-## Token Sale Mechanics
+## Sale Mechanics
 
-## BigMarket Token Sale & Distribution
+## BigMarket Proof of Use Sale & Distribution
 
 ```svelte
 This is a work in progress - the final version will 
@@ -16,6 +16,10 @@ include feedback from early contributors via proposal voting.
 This document is a work in progress - final version will include voting on proposals from early community contributors.
 
 ### 📌 Overview
+
+BIG Tokens are claimed in exchange for contributions to the project. Contributions can involve providing liquidity (re a normal token sale) but they are formally exchanged for for our participation token BIGR.&#x20;
+
+See `Reputation & Rewards` for a full overview of how the reputation token is earned and distributed and exchanged for BIG.
 
 The **BigMarket DAO Governance (BIG) Token** will be distributed in multiple stages to fund the ecosystem and provide governance access to early supporters.
 
