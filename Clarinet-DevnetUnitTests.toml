@@ -319,6 +319,7 @@ epoch = 3.0
 path = 'contracts/external/wrapped-stx.clar'
 clarity_version = 3
 epoch = 3.0
+
 [repl.analysis]
 passes = []
 

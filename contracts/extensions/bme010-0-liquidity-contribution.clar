@@ -50,10 +50,8 @@
     (map-set stx-contributions {who: user} (+ existing amount))
 
     ;; Mint BIGR to the contributor
-    (try! (contract-call? .reputation-token mint-bigr bigr-earned user))
-
-    (try! (contract-call? .bme030-0-reputation-token mint tx-sender u7 u5))
-    (print {type: "liquidity_contribution", from: user, amount: amount, bigr: bigr-earned})
+    (try! (contract-call? .bme030-0-reputation-token mint user u7 bigr-earned))
+    (print {event: "liquidity_contribution", from: user, amount: amount, bigr: bigr-earned})
     (ok bigr-earned)
   )
 )

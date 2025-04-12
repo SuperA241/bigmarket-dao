@@ -15,7 +15,7 @@
 		))
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-pyth 0x70a06106d0aaecb26ab15155dc1d958422d991a5367d446699f9a978e80f12f0))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
-		(try! (contract-call? .bme023-0-market-scalar-pyth set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
+		(try! (contract-call? .bme023-0-market-scalar-pyth set-dev-fund 'ST1EEDB05014JVXS8BF3E1G54WC5M782AC66WPHAR))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-dao-treasury .bme006-0-treasury))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token .wrapped-stx true))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token .bme000-0-governance-token true))

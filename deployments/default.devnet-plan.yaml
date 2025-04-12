@@ -144,7 +144,7 @@ plan:
         - contract-publish:
             contract-name: bme030-0-reputation-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 106370
+            cost: 106480
             path: contracts/extensions/bme030-0-reputation-token.clar
             anchor-block-only: true
             clarity-version: 3
@@ -249,7 +249,7 @@ plan:
         - contract-publish:
             contract-name: sbtc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 23610
+            cost: 23910
             path: contracts/external/sbtc.clar
             anchor-block-only: true
             clarity-version: 3
@@ -493,7 +493,7 @@ plan:
         - contract-publish:
             contract-name: wrapped-stx
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 8360
+            cost: 8920
             path: contracts/external/wrapped-stx.clar
             anchor-block-only: true
             clarity-version: 3

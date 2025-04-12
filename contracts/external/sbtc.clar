@@ -7,7 +7,7 @@
 (define-constant err-unauthorised (err u3000))
 (define-constant err-not-token-owner (err u4))
 
-(define-fungible-token sBTC)
+(define-fungible-token sbtc-token)
 
 (define-data-var token-name (string-ascii 32) "sBTC")
 (define-data-var token-symbol (string-ascii 10) "sBTC")
@@ -49,7 +49,7 @@
 )
 
 (define-private (sbtc-mint-many-iter (item {amount: uint, recipient: principal}))
-	(ft-mint? sBTC (get amount item) (get recipient item))
+	(ft-mint? sbtc-token (get amount item) (get recipient item))
 )
 
 (define-public (sbtc-mint-many (recipients (list 200 {amount: uint, recipient: principal})))
@@ -66,7 +66,7 @@
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
 	(begin
 		(asserts! (or (is-eq tx-sender sender) (is-eq contract-caller sender)) err-not-token-owner)
-		(ft-transfer? sBTC amount sender recipient)
+		(ft-transfer? sbtc-token amount sender recipient)
 	)
 )
 
@@ -83,11 +83,11 @@
 )
 
 (define-read-only (get-balance (who principal))
-	(ok (ft-get-balance sBTC who))
+	(ok (ft-get-balance sbtc-token who))
 )
 
 (define-read-only (get-total-supply)
-	(ok (ft-get-supply sBTC))
+	(ok (ft-get-supply sbtc-token))
 )
 
 (define-read-only (get-token-uri)

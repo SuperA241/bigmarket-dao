@@ -18,7 +18,7 @@
 		;; bcrt1q4zymxl8934vvle2ppzw0j6tkwz3d7qw4f0esme
 		(try! (contract-call? .bme023-0-market-bitcoin set-market-wallet 0x00 0xa889b37ce58d58cfe541089cf9697670a2df01d5))
 		(try! (contract-call? .bme023-0-market-bitcoin set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
-		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fund 'ST18V03KSFR84AG69JEPG6SM7GA1CBJR6PSXS1Y8M))
+		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fund 'ST1EEDB05014JVXS8BF3E1G54WC5M782AC66WPHAR))
 		(try! (contract-call? .bme023-0-market-bitcoin set-dao-treasury .bme006-0-treasury))
 		(try! (contract-call? .bme023-0-market-bitcoin set-creation-gated true))
 		(try! (contract-call? .bme023-0-market-bitcoin set-market-fee-bips-max u300))
