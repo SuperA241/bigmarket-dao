@@ -22,8 +22,6 @@ layout:
 
 ## Rethinking Speculation, Empowering Communities
 
-## Rethinking Speculation, Empowering Communities
-
 {% hint style="info" %}
 ### **Bitcoin Backed, Community Focused**
 {% endhint %}
