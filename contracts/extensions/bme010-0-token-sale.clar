@@ -18,9 +18,11 @@
 (define-constant err-no-purchase (err u5007))
 (define-constant err-stage-not-cancelled (err u5008))
 (define-constant err-stage-cancelled (err u5009))
+(define-constant err-user-limit-reached (err u5010))
 
 (define-data-var current-stage uint u1) ;; IDO starts at Stage 1
 (define-data-var current-stage-start uint burn-block-height) ;; Tracks burn-block-height when stage begins
+(define-data-var max-user-ido-purchase uint u500000000000)
 
 (define-map ido-stage-details uint 
   {price: uint, max-supply: uint, tokens-sold: uint, cancelled: bool})
@@ -30,6 +32,14 @@
 
 (define-public (is-dao-or-extension)
 	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
+)
+
+(define-public (set-max-user-ido-purchase (ido-purchase-limit uint))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set max-user-ido-purchase ido-purchase-limit)
+    (ok true)
+  )
 )
 
 (define-read-only (get-ido-stages)
@@ -88,7 +98,8 @@
     (current-stake (default-to u0 (map-get? ido-purchases {stage: stage, buyer: tx-sender})))
     (tokens-to-buy (* stx-amount bmg-price))
 	)
-
+    ;; assert account limit not reached
+    (asserts! (<= (+ current-stake tokens-to-buy) (var-get max-user-ido-purchase)) err-user-limit-reached)
     ;; Ensure enough supply remains
     (asserts! (<= (+ tokens-sold tokens-to-buy) max-supply) err-stage-sold-out)
     (asserts! (not cancelled) err-stage-cancelled)

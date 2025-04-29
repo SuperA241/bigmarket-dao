@@ -130,7 +130,7 @@ describe('claiming', () => {
 		expect(bal.result).toEqual(Cl.ok(Cl.uint(1010)));
 
 		let response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
 		expect(response.result).toEqual(Cl.error(Cl.uint(30006)));
@@ -153,10 +153,10 @@ describe('claiming', () => {
 		expect(bal.result).toEqual(Cl.ok(Cl.uint(1010)));
 
 		let response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], bob);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 	});
 
 	it('alice and bob can claim subsequent epochs', async () => {
@@ -166,7 +166,7 @@ describe('claiming', () => {
 		let bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-epoch', [], bob);
 		expect(bal.result).toEqual(Cl.uint(0));
 
-		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [], bob);
+		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [Cl.principal(alice)], bob);
 		expect(bal.result).toEqual(Cl.uint(0));
 
 		simnet.mineEmptyBlocks(4000);
@@ -183,29 +183,29 @@ describe('claiming', () => {
 		expect(bal.result).toEqual(Cl.ok(Cl.uint(1010)));
 
 		let response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], bob);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-epoch', [], bob);
 		expect(bal.result).toEqual(Cl.uint(1));
 
-		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [], bob);
+		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [Cl.principal(alice)], bob);
 		expect(bal.result).toEqual(Cl.uint(1));
 
 		simnet.mineEmptyBlocks(4000);
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], bob);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-epoch', [], bob);
 		expect(bal.result).toEqual(Cl.uint(2));
 
-		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [], bob);
+		bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-last-claimed-epoch', [Cl.principal(alice)], bob);
 		expect(bal.result).toEqual(Cl.uint(2));
 	});
 
@@ -226,9 +226,9 @@ describe('claiming', () => {
 		expect(bal.result).toEqual(Cl.ok(Cl.uint(1010)));
 
 		let response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], alice);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 
 		response = await simnet.callPublicFn(reputationSft, 'claim-big-reward', [], bob);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(50000000)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(500000000)));
 	});
 });

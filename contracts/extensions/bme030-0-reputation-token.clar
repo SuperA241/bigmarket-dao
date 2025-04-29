@@ -21,9 +21,6 @@
 
 (define-constant max-tier u20)
 
-(define-data-var token-name (string-ascii 32) "BigMarket Reputation Token")
-(define-data-var token-symbol (string-ascii 10) "BIGR")
-
 (define-fungible-token bigr-token)
 (define-non-fungible-token bigr-id { token-id: uint, owner: principal })
 
@@ -32,14 +29,24 @@
 (define-map last-claimed-epoch { who: principal } uint)
 (define-map tier-weights uint uint)
 
-(define-data-var reward-per-epoch uint u100000000) ;; 1000 BIG (in micro units)
+(define-data-var reward-per-epoch uint u1000000000) ;; 1000 BIG (in micro units)
 (define-data-var overall-supply uint u0)
+(define-data-var token-name (string-ascii 32) "BigMarket Reputation Token")
+(define-data-var token-symbol (string-ascii 10) "BIGR")
 
 ;; ------------------------
 ;; DAO Control Check
 ;; ------------------------
 (define-public (is-dao-or-extension)
 	(ok (asserts! (or (is-eq tx-sender .bigmarket-dao) (contract-call? .bigmarket-dao is-extension contract-caller)) err-unauthorised))
+)
+
+(define-read-only (get-epoch)
+	 (/ burn-block-height u4000)
+)
+
+(define-read-only (get-last-claimed-epoch (user principal))
+  (default-to u0 (map-get? last-claimed-epoch { who: user }))
 )
 
 ;; ------------------------
@@ -79,6 +86,7 @@
   (begin
     (try! (is-dao-or-extension))
     (var-set reward-per-epoch new-reward)
+    (print { event: "set-reward-per-epoch", new-reward: new-reward })
     (ok true)
   )
 )
@@ -86,6 +94,7 @@
   (begin
     (try! (is-dao-or-extension))
     (map-set tier-weights token-id weight)
+    (print { event: "set-tier-weight", token-id: token-id, weight: weight })
     (ok true)
   )
 )
@@ -222,14 +231,6 @@
       (ok true)
     )
   )
-)
-
-(define-read-only (get-epoch)
-	 (/ burn-block-height u4000)
-)
-
-(define-read-only (get-last-claimed-epoch)
-	 (default-to u0 (map-get? last-claimed-epoch { who: tx-sender }))
 )
 
 ;; ------------------------

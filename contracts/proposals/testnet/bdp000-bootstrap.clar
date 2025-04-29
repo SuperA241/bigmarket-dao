@@ -16,6 +16,7 @@
 				{extension: .bme003-0-core-proposals, enabled: true}
 				{extension: .bme004-0-core-execute, enabled: true}
 				{extension: .bme006-0-treasury, enabled: true}
+				{extension: .bme010-0-token-sale, enabled: true}
 				{extension: .bme010-0-liquidity-contribution, enabled: true}
 				{extension: .bme021-0-market-voting, enabled: true}
 				{extension: .bme022-0-market-gating, enabled: true}

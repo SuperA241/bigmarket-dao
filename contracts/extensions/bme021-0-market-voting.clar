@@ -28,6 +28,8 @@
 (define-constant err-no-votes-to-return (err u2114))
 (define-constant err-not-concluded (err u2115))
 (define-constant err-invalid-category (err u2116))
+(define-constant err-invalid-extension (err u2117))
+
 
 (define-constant structured-data-prefix 0x534950303138)
 (define-constant message-domain-hash (sha256 (unwrap! (to-consensus-buff?
@@ -71,7 +73,8 @@
   )
 )
 
-;; called by a staker in a market to begin dispute resolution process
+;; called by a user to begin dispute resolution process.
+;; access conditions for this action are determined in the contract-call to the market contract.
 (define-public (create-market-vote
     (market <prediction-market-trait>)
     (market-id uint)
@@ -82,10 +85,14 @@
     (
       (original-sender tx-sender)
     )
+
+    ;; Verify that the market is a registered extension
+    (asserts! (contract-call? .bigmarket-dao is-extension (contract-of market)) err-invalid-extension)
+    ;; ensure no market vote already exists
     (asserts! (is-none (map-get? resolution-polls {market-id: market-id, market: (contract-of market)})) err-poll-already-exists)
     (asserts! (is-eq (len empty-votes) num-categories) err-poll-already-exists)
-		;; a user with stake can propose but only for a market in the correct state in bme023. 
-    (try! (as-contract (contract-call? market dispute-resolution market-id original-sender)))
+		;; see market for access rules. 
+    (try! (as-contract (contract-call? market dispute-resolution market-id original-sender num-categories)))
 
     ;; Register the poll
     (map-set resolution-polls {market-id: market-id, market: (contract-of market)}

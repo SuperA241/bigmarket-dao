@@ -62,7 +62,7 @@ describe('voting on resolution', () => {
 		response = await predictCategory(bob, 0, 'nay', 2000000, 0, stxToken);
 		response = await simnet.callPublicFn('bme023-0-market-predicting', 'resolve-market', [Cl.uint(0), Cl.stringAscii('yay')], bob);
 		expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
-		response = await simnet.callPublicFn('bme023-0-market-predicting', 'dispute-resolution', [Cl.uint(0), Cl.principal(alice)], bob);
+		response = await simnet.callPublicFn('bme023-0-market-predicting', 'dispute-resolution', [Cl.uint(0), Cl.principal(alice), Cl.uint(2)], bob);
 		expect(response.result).toEqual(Cl.error(Cl.uint(10015)));
 		let md = await assertMarketData();
 		expect(md.result).toMatchObject(
@@ -92,7 +92,7 @@ describe('voting on resolution', () => {
 		response = await simnet.callPublicFn('bme023-0-market-predicting', 'resolve-market', [Cl.uint(0), Cl.stringAscii('yay')], bob);
 		expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
 
-		response = await simnet.callPublicFn('bme023-0-market-predicting', 'dispute-resolution', [Cl.uint(0), Cl.principal(alice)], bob);
+		response = await simnet.callPublicFn('bme023-0-market-predicting', 'dispute-resolution', [Cl.uint(0), Cl.principal(alice), Cl.uint(2)], bob);
 		expect(response.result).toEqual(Cl.error(Cl.uint(10000)));
 	});
 

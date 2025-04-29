@@ -99,15 +99,6 @@ plan:
       transactions: []
       epoch: "2.1"
     - id: 7
-      transactions: []
-      epoch: "2.1"
-    - id: 8
-      transactions: []
-      epoch: "2.1"
-    - id: 9
-      transactions: []
-      epoch: "2.1"
-    - id: 10
       transactions:
         - emulated-contract-publish:
             contract-name: hk-cursor-v2
@@ -125,6 +116,15 @@ plan:
             path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5.clar"
             clarity-version: 2
       epoch: "2.4"
+    - id: 8
+      transactions: []
+      epoch: "2.4"
+    - id: 9
+      transactions: []
+      epoch: "2.4"
+    - id: 10
+      transactions: []
+      epoch: "2.4"
     - id: 11
       transactions: []
       epoch: "2.4"
@@ -132,24 +132,6 @@ plan:
       transactions: []
       epoch: "2.4"
     - id: 13
-      transactions: []
-      epoch: "2.4"
-    - id: 14
-      transactions: []
-      epoch: "2.4"
-    - id: 15
-      transactions: []
-      epoch: "2.4"
-    - id: 16
-      transactions: []
-      epoch: "2.4"
-    - id: 17
-      transactions: []
-      epoch: "2.4"
-    - id: 18
-      transactions: []
-      epoch: "2.4"
-    - id: 19
       transactions:
         - emulated-contract-publish:
             contract-name: sbtc-registry
@@ -277,7 +259,7 @@ plan:
             path: contracts/extensions/bme010-0-token-sale.clar
             clarity-version: 3
       epoch: "3.0"
-    - id: 20
+    - id: 14
       transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-1
@@ -405,7 +387,7 @@ plan:
             path: contracts/external/pyth/hk/hk-cursor-v2.clar
             clarity-version: 3
       epoch: "3.0"
-    - id: 21
+    - id: 15
       transactions:
         - emulated-contract-publish:
             contract-name: nft-trait
@@ -438,6 +420,24 @@ plan:
             path: contracts/external/wrapped-stx.clar
             clarity-version: 3
       epoch: "3.0"
+    - id: 16
+      transactions: []
+      epoch: "3.0"
+    - id: 17
+      transactions: []
+      epoch: "3.0"
+    - id: 18
+      transactions: []
+      epoch: "3.0"
+    - id: 19
+      transactions: []
+      epoch: "3.0"
+    - id: 20
+      transactions: []
+      epoch: "3.0"
+    - id: 21
+      transactions: []
+      epoch: "3.0"
     - id: 22
       transactions: []
       epoch: "3.0"
@@ -460,51 +460,6 @@ plan:
       transactions: []
       epoch: "3.0"
     - id: 29
-      transactions: []
-      epoch: "3.0"
-    - id: 30
-      transactions: []
-      epoch: "3.0"
-    - id: 31
-      transactions: []
-      epoch: "3.0"
-    - id: 32
-      transactions: []
-      epoch: "3.0"
-    - id: 33
-      transactions: []
-      epoch: "3.0"
-    - id: 34
-      transactions: []
-      epoch: "3.0"
-    - id: 35
-      transactions: []
-      epoch: "3.0"
-    - id: 36
-      transactions: []
-      epoch: "3.0"
-    - id: 37
-      transactions: []
-      epoch: "3.0"
-    - id: 38
-      transactions: []
-      epoch: "3.0"
-    - id: 39
-      transactions: []
-      epoch: "3.0"
-    - id: 40
-      transactions: []
-      epoch: "3.0"
-    - id: 41
-      transactions: []
-      epoch: "3.0"
-    - id: 42
-      transactions: []
-      epoch: "3.0"
-    - id: 43
-      transactions: []
-      epoch: "3.0"
-    - id: 44
       transactions:
         - emulated-contract-publish:
             contract-name: wormhole-traits-v1
@@ -537,27 +492,18 @@ plan:
             path: ".cache/requirements/SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3.clar"
             clarity-version: 3
       epoch: "3.1"
-    - id: 45
+    - id: 30
       transactions: []
       epoch: "3.1"
-    - id: 46
+    - id: 31
       transactions: []
       epoch: "3.1"
-    - id: 47
+    - id: 32
       transactions: []
       epoch: "3.1"
-    - id: 48
+    - id: 33
       transactions: []
       epoch: "3.1"
-    - id: 49
-      transactions: []
-      epoch: "3.1"
-    - id: 50
-      transactions: []
-      epoch: "3.1"
-    - id: 51
-      transactions: []
-      epoch: "3.1"
-    - id: 52
+    - id: 34
       transactions: []
       epoch: "3.1"

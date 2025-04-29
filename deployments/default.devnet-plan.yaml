@@ -144,7 +144,7 @@ plan:
         - contract-publish:
             contract-name: bme030-0-reputation-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 106480
+            cost: 106820
             path: contracts/extensions/bme030-0-reputation-token.clar
             anchor-block-only: true
             clarity-version: 3
@@ -256,7 +256,7 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 109290
+            cost: 109190
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -334,9 +334,16 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: proposal-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 820
+            path: contracts/traits/proposal-trait.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bdp001-gating
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 6410
+            cost: 6000
             path: contracts/proposals/devnet/bdp001-gating.clar
             anchor-block-only: true
             clarity-version: 3
@@ -438,6 +445,9 @@ plan:
             path: contracts/traits/extension-trait.clar
             anchor-block-only: true
             clarity-version: 3
+      epoch: "3.0"
+    - id: 5
+      transactions:
         - contract-publish:
             contract-name: hk-cursor-v2
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -445,21 +455,11 @@ plan:
             path: contracts/external/pyth/hk/hk-cursor-v2.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 5
-      transactions:
         - contract-publish:
             contract-name: nft-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4690
             path: contracts/traits/sips/nft-trait.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: proposal-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 820
-            path: contracts/traits/proposal-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:

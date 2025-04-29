@@ -56,6 +56,8 @@
 (define-constant err-winning-stake-not-zero (err u10026))
 (define-constant err-losing-stake-is-zero (err u10027))
 (define-constant err-unknown-stacks-block (err u10028))
+(define-constant err-amount-too-high (err u10029))
+(define-constant err-fee-too-high (err u10030))
 
 (define-data-var market-counter uint u0)
 (define-data-var dispute-window-length uint u144)
@@ -419,7 +421,7 @@
 
 ;; Allows a user with a stake in market to contest the resolution
 ;; the call is made via the voting contract 'create-market-vote' function
-(define-public (dispute-resolution (market-id uint) (disputer principal))
+(define-public (dispute-resolution (market-id uint) (disputer principal) (num-categories uint))
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
       (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
@@ -429,6 +431,7 @@
     ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
 
+    (asserts! (is-eq num-categories (len (get categories md))) err-too-few-categories)
     ;; prevent market getting locked in unresolved state
     (asserts! (<= burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-elapsed)
 
@@ -575,10 +578,13 @@
         (transfer-amount (- amount fee))
        )
     (begin
+      (asserts! (> transfer-amount u0) err-amount-too-low)
       ;; Ensure amount is valid
       (asserts! (>= amount u100) err-amount-too-low)
       ;; Check tx-sender's balance
       (asserts! (>= sender-balance amount) err-insufficient-balance)
+      (asserts! (<= amount u50000000000000) err-amount-too-high)
+      (asserts! (<= (var-get dev-fee-bips) u1000) err-fee-too-high) ;; max 10%
       
       (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-scalar-dia none))
       (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))

@@ -6,7 +6,11 @@
 
 (define-public (execute (sender principal))
 	(begin
-		(try! (contract-call? .bme023-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
+		(try! (contract-call? .bigmarket-dao set-extensions
+			(list
+				{extension: .bme010-0-token-sale, enabled: true}
+			)
+		))
 		(ok true)
 	)
 )
