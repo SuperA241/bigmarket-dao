@@ -1,5 +1,5 @@
 ---
-icon: monero
+icon: tower-cell
 ---
 
 # BigMarket Token Sale Philosophy

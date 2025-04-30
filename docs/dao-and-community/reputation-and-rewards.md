@@ -1,5 +1,5 @@
 ---
-icon: monero
+icon: tower-cell
 ---
 
 # Reputation & Rewards

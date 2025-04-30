@@ -12,7 +12,7 @@
 * [Reputation & Rewards](dao-and-community/reputation-and-rewards.md)
 * [Reward Tables](dao-and-community/reward-tables.md)
 * [BigMarket DeFi](dao-and-community/bigmarket-defi.md)
-* [Page 1](dao-and-community/page-1.md)
+* [BigMarket Early Access: Unlocking Rewards](dao-and-community/bigmarket-early-access-unlocking-rewards.md)
 
 ## How it Works
 
