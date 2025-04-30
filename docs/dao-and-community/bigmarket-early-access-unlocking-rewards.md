@@ -1,5 +1,7 @@
 ---
 icon: tower-cell
+cover: ../.gitbook/assets/dreambig-banner.jpeg
+coverY: 0
 ---
 
 # BigMarket Early Access: Unlocking Rewards
