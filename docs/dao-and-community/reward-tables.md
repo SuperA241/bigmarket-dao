@@ -1,6 +1,6 @@
 ---
 description: Breaks down rewards and how they're earned
-icon: monero
+icon: tower-cell
 ---
 
 # Reward Tables
