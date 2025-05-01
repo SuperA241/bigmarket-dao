@@ -33,6 +33,7 @@
 (define-data-var overall-supply uint u0)
 (define-data-var token-name (string-ascii 32) "BigMarket Reputation Token")
 (define-data-var token-symbol (string-ascii 10) "BIGR")
+(define-data-var launch-height uint u0)
 
 ;; ------------------------
 ;; DAO Control Check
@@ -54,6 +55,15 @@
 ;; ------------------------
 (define-read-only (get-balance (token-id uint) (who principal))
   (ok (default-to u0 (map-get? balances { token-id: token-id, owner: who })))
+)
+
+(define-public (set-launch-height)
+  (begin
+    (try! (is-dao-or-extension))
+    (asserts! (is-eq (var-get launch-height) u0) err-unauthorised)
+    (var-set launch-height burn-block-height)
+    (ok (var-get launch-height))
+  )
 )
 
 (define-read-only (get-symbol)
@@ -103,18 +113,27 @@
 ;; Mint / Burn
 ;; ------------------------
 (define-public (mint (recipient principal) (token-id uint) (amount uint))
-  (begin
-    (try! (is-dao-or-extension))
-    (asserts! (> amount u0) err-zero-amount)
-    (asserts! (and (> token-id u0) (<= token-id max-tier)) err-invalid-tier)
-    (try! (ft-mint? bigr-token amount recipient))
-    (try! (tag-nft { token-id: token-id, owner: recipient }))
-    (map-set balances { token-id: token-id, owner: recipient }
-      (+ amount (default-to u0 (map-get? balances { token-id: token-id, owner: recipient }))))
-    (map-set supplies token-id (+ amount (default-to u0 (map-get? supplies token-id))))
-    (var-set overall-supply (+ (var-get overall-supply) amount))
-    (print { event: "sft_mint", token-id: token-id, amount: amount, recipient: recipient })
-    (ok true)
+  (let (
+    (base-amount
+      (if (not is-in-mainnet)
+          (* amount u2) ;; testnet: 2x
+          (if (< burn-block-height (+ (var-get launch-height) u12000))
+              (/ (* amount u3) u2) ;; 1.5x on early mainnet
+              amount))) ;; no early adopter bonus
+  )
+    (begin
+      (try! (is-dao-or-extension))
+      (asserts! (> base-amount u0) err-zero-amount)
+      (asserts! (and (> token-id u0) (<= token-id max-tier)) err-invalid-tier)
+      (try! (ft-mint? bigr-token base-amount recipient))
+      (try! (tag-nft { token-id: token-id, owner: recipient }))
+      (map-set balances { token-id: token-id, owner: recipient }
+        (+ base-amount (default-to u0 (map-get? balances { token-id: token-id, owner: recipient }))))
+      (map-set supplies token-id (+ base-amount (default-to u0 (map-get? supplies token-id))))
+      (var-set overall-supply (+ (var-get overall-supply) base-amount))
+      (print { event: "sft_mint", token-id: token-id, amount: base-amount, recipient: recipient })
+      (ok true)
+    )
   )
 )
 
@@ -177,38 +196,23 @@
 ;; -------------------------
 
 (define-public (claim-big-reward)
-  (let (
-        (user tx-sender)
-        (epoch (/ burn-block-height u4000))
-        (last (default-to u0 (map-get? last-claimed-epoch { who: user })))
-    )
-    (asserts! (< last epoch) err-claims-old-epoch)
-
-    (let (
-          (rep (unwrap! (get-weighted-rep user) err-claims-zero-rep))
-          (total (unwrap! (get-weighted-supply) err-claims-zero-total))
-    )
-      (asserts! (> rep u0) err-claims-zero-rep)
-      (asserts! (> total u0) err-claims-zero-total)
-
-      (let ((share (/ (* rep (var-get reward-per-epoch)) total)))
-        (map-set last-claimed-epoch { who: user } epoch)
-
-        ;; Use vault method to perform BIG transfer
-        (try! (contract-call? .bme006-0-treasury sip010-transfer share user none .bme000-0-governance-token))
-
-        (print { event: "big-claim", user: user, epoch: epoch, amount: share, reward-per-epoch: (var-get reward-per-epoch) })
-        (ok share)
-      )
-    )
-  )
+  (claim-big-reward-for-user tx-sender)
 )
 
 (define-public (claim-big-reward-batch (users (list 100 principal)))
-  (fold claim-big-reward-for-user users (ok true))
+  (fold claim-big-reward-batch-iter users (ok u0))
 )
 
-(define-private (claim-big-reward-for-user (user principal) (prev (response bool uint)))
+(define-private (claim-big-reward-batch-iter (user principal) (acc (response uint uint)))
+  (let (
+        (a (unwrap! acc err-claims-zero-total))
+        (b (unwrap! (claim-big-reward-for-user user) err-claims-zero-total))
+      )
+    (ok (+ a b))
+  )
+)
+
+(define-private (claim-big-reward-for-user (user principal)) ;; returns share or u0
   (let (
         (epoch (/ burn-block-height u4000))
         (last (default-to u0 (map-get? last-claimed-epoch { who: user })))
@@ -222,13 +226,13 @@
           (let ((share (/ (* rep (var-get reward-per-epoch)) total)))
             (map-set last-claimed-epoch { who: user } epoch)
             (try! (contract-call? .bme006-0-treasury sip010-transfer share user none .bme000-0-governance-token))
-            (print { event: "big-claim-batch", user: user, epoch: epoch, amount: share, reward-per-epoch: (var-get reward-per-epoch) })
-            (ok true)
+            (print { event: "big-claim", user: user, epoch: epoch, amount: share, reward-per-epoch: (var-get reward-per-epoch) })
+            (ok share)
           )
-          (ok true)
+          (ok u0)
         )
       )
-      (ok true)
+      (ok u0)
     )
   )
 )

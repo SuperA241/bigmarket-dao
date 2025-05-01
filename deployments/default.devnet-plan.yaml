@@ -144,7 +144,7 @@ plan:
         - contract-publish:
             contract-name: bme030-0-reputation-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 106820
+            cost: 107780
             path: contracts/extensions/bme030-0-reputation-token.clar
             anchor-block-only: true
             clarity-version: 3
@@ -172,14 +172,14 @@ plan:
         - contract-publish:
             contract-name: prediction-market-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 1690
+            cost: 1740
             path: contracts/traits/prediction-market-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme021-0-market-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 132400
+            cost: 135410
             path: contracts/extensions/bme021-0-market-voting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -193,14 +193,14 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-bitcoin
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 252380
+            cost: 256490
             path: contracts/extensions/bme023-0-market-bitcoin.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme023-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 199930
+            cost: 204040
             path: contracts/extensions/bme023-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -214,7 +214,7 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-dia
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 239690
+            cost: 243800
             path: contracts/extensions/bme023-0-market-scalar-dia.clar
             anchor-block-only: true
             clarity-version: 3
@@ -242,7 +242,7 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-pyth
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 230070
+            cost: 234180
             path: contracts/extensions/bme023-0-market-scalar-pyth.clar
             anchor-block-only: true
             clarity-version: 3
@@ -256,7 +256,7 @@ plan:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 109190
+            cost: 109500
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -273,7 +273,7 @@ plan:
         - contract-publish:
             contract-name: bme010-0-token-sale
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 67130
+            cost: 71580
             path: contracts/extensions/bme010-0-token-sale.clar
             anchor-block-only: true
             clarity-version: 3

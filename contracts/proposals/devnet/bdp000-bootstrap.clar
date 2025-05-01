@@ -98,7 +98,7 @@
 		;;(try! (contract-call? .bme023-0-market-predicting set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc sbtc-mint-many
 			(list
-				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-0-market-bitcoin}
+				{amount: u1000000000000000, recipient: .bme023-0-market-bitcoin}
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
 				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
@@ -129,6 +129,9 @@
 				{amount: (/ (* u1500 token-supply) u10000), recipient: .bme006-0-treasury}
 			)
 		))
+
+		(try! (contract-call? .bme030-0-reputation-token set-launch-height))
+
 		;; Entry levels (weight: 1)
 		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u1 u1))
 		(try! (contract-call? .bme030-0-reputation-token set-tier-weight u2 u1))

@@ -10,7 +10,7 @@ const simnet = await setupSimnet();
 */
 async function assertBalance(user: string, tier: number, balance: number) {
 	let bal = simnet.callReadOnlyFn(`${deployer}.${reputationSft}`, 'get-balance', [Cl.uint(tier), Cl.principal(user)], user);
-	expect(bal.result).toEqual(Cl.ok(Cl.uint(balance)));
+	expect(bal.result).toEqual(Cl.ok(Cl.uint(balance * 2)));
 }
 
 describe('prediction contract', () => {

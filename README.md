@@ -36,6 +36,19 @@ parameters and configuration.
 % stx make_keychain -t
 % stx make_keychain --backup_phrase -t ""
 
+[accounts.deployer.3]
+"mnemonic": "bone solid draft aerobic grid envelope draw torch hurdle submit peasant steel say build recipe airport either item brown boil butter brief skull vendor",
+"privateKey": "63ff02cc62e09f5a5b6531133caa3d8c68d7e3356916822f1171c342d3113bc801",
+"publicKey": "0248eec0cc49312cb4b6f8a1d3739e9743aae74b3a8523693f1eb148af0433c426",
+"address": "ST2P1A2ECDAT2053BMYKHCN3ZTRKPX2RAKKY9WJ38",
+"btcAddress": "mwCqipA4UNPYmHiw494yzxoYsA9vXp4pmh",
+"wif": "cQw5ewyKXA2HK8Sso5xShLRZN91QmJP4duHnnxpyHRTqT29Ls4WG",
+
+0: ST2P1A2ECDAT2053BMYKHCN3ZTRKPX2RAKKY9WJ38
+1: ST15GF59RDTKS7YY8VMKREQ7A0C1CP1NEJE23DMJA
+2: ST205A56XSM3F65NQBDBNN9FNZF5J9TBFH1MY1TJ1
+3: ST16RPMHH96463TP1AFEWZKQ12D7CY57YZGRWJR88
+
 [accounts.deployer.2]
 "mnemonic": "car cycle lizard wage busy gain paper ticket orient gentle globe chuckle wrist hurt chat great wink hotel crouch height timber dolphin anger scissors",
 "privateKey": "13837dcffa014e9ff9aaf54934bb9471b13c7c7e3cb8a58e9995517f41686ae201",
@@ -43,7 +56,6 @@ parameters and configuration.
 "address": "ST1SV7MYKRKKDG8PHSSKZ0W66DPKRPB5KV8ACN62G",
 "btcAddress": "mr4jRk9kXXFrveEx24Wfhzucy9oRQwNvYC",
 "wif": "cNEdhhLzUBxwubyibDaFsJrbpfnn1LjVybcZiyEBVDYjpszfSbAn",
-"index": 0
 
 0: ST1SV7MYKRKKDG8PHSSKZ0W66DPKRPB5KV8ACN62G
 1: ST2F4ZBBV22RF2WYR424HKX5RDN6XRK19X37YEVGG
