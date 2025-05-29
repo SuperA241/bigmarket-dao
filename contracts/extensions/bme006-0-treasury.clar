@@ -10,6 +10,8 @@
 ;; directly. The treasury extension merely adds a bit of separation.
 
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
+(use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)
+(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant err-unauthorised (err u3000))
 
@@ -152,4 +154,12 @@
 
 (define-public (callback (sender principal) (memo (buff 34)))
 	(ok true)
+)
+
+(define-public (claim-for-dao (market <prediction-market-trait>) (market-id uint) (token <ft-token>))
+  (begin
+    (as-contract
+      (contract-call? market claim-winnings market-id token)
+    )
+  )
 )

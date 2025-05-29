@@ -1,18 +1,28 @@
-;; Title: BME023 Market bitcoin predictions
+;; Title: BME023 Market scalar predictions
 ;; Synopsis:
-;; Implements prediciton markets for bitcoin users (see also bme023-0-market-predicting).
+;; Implements scalar prediciton markets (see also bme023-0-market-predicting).
 ;; Description:
-;; Provide binary and categorical prediction markets with 
-;; bitcoin only transactions - no stx needed for gas. Works with 
-;; clarity-bitcoin-lib-v5 for bitcoin catamaran swaps into markets.
+;; Scalar markets differ from binary/categorical markets (see bme023-0-market-predicting)
+;; in the type of categories and the mechanism for rsolution:
+;; Firstly, the categories are contiguous ranges of numbers with a min and max value. The winning
+;; category is decided by the range that the outcome selects. Secondly, scalar market outcomes
+;; are determined by on-chain oracles. This contract uses the DIA oracle for selecting from
+;; possible outcomes.
 
-(impl-trait  .prediction-market-trait.prediction-market-trait)
-
-(define-constant min-stake u100000) ;; Example: 100,000 satoshis (0.001 BTC)
+(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait .prediction-market-trait.prediction-market-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
-(define-constant MARKET_TYPE u3) ;; bitcoin tx market
-(define-constant token 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token)
+;; Market Types (2 => range based markets)
+(define-constant MARKET_TYPE u2)
+
+;; Price Feeds
+;; DIA_ORACLE 'SP1G48FZ4Y7JY8G2Z0N51QTCYGBQ6F4J43J77BQC0.dia-oracle
+;; DIA_ORACLE 'ST3Q982CNNQ00E3FH6853EMTA5FPF1M3ENJTHB8PY.dia-oracle
+(define-constant STX_USD_FEED_ID 0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43)
+
+(define-constant DEFAULT_MARKET_DURATION u144) ;; ~1 day in Bitcoin blocks
+(define-constant DEFAULT_COOL_DOWN_PERIOD u144) ;; ~1 day in Bitcoin blocks
 
 (define-constant RESOLUTION_OPEN u0)
 (define-constant RESOLUTION_RESOLVING u1)
@@ -45,13 +55,9 @@
 (define-constant err-element-expected (err u10025))
 (define-constant err-winning-stake-not-zero (err u10026))
 (define-constant err-losing-stake-is-zero (err u10027))
-(define-constant err-transaction-segwit (err u10028))
-(define-constant err-transaction-legacy (err u10029))
-(define-constant err-transaction (err u1030))
-(define-constant err-market-wallet (err u1031))
-(define-constant err-transfer-forbidden (err u1032))
-(define-constant err-amount-too-high (err u10033))
-(define-constant err-fee-too-high (err u10034))
+(define-constant err-unknown-stacks-block (err u10028))
+(define-constant err-amount-too-high (err u10029))
+(define-constant err-fee-too-high (err u10030))
 
 (define-data-var market-counter uint u0)
 (define-data-var dispute-window-length uint u144)
@@ -63,7 +69,6 @@
 (define-data-var resolution-agent principal tx-sender)
 (define-data-var dao-treasury principal tx-sender)
 (define-data-var creation-gated bool true)
-(define-data-var market-wallet { version: (buff 1), hashbytes: (buff 32) } { version: 0x00, hashbytes: 0x8ae4a48cb0c3b7874460a6f5287d9dd512a18246 })
 (define-data-var resolution-timeout uint u1000) ;; 1000 blocks (~9 days)
 
 ;; Data structure for each Market
@@ -72,15 +77,20 @@
   uint
   {
 		market-data-hash: (buff 32),
+    token: principal, 
     treasury: principal,
     creator: principal,
     market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
-    resolution-burn-height: uint,
-    categories: (list 10 (string-ascii 64)), ;; List of available categories
+    categories: (list 10 {min: uint, max: uint}), ;; Min (inclusive) and Max (exclusive)
     stakes: (list 10 uint), ;; Total staked per category
     outcome: (optional uint),
-    concluded: bool
+    concluded: bool,
+    market-start: uint,
+    market-duration: uint,
+    cool-down-period: uint,
+    price-feed-id: (string-ascii 32), ;; DIA price feed ID (custom per market)
+    price-outcome: (optional uint)
   }
 )
 
@@ -88,6 +98,7 @@
   { market-id: uint, user: principal }
   (list 10 uint)
 )
+(define-map allowed-tokens principal bool)
 
 ;; ---------------- access control ----------------
 (define-public (is-dao-or-extension)
@@ -95,6 +106,16 @@
 )
 
 ;; ---------------- getters / setters ----------------
+(define-public (set-allowed-token (token principal) (enabled bool))
+	(begin
+		(try! (is-dao-or-extension))
+		(print {event: "allowed-token", token: token, enabled: enabled})
+		(ok (map-set allowed-tokens token enabled))
+	)
+)
+(define-read-only (is-allowed-token (token principal))
+	(default-to false (map-get? allowed-tokens token))
+)
 
 (define-public (set-dispute-window-length (length uint))
   (begin
@@ -171,30 +192,6 @@
   )
 )
 
-(define-public (set-market-wallet (version (buff 1)) (hashbytes (buff 32)))
-  (begin
-    (try! (is-dao-or-extension))
-    (var-set market-wallet { version: version, hashbytes: hashbytes })
-    (ok {hashbytes: hashbytes, version: version})
-  )
-)
-(define-read-only (get-market-wallet)
-  (ok (var-get market-wallet))
-)
-(define-read-only (is-market-wallet-output (scriptPubKey (buff 128)))
-  (let 
-    (
-      (wallet (var-get market-wallet))
-      (script-len (len scriptPubKey))
-    )
-    (if (>= script-len u22)
-        (let ((script-hash (slice? scriptPubKey (- script-len u20) script-len))) 
-          (ok (is-eq (unwrap! script-hash err-element-expected) (get hashbytes wallet))))
-        (err u10025) ;; Error: Script too short
-    )
-  )
-)
-
 (define-read-only (get-market-data (market-id uint))
 	(map-get? markets market-id)
 )
@@ -206,14 +203,31 @@
 
 ;; ---------------- public functions ----------------
 
-(define-public (create-market (categories (list 10 (string-ascii 64))) (fee-bips (optional uint)) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal))
+(define-public (create-market 
+  (categories (list 10 {min: uint, max: uint})) 
+  (fee-bips (optional uint)) 
+  (token <ft-token>) 
+  (market-data-hash (buff 32)) 
+  (proof (list 10 (tuple (position bool) (hash (buff 32))))) 
+  (treasury principal) 
+  (market-duration (optional uint)) 
+  (cool-down-period (optional uint))
+  (price-feed-id (string-ascii 32)))
     (let (
         (sender tx-sender)
         (new-id (var-get market-counter))
         (market-fee-bips (default-to u0 fee-bips))
+        (market-duration-final (default-to DEFAULT_MARKET_DURATION market-duration))
+        (cool-down-final (default-to DEFAULT_COOL_DOWN_PERIOD cool-down-period))
+        (current-block burn-block-height)
       )
+      (asserts! (> market-duration-final u10) err-market-not-found)
+      (asserts! (> cool-down-final u10) err-market-not-found)
+
 		  (asserts! (> (len categories) u1) err-too-few-categories)
 		  (asserts! (<= market-fee-bips (var-get market-fee-bips-max)) err-max-market-fee-bips-exceeded)
+      ;; ensure the trading token is allowed 
+		  (asserts! (is-allowed-token (contract-of token)) err-invalid-token)
       ;; ensure user pays creation fee if required
       (if (and (not (is-eq tx-sender (var-get resolution-agent))) (> (var-get market-create-fee) u0))
         (try! (stx-transfer? (var-get market-create-fee) tx-sender (var-get dao-treasury)))
@@ -227,74 +241,45 @@
         new-id
         {
           market-data-hash: market-data-hash,
+          token: (contract-of token),
           treasury: treasury,
           creator: tx-sender,
           market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
-          resolution-burn-height: u0,
           categories: categories,
           stakes: (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0),
           outcome: none,
-          concluded: false
+          concluded: false,
+          market-start: current-block,
+          market-duration: market-duration-final,
+          cool-down-period: cool-down-final,
+          price-feed-id: price-feed-id,
+          price-outcome: none
         }
       )
       ;; Increment the counter
+      (print {event: "create-market", market-id: new-id, categories: categories, market-fee-bips: market-fee-bips, token: token, market-data-hash: market-data-hash, creator: tx-sender})
       (var-set market-counter (+ new-id u1))
-      (try! (contract-call? .bme030-0-reputation-token mint tx-sender u7 u4))
-      (print {event: "create-market", market-id: new-id, categories: categories, market-fee-bips: market-fee-bips, market-data-hash: market-data-hash, creator: tx-sender})
+      (try! (contract-call? .bme030-0-reputation-token mint tx-sender u6 u4))
       (ok new-id)
   )
 )
-
-;; -------------------------------------------------------------------------------------------------
-;; bitcoin predictions
-;; requires parsing of bitcoin transaction
-(define-public (predict-category 
-    (height uint)
-    (wtx (buff 4096))
-    (header (buff 80))
-    (tx-index uint)
-    (tree-depth uint)
-    (wproof (list 14 (buff 32)))
-    (witness-merkle-root (buff 32))
-    (witness-reserved-value (optional  (buff 32)))
-    (ctx (optional (buff 1024)))
-    (cproof (optional (list 14 (buff 32))))
-  )
+(define-public (predict-category (market-id uint) (amount uint) (index uint) (token <ft-token>))
   (let (
-      (verified 
-        (if (is-some witness-reserved-value)
-          (try! (verify-segwit height wtx header tx-index tree-depth wproof witness-merkle-root (unwrap! witness-reserved-value err-element-expected) (unwrap! ctx err-element-expected) (unwrap! cproof err-element-expected)))
-          (try! (verify-legacy height wtx header { tx-index: tx-index, hashes: wproof, tree-depth: tree-depth}))
-        )
+        (amount-less-fee (try! (process-stake-transfer amount token)))
+        (md (unwrap! (map-get? markets market-id) err-market-not-found))
+        (categories (get categories md))
+        (current-stakes (get stakes md))
+        (current-stake (unwrap! (element-at? current-stakes index) err-category-not-found))
+        (current-stake-balances (default-to (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0) (map-get? stake-balances {market-id: market-id, user: tx-sender})))
+        (current-user-stake (unwrap! (element-at? current-stake-balances index) err-category-not-found))
+        (market-end (+ (get market-start md) (get market-duration md)))
       )
-      (payload (if (is-some witness-reserved-value)
-        (unwrap! (parse-payload-segwit wtx) err-element-expected)
-        (unwrap! (parse-payload-legacy wtx) err-element-expected)
-      ))
-      (output1 (if (is-some witness-reserved-value)
-        (unwrap! (get-output-segwit wtx u1) err-element-expected)
-        (unwrap! (get-output-legacy wtx u1) err-element-expected)
-      ))
-      ;;(amount (unwrap! (get amt payload) err-element-expected))
-      (market-id (unwrap! (get i payload) err-element-expected))
-      (index (unwrap! (get o payload) err-element-expected))
-      (sender (unwrap! (get p payload) err-element-expected))
-
-      (amount (get value output1))
-      (amount-less-fee amount) ;;(try! (process-stake-transfer amount)))
-      (md (unwrap! (map-get? markets market-id) err-market-not-found))
-      (current-stakes (get stakes md))
-      (current-stake (unwrap! (element-at? current-stakes index) err-category-not-found))
-      (current-stake-balances (default-to (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0) (map-get? stake-balances {market-id: market-id, user: sender})))
-      (current-user-stake (unwrap! (element-at? current-stake-balances index) err-category-not-found))
-    )
-    ;; Ensure transaction verifies
-    (asserts! (unwrap! (is-market-wallet-output (get scriptPubKey output1)) err-market-wallet) err-market-wallet)
-
-    ;; Ensure transaction verifies
-    (asserts! verified err-transaction)
-    
+    (asserts! (< index (len categories)) err-category-not-found)
+    (asserts! (< burn-block-height market-end) err-market-not-open)
+    ;; Ensure correct token
+    (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
+    ;; Ensure market is not concluded
     (asserts! (not (get concluded md)) err-already-concluded)
     ;; Ensure resolution process has not started 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-not-open)
@@ -303,155 +288,109 @@
       (merge md {stakes: (unwrap! (replace-at? current-stakes index (+ current-stake amount-less-fee)) err-category-not-found)})
     )
 
-    (map-set stake-balances {market-id: market-id, user: sender}
+    (map-set stake-balances {market-id: market-id, user: tx-sender}
         (unwrap! (replace-at? current-stake-balances index (+ current-user-stake amount-less-fee)) err-category-not-found)
     )
 
     (try! (contract-call? .bme030-0-reputation-token mint tx-sender u4 u3))
-    (print {event: "market-stake", market-id: market-id, index: index, amount: amount, amount-less-fee: amount-less-fee, voter: sender})
+    (print {event: "market-stake", market-id: market-id, index: index, amount: amount-less-fee, voter: tx-sender})
     (ok index)
   )
 )
-
-(define-read-only (verify-segwit 
-    (height uint)
-    (wtx (buff 4096))
-    (header (buff 80))
-    (tx-index uint)
-    (tree-depth uint)
-    (wproof (list 14 (buff 32)))
-    (witness-merkle-root (buff 32))
-    (witness-reserved-value (buff 32))
-    (ctx (buff 1024))
-    (cproof (list 14 (buff 32)))
-  )
-  ;; commented out for testing on stacks testnet which is running on bitcoin regtest!
-  (match (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 was-segwit-tx-mined-compact height wtx header tx-index tree-depth wproof witness-merkle-root witness-reserved-value ctx cproof)
-    result (ok true)
-    err err-transaction-segwit)
-)
-
-(define-read-only (verify-legacy 
-    (height uint)
-    (wtx (buff 4096))
-    (header (buff 80))
-    (proof { tx-index: uint, hashes: (list 14 (buff 32)), tree-depth: uint})
-  )
-  (match (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 was-tx-mined-compact height wtx header proof)
-    result (ok true)
-    err err-transaction-legacy)
-)
-
-(define-read-only (get-output-legacy (tx (buff 4096)) (index uint))
-  (let
-    (
-      (parsed-tx (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 parse-tx tx))
-    )
-    (match parsed-tx
-      result
-      (let
-        (
-          (tx-data (unwrap-panic parsed-tx))
-          (outs (get outs tx-data))
-          (out (unwrap! (element-at? outs index) err-element-expected))
-          (scriptPubKey (get scriptPubKey out))
-          (value (get value out)) 
-        )
-          (ok { scriptPubKey: scriptPubKey, value: value })
-      )
-      missing err-element-expected
-    )
-  )
-)
-
-(define-read-only (get-output-segwit (tx (buff 4096)) (index uint))
-  (let
-    (
-      (parsed-tx (contract-call? 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5 parse-wtx tx false))
-    )
-    (match parsed-tx
-      result
-      (let
-        (
-          (tx-data (unwrap-panic parsed-tx)) 
-          (outs (get outs tx-data)) 
-          (out (unwrap! (element-at? outs index) err-transaction-segwit))
-          (scriptPubKey (get scriptPubKey out))
-          (value (get value out)) 
-        )
-        (ok { scriptPubKey: scriptPubKey, value: value })
-      )
-      missing err-transaction
-    )
-  )
-)
-
-(define-read-only (parse-payload-legacy (tx (buff 4096)))
-  (match (get-output-legacy tx u0)
-    parsed-result
-    (let
-      (
-        (script (get scriptPubKey parsed-result))
-        (script-len (len script))
-        ;; lenght is dynamic one or two bytes!
-        (offset (if (is-eq (unwrap! (element-at? script u1) err-element-expected) 0x4C) u3 u2)) 
-        (payload (unwrap! (slice? script offset script-len) err-element-expected))
-      )
-      (asserts! (> (len payload) u2) err-element-expected)
-      (ok (from-consensus-buff? { i: uint, o: uint, p: principal } payload))
-    )
-    not-found err-element-expected
-  )
-)
-
-(define-read-only (parse-payload-segwit (tx (buff 4096)))
-  (match (get-output-segwit tx u0)
-    result
-    (let
-      (
-        (script (get scriptPubKey result))
-        (script-len (len script))
-        ;; lenght is dynamic one or two bytes!
-        (offset (if (is-eq (unwrap! (element-at? script u1) err-element-expected) 0x4C) u3 u2)) 
-        (payload (unwrap! (slice? script offset script-len) err-element-expected))
-      )
-      (ok (from-consensus-buff? { i: uint, o: uint, p: principal } payload))
-    )
-    not-found err-element-expected
-  )
-)
-;; -------------------------------------------------------------------------------------------------
-
 
 ;; Resolve a market invoked by ai-agent.
-(define-public (resolve-market (market-id uint) (category (string-ascii 64)))
+(define-public (resolve-market (market-id uint) (stacks-height uint))
   (let (
-        (md (unwrap! (map-get? markets market-id) err-market-not-found))
-        (index (unwrap! (index-of? (get categories md) category) err-category-not-found))
-    )
-    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
-    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-wrong-state)
-
-    (map-set markets market-id
-      (merge md
-        { outcome: (some index), resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
+      (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
+      (price-feed-id (get price-feed-id md))
+      (id-header-hash (unwrap! (get-stacks-block-info? id-header-hash stacks-height) err-unknown-stacks-block))
+      (price-data (get-dia-price stacks-height price-feed-id))
+      (parsed-price (parse-dia-price (unwrap! price-data err-unauthorised))) ;; Parse DIA response
+      (categories (get categories md))
+      (first-category (unwrap! (element-at? categories u0) err-category-not-found))
+      (winning-category-index
+        (get winning-index
+          (fold select-winner categories
+            {current-index: u0, winning-index: none, price: parsed-price}
+          )
+        )
+      )
+      (final-index
+        (if (is-some winning-category-index)
+            winning-category-index
+            (if (< parsed-price (get min first-category))
+                (some u0)  ;; If price < first category min, assign first category
+                (some (- (len categories) u1))  ;; If price >= last category max, assign last category
+            )
+        )
       )
     )
-    (print {event: "resolve-market", market-id: market-id, outcome: index, category: category, resolver: tx-sender, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height})
-    (ok index)
+    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
+    (asserts! (>= burn-block-height resolution-burn-block) err-market-wrong-state)
+
+      ;; Ensure category was successfully assigned
+    (asserts! (is-some final-index) err-category-not-found)
+
+      ;; Store the result
+    (map-set markets market-id
+      (merge md
+        { outcome: final-index, price-outcome: (some parsed-price), resolution-state: RESOLUTION_RESOLVING }
+      )
+    )
+    (print {event: "resolve-market", market-id: market-id, stacks-height: stacks-height, outcome: final-index, resolver: tx-sender, price: parsed-price})
+    (ok final-index)
+  )
+)
+
+(define-read-only (get-dia-price (stacks-height uint) (price-feed-id (string-ascii 32)))
+  (let (
+      (id-header-hash (unwrap! (get-stacks-block-info? id-header-hash stacks-height) err-market-wrong-state))
+      (price-data (at-block id-header-hash (contract-call? .dia-oracle get-value price-feed-id)))
+    )
+    price-data
+  )
+)
+
+;; We don't convert here as our price ranges are also multiplied by 10**8 
+(define-private (parse-dia-price (price-response (tuple (timestamp uint) (value uint))))
+  (let ((price-raw (get value price-response)))
+    ;;(/ price-raw (pow u10 u8)) 
+    price-raw
+  )
+)
+;; Helper function: Finds the correct category index based on the price
+(define-private (select-winner 
+      (category (tuple (min uint) (max uint)))
+      (acc {current-index: uint, winning-index: (optional uint), price: uint}))
+  (let (
+      (price (get price acc))
+      (min-price (get min category))
+      (max-price (get max category))
+      (current-index (get current-index acc))
+    )
+    ;; Check if the price falls within this category's range
+    (if (and (>= price min-price) (< price max-price) (is-none (get winning-index acc)))
+        {current-index: (+ current-index u1), winning-index: (some current-index), price: price}
+        {current-index: (+ current-index u1), winning-index: (get winning-index acc), price: price}
+    )
   )
 )
 
 (define-public (resolve-market-undisputed (market-id uint))
   (let (
-        (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
+
     )
-    (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (> burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-not-elapsed)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-open)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-burn-height: burn-block-height }
+        { concluded: true, resolution-state: RESOLUTION_RESOLVED }
       )
     )
     (print {event: "resolve-market-undisputed", market-id: market-id, resolution-burn-height: burn-block-height, resolution-state: RESOLUTION_RESOLVED})
@@ -484,18 +423,19 @@
 ;; the call is made via the voting contract 'create-market-vote' function
 (define-public (dispute-resolution (market-id uint) (disputer principal) (num-categories uint))
   (let (
-        (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
-        (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
+      (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
+      (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
     )
     ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
 
     (asserts! (is-eq num-categories (len (get categories md))) err-too-few-categories)
     ;; prevent market getting locked in unresolved state
-    (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
+    (asserts! (<= burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-elapsed)
 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
-    (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
 
     (map-set markets market-id
       (merge md { resolution-state: RESOLUTION_DISPUTED }))
@@ -506,7 +446,9 @@
 (define-public (force-resolve-market (market-id uint))
   (let (
     (md (unwrap! (map-get? markets market-id) err-market-not-found))
-    (elapsed (- burn-block-height (get resolution-burn-height md)))
+    (market-end (+ (get market-start md) (get market-duration md)))
+    (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
+    (elapsed (- burn-block-height resolution-burn-block))
   )
   (begin
     (asserts! (> elapsed (var-get resolution-timeout)) err-market-wrong-state)
@@ -521,7 +463,7 @@
 )
 
 ;; Claim winnings (for users who staked on the correct category)
-(define-public (claim-winnings (market-id uint))
+(define-public (claim-winnings (market-id uint) (token <ft-token>))
   (let 
     (
       (market-data (unwrap! (map-get? markets market-id) err-market-not-found))
@@ -533,6 +475,8 @@
       (total-pool (fold + stake-list u0))
     )
 
+    ;; Ensure correct token
+    (asserts! (is-eq (get token market-data) (contract-of token)) err-invalid-token)
     ;; Check if market is concluded
     (asserts! (is-eq (get resolution-state market-data) RESOLUTION_RESOLVED) err-market-not-concluded)
     (asserts! (get concluded market-data) err-market-not-concluded)
@@ -541,12 +485,12 @@
     (asserts! (> winning-pool u0) err-amount-too-low)
 
       ;; Claim winnings
-    (claim-winnings-internal market-id user-stake winning-pool total-pool index-won)
+    (claim-winnings-internal market-id user-stake winning-pool total-pool index-won token)
   )
 )
 
 ;; needed for markets with no winner - in this case, tokens accrued are transferred to the dao treasury
-(define-public (transfer-losing-stakes (market-id uint))
+(define-public (transfer-losing-stakes (market-id uint) (token <ft-token>))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (stakes (get stakes md))
@@ -554,9 +498,9 @@
         (balance (fold + stakes u0))
     )
     ;; Ensure market is concluded and winning category is empty
+    (asserts! (is-eq (get token md) (contract-of token)) err-invalid-token)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVED) err-market-not-concluded)
     (asserts! (is-eq u0 (unwrap! (element-at? stakes winning-index) err-element-expected)) err-winning-stake-not-zero)
-    (asserts! (> balance u0) err-losing-stake-is-zero)
     (as-contract
       (begin
         (if (> balance u0)
@@ -575,7 +519,7 @@
   (user-stake uint) 
   (winning-pool uint) 
   (total-pool uint) 
-  (index-won uint))
+  (index-won uint) (token <ft-token>))
   (let (
         (md (unwrap! (map-get? markets market-id) err-market-not-found))
         (original-sender tx-sender)
@@ -626,11 +570,10 @@
   )
 )
 
-;; the funds have arrived on bitcoin - so the sender here is the big market sbtc liquidity pool
-(define-private (process-stake-transfer (amount uint))
+(define-private (process-stake-transfer (amount uint) (token <ft-token>))
   (let (
         ;;(sender-balance (stx-get-balance tx-sender))
-        (sender-balance (unwrap! (contract-call? token get-balance .bme023-0-market-bitcoin) err-insufficient-balance))
+        (sender-balance (unwrap! (contract-call? token get-balance tx-sender) err-insufficient-balance))
         (fee (calculate-fee amount (var-get dev-fee-bips)))
         (transfer-amount (- amount fee))
        )
@@ -643,10 +586,8 @@
       (asserts! (<= amount u50000000000000) err-amount-too-high)
       (asserts! (<= (var-get dev-fee-bips) u1000) err-fee-too-high) ;; max 10%
       
-      ;; assume here the contract has the funds to cover payouts.
-      ;; in fact the liquidity will come from direct sbtc into this contract from the bitcoin staking address
-      ;; (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-predicting none))
-      (try! (as-contract (contract-call? token transfer fee .bme023-0-market-bitcoin (var-get dev-fund) none)))
+      (try! (contract-call? token transfer transfer-amount tx-sender .bme023-0-market-scalar-dia none))
+      (try! (contract-call? token transfer fee tx-sender (var-get dev-fund) none))
 
       (ok transfer-amount)
     )
@@ -656,4 +597,8 @@
   (let ((fee (/ (* amount fee-bips) u10000)))
     fee
   )
+)
+;; Placeholder: staking does not support this
+(define-public (transfer-shares (market-id uint) (outcome uint) (from principal) (to principal) (amount uint) (t <ft-token>))
+  err-unauthorised
 )

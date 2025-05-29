@@ -8,9 +8,9 @@
 
 (define-public (execute (sender principal))
 	(begin
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-predicting 0x865f22ef861a47324fed3c9aec19a60b47dd0f67a534c696538408350fccb962))
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-pyth 0x865f22ef861a47324fed3c9aec19a60b47dd0f67a534c696538408350fccb962))
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-bitcoin 0x865f22ef861a47324fed3c9aec19a60b47dd0f67a534c696538408350fccb962))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-predicting 0x6cf941784773751b4c0f4f887f25121106b2b59d026b5bc52822953f9c0e5fef))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-pyth 0x6cf941784773751b4c0f4f887f25121106b2b59d026b5bc52822953f9c0e5fef))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-bitcoin 0x6cf941784773751b4c0f4f887f25121106b2b59d026b5bc52822953f9c0e5fef))
 
 		(print "Merkle root for account gating updated.")
 		(ok true)

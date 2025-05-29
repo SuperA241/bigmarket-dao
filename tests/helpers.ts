@@ -7,12 +7,12 @@ import { contractId2Key, generateMerkleProof, generateMerkleTreeUsingStandardPri
 
 export const simnet = await setupSimnet();
 export const accounts = simnet.getAccounts();
-export const deployer = accounts.get('deployer')!;
-export const alice = accounts.get('wallet_1')!;
-export const bob = accounts.get('wallet_2')!;
-export const tom = accounts.get('wallet_3')!;
-export const betty = accounts.get('wallet_4')!;
-export const fred = accounts.get('wallet_5')!;
+export const deployer = accounts.get('deployer')!; // ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+export const alice = accounts.get('wallet_1')!; // ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5
+export const bob = accounts.get('wallet_2')!; // ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG
+export const tom = accounts.get('wallet_3')!; // ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC
+export const betty = accounts.get('wallet_4')!; // ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND
+export const fred = accounts.get('wallet_5')!; // ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB
 export const wallace = accounts.get('wallet_6')!;
 export const piedro = accounts.get('wallet_7')!;
 export const annie = accounts.get('wallet_4')!;
@@ -23,6 +23,8 @@ export const coreProposals = 'bme003-0-core-proposals';
 export const marketVoting = 'bme021-0-market-voting';
 export const marketGating = 'bme022-0-market-gating';
 export const marketPredicting = 'bme023-0-market-predicting';
+export const marketPredictingCPMM = 'bme024-0-market-predicting';
+export const marketScalingCPMM = 'bme024-0-market-scalar-pyth';
 export const marketScalarDia = 'bme023-0-market-scalar-dia';
 export const marketScalarPyth = 'bme023-0-market-scalar-pyth';
 export const reputationSft = 'bme030-0-reputation-token';
@@ -69,13 +71,13 @@ export async function constructDao(simnet: any) {
 	return proposal;
 }
 
-export async function assertDataVarNumber(contract: string, varName: string, value: number) {
+export async function assertDataVarNumber(contract: string, varName: string, value: number | undefined) {
 	let result = Number((simnet.getDataVar(contract, varName) as any).value);
 	expect(result).toEqual(value);
 }
-export async function assertContractBalance(contract: string, value: bigint) {
+export async function assertContractBalance(contract: string, value: bigint | undefined) {
 	let stxBalances = simnet.getAssetsMap().get('STX'); // Replace if contract's principal
-	console.log('contractBalance : ' + contract + ' : ' + stxBalances?.get(`${deployer}.${contract}`));
+	//console.log('contractBalance : ' + contract + ' : ' + stxBalances?.get(`${deployer}.${contract}`));
 	expect(stxBalances?.get(`${deployer}.${contract}`)).toEqual(value);
 }
 
@@ -206,4 +208,12 @@ export async function passProposalByCoreVote(proposal: string, errorCode?: numbe
 		expect(concludeResponse.result).toEqual(Cl.ok(Cl.bool(true)));
 	}
 	return concludeResponse;
+}
+export async function claimDao(market: string, marketId: number, share: number, code?: number) {
+	let response = await simnet.callPublicFn('bme006-0-treasury', 'claim-for-dao', [Cl.principal(market), Cl.uint(marketId), Cl.principal(stxToken)], bob);
+	if (code) {
+		expect(response.result).toEqual(Cl.error(Cl.uint(code)));
+	} else {
+		expect(response.result).toEqual(Cl.ok(Cl.uint(share)));
+	}
 }

@@ -135,9 +135,16 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: prediction-market-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4290
+            path: contracts/traits/prediction-market-trait.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bme006-0-treasury
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50410
+            cost: 54330
             path: contracts/extensions/bme006-0-treasury.clar
             anchor-block-only: true
             clarity-version: 3
@@ -170,13 +177,6 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: prediction-market-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 1740
-            path: contracts/traits/prediction-market-trait.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
             contract-name: bme021-0-market-voting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 135410
@@ -193,15 +193,15 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-bitcoin
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 256490
-            path: contracts/extensions/bme023-0-market-bitcoin.clar
+            cost: 259630
+            path: contracts/extensions/linear/bme023-0-market-bitcoin.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme023-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 204040
-            path: contracts/extensions/bme023-0-market-predicting.clar
+            cost: 205980
+            path: contracts/extensions/linear/bme023-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -214,8 +214,8 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-dia
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 243800
-            path: contracts/extensions/bme023-0-market-scalar-dia.clar
+            cost: 245730
+            path: contracts/extensions/linear/bme023-0-market-scalar-dia.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -242,8 +242,22 @@ plan:
         - contract-publish:
             contract-name: bme023-0-market-scalar-pyth
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 234180
-            path: contracts/extensions/bme023-0-market-scalar-pyth.clar
+            cost: 236110
+            path: contracts/extensions/linear/bme023-0-market-scalar-pyth.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bme024-0-market-predicting
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 282950
+            path: contracts/extensions/bme024-0-market-predicting.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bme024-0-market-scalar-pyth
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 309690
+            path: contracts/extensions/bme024-0-market-scalar-pyth.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -253,10 +267,13 @@ plan:
             path: contracts/external/sbtc.clar
             anchor-block-only: true
             clarity-version: 3
+      epoch: "3.0"
+    - id: 4
+      transactions:
         - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 109500
+            cost: 139720
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -267,9 +284,6 @@ plan:
             path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 4
-      transactions:
         - contract-publish:
             contract-name: bme010-0-token-sale
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -390,6 +404,13 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: bdp001-set-dev-fee-zero
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 3030
+            path: contracts/proposals/devnet/unit-tests/bdp001-set-dev-fee-zero.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bdp001-sft-disable
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4270
@@ -424,11 +445,21 @@ plan:
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-4.clar
             anchor-block-only: true
             clarity-version: 3
+      epoch: "3.0"
+    - id: 5
+      transactions:
         - contract-publish:
             contract-name: bdp001-sft-tokens-5
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 12960
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: bme040-0-shares-marketplace
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 34450
+            path: contracts/extensions/bme040-0-shares-marketplace.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
@@ -445,9 +476,6 @@ plan:
             path: contracts/traits/extension-trait.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 5
-      transactions:
         - contract-publish:
             contract-name: hk-cursor-v2
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM

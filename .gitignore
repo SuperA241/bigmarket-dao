@@ -5,6 +5,8 @@ scraps.txt
 cvm/vmstate.db
 .DS_Store
 nohup.out
+# Ignore Clarinet toml - user must actively choose devnet or testnet/mainnet toml config.
+Clarinet.toml
 # Ignore Node and NPM files. Added by the clarinet-sdk migration.
 .cache
 logs

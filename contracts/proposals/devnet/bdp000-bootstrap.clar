@@ -24,7 +24,10 @@
 				{extension: .bme023-0-market-scalar-pyth, enabled: true}
 				{extension: .bme023-0-market-scalar-dia, enabled: true}
 				{extension: .bme023-0-market-bitcoin, enabled: true}
+				{extension: .bme024-0-market-predicting, enabled: true}
+				{extension: .bme024-0-market-scalar-pyth, enabled: true}
 				{extension: .bme030-0-reputation-token, enabled: true}
+				{extension: .bme040-0-shares-marketplace, enabled: true}
 			)
 		))
 
@@ -45,7 +48,10 @@
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-dia 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-scalar-pyth 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
 		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme023-0-market-bitcoin 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
-		
+
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-predicting 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-scalar-pyth 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e))
+
 		(try! (contract-call? .bme023-0-market-predicting set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
 		(try! (contract-call? .bme023-0-market-predicting set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
 		(try! (contract-call? .bme023-0-market-predicting set-dao-treasury .bme006-0-treasury))
@@ -57,6 +63,19 @@
 		(try! (contract-call? .bme023-0-market-predicting set-dev-fee-bips u100))
 		(try! (contract-call? .bme023-0-market-predicting set-dao-fee-bips u150))
 		(try! (contract-call? .bme023-0-market-predicting set-dispute-window-length u24))
+
+		(try! (contract-call? .bme024-0-market-predicting set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
+		(try! (contract-call? .bme024-0-market-predicting set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
+		(try! (contract-call? .bme024-0-market-predicting set-dao-treasury .bme006-0-treasury))
+		(try! (contract-call? .bme024-0-market-predicting set-creation-gated true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc true))
+		(try! (contract-call? .bme024-0-market-predicting set-market-fee-bips-max u300))
+		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx u100))
+		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc u100))
+		(try! (contract-call? .bme024-0-market-predicting set-dev-fee-bips u100))
+		(try! (contract-call? .bme024-0-market-predicting set-dao-fee-bips u150))
+		(try! (contract-call? .bme024-0-market-predicting set-dispute-window-length u24))
 
 		(try! (contract-call? .bme023-0-market-scalar-dia set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
 		(try! (contract-call? .bme023-0-market-scalar-dia set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
@@ -81,6 +100,19 @@
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-dev-fee-bips u100))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-dao-fee-bips u150))
 		(try! (contract-call? .bme023-0-market-scalar-pyth set-dispute-window-length u24))
+
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-dao-treasury .bme006-0-treasury))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-creation-gated true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-market-fee-bips-max u300))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx u100))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc u100))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-dev-fee-bips u100))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-dao-fee-bips u150))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-dispute-window-length u24))
 
 		(try! (contract-call? .bme023-0-market-bitcoin set-resolution-agent 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
 		(try! (contract-call? .bme023-0-market-bitcoin set-dev-fund 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))

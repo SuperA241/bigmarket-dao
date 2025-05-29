@@ -49,6 +49,7 @@ contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-semi-fungible-tok
 
 [[project.requirements]]
 contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait'
+
 [contracts.bdp000-bootstrap]
 path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3
@@ -164,6 +165,11 @@ path = 'contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.cla
 clarity_version = 3
 epoch = 3.0
 
+[contracts.bdp001-set-dev-fee-zero]
+path = 'contracts/proposals/devnet/unit-tests/bdp001-set-dev-fee-zero.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.bigmarket-dao]
 path = 'contracts/bigmarket-dao.clar'
 clarity_version = 3
@@ -210,22 +216,37 @@ clarity_version = 3
 epoch = 3.0
 
 [contracts.bme023-0-market-bitcoin]
-path = 'contracts/extensions/bme023-0-market-bitcoin.clar'
+path = 'contracts/extensions/linear/bme023-0-market-bitcoin.clar'
 clarity_version = 3
 epoch = 3.0
 
 [contracts.bme023-0-market-predicting]
-path = 'contracts/extensions/bme023-0-market-predicting.clar'
+path = 'contracts/extensions/linear/bme023-0-market-predicting.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme024-0-market-predicting]
+path = 'contracts/extensions/bme024-0-market-predicting.clar'
 clarity_version = 3
 epoch = 3.0
 
 [contracts.bme023-0-market-scalar-dia]
-path = 'contracts/extensions/bme023-0-market-scalar-dia.clar'
+path = 'contracts/extensions/linear/bme023-0-market-scalar-dia.clar'
 clarity_version = 3
 epoch = 3.0
 
 [contracts.bme023-0-market-scalar-pyth]
-path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
+path = 'contracts/extensions/linear/bme023-0-market-scalar-pyth.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme024-0-market-scalar-pyth]
+path = 'contracts/extensions/bme024-0-market-scalar-pyth.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.bme040-0-shares-marketplace]
+path = 'contracts/extensions/bme040-0-shares-marketplace.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -254,11 +275,6 @@ path = 'contracts/traits/governance-token-trait.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.hk-cursor-v2]
-path = 'contracts/external/pyth/hk/hk-cursor-v2.clar'
-clarity_version = 3
-epoch = 3.0
-
 [contracts.nft-trait]
 path = 'contracts/traits/sips/nft-trait.clar'
 clarity_version = 3
@@ -271,6 +287,11 @@ epoch = 3.0
 
 [contracts.proposal-trait]
 path = 'contracts/traits/proposal-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.hk-cursor-v2]
+path = 'contracts/external/pyth/hk/hk-cursor-v2.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -289,6 +310,16 @@ path = 'contracts/external/pyth/pyth-traits-v1.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.wormhole-core-v3]
+path = 'contracts/external/pyth/wormhole/wormhole-core-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wormhole-traits-v1]
+path = 'contracts/external/pyth/wormhole/wormhole-traits-v1.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.sbtc]
 path = 'contracts/external/sbtc.clar'
 clarity_version = 3
@@ -301,16 +332,6 @@ epoch = 3.0
 
 [contracts.trait-dia-oracle]
 path = 'contracts/external/trait-dia-oracle.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.wormhole-core-v3]
-path = 'contracts/external/pyth/wormhole/wormhole-core-v3.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.wormhole-traits-v1]
-path = 'contracts/external/pyth/wormhole/wormhole-traits-v1.clar'
 clarity_version = 3
 epoch = 3.0
 

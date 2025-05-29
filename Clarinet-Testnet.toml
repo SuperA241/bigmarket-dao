@@ -15,15 +15,6 @@ contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
 contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
 
 [[project.requirements]]
-contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
-
-[[project.requirements]]
-contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait'
-
-[[project.requirements]]
-contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait'
-
-[[project.requirements]]
 contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-merkle-tree-keccak160-v1'
 
 [[project.requirements]]
@@ -33,25 +24,34 @@ contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3'
 contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-oracle-v3'
 
 [[project.requirements]]
-contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-traits-v1'
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait'
+
+[[project.requirements]]
+contract_id = 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait'
+
+[[project.requirements]]
+contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5'
 
 [[project.requirements]]
 contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-governance-v2'
 
 [[project.requirements]]
-contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-cursor-v2'
-
-[[project.requirements]]
-contract_id = 'SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-ecc-v1'
-
-[[project.requirements]]
 contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.wormhole-traits-v1'
+
+[[project.requirements]]
+contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-traits-v1'
 
 [[project.requirements]]
 contract_id = 'SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-pnau-decoder-v2'
 
+[[project.requirements]]
+contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-semi-fungible-token-trait'
+
+[[project.requirements]]
+contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait'
+
 [contracts.bdp000-bootstrap]
-path = 'contracts/proposals/testnet/bdp000-bootstrap-no-pyth.clar'
+path = 'contracts/proposals/testnet/bdp000-bootstrap.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -100,18 +100,13 @@ path = 'contracts/extensions/bme022-0-market-gating.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.bme023-0-market-bitcoin]
-path = 'contracts/extensions/bme023-0-market-bitcoin.clar'
+[contracts.bme024-0-market-predicting]
+path = 'contracts/extensions/bme024-0-market-predicting.clar'
 clarity_version = 3
 epoch = 3.0
 
-#[contracts.bme023-0-market-scalar-pyth]
-#path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
-#clarity_version = 3
-#epoch = 3.0
-
-[contracts.bme023-0-market-predicting]
-path = 'contracts/extensions/bme023-0-market-predicting.clar'
+[contracts.bme024-0-market-scalar-pyth]
+path = 'contracts/extensions/bme024-0-market-scalar-pyth.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -142,8 +137,42 @@ epoch = 3.0
 [repl.analysis]
 passes = []
 
+[contracts.hk-cursor-v2]
+path = 'contracts/external/pyth/hk/hk-cursor-v2.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-oracle-v3]
+path = 'contracts/external/pyth/pyth-oracle-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-storage-v3]
+path = 'contracts/external/pyth/pyth-storage-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.pyth-traits-v1]
+path = 'contracts/external/pyth/pyth-traits-v1.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wormhole-core-v3]
+path = 'contracts/external/pyth/wormhole/wormhole-core-v3.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.wormhole-traits-v1]
+path = 'contracts/external/pyth/wormhole/wormhole-traits-v1.clar'
+clarity_version = 3
+epoch = 3.0
+
 [repl.analysis.check_checker]
 strict = false
 trusted_sender = false
 trusted_caller = false
 callee_filter = false
+
+[repl.remote_data]
+enabled = false
+api_url = 'https://api.hiro.so'
