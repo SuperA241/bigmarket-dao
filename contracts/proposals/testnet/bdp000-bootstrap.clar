@@ -1,7 +1,7 @@
 ;; Title: BDP000 Bootstrap
 ;; Description:
 ;; Sets up and configure the DAO
-;; Allowed = ["ST2P1A2ECDAT2053BMYKHCN3ZTRKPX2RAKKY9WJ38, ST15GF59RDTKS7YY8VMKREQ7A0C1CP1NEJE23DMJA, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, ST3SJD6KV86N90W0MREGRTM1GWXN8Z91PF6W0BQKM"];
+;; Allowed = ["ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9, ST2MEFKR0BDYC9V8QDMZ13T4B9R7XASKAX24ETX9K, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, ST3SJD6KV86N90W0MREGRTM1GWXN8Z91PF6W0BQKM"];
 
 (impl-trait  'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.proposal-trait.proposal-trait)
 
@@ -32,38 +32,37 @@
 		(try! (contract-call? .bme003-0-core-proposals set-core-team-member 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ true))
 
 		;; Set executive team members.
-		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST2P1A2ECDAT2053BMYKHCN3ZTRKPX2RAKKY9WJ38 true))
-		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST15GF59RDTKS7YY8VMKREQ7A0C1CP1NEJE23DMJA true))
+		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9 true))
+		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST2MEFKR0BDYC9V8QDMZ13T4B9R7XASKAX24ETX9K true))
 		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY true))
 		(try! (contract-call? .bme004-0-core-execute set-executive-team-member 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ true))
 		(try! (contract-call? .bme004-0-core-execute set-signals-required u1)) ;; signal 2 out of 4 team members requied.
 
 		;; configure prediction markets
-		;; allowedCreators = ["ST2P1A2ECDAT2053BMYKHCN3ZTRKPX2RAKKY9WJ38, ST15GF59RDTKS7YY8VMKREQ7A0C1CP1NEJE23DMJA, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, ST3SJD6KV86N90W0MREGRTM1GWXN8Z91PF6W0BQKM"];
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-predicting 0x6cf941784773751b4c0f4f887f25121106b2b59d026b5bc52822953f9c0e5fef))
-		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-scalar-pyth 0x6cf941784773751b4c0f4f887f25121106b2b59d026b5bc52822953f9c0e5fef))
+		;; allowedCreators = ["ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9, ST2MEFKR0BDYC9V8QDMZ13T4B9R7XASKAX24ETX9K, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, ST3SJD6KV86N90W0MREGRTM1GWXN8Z91PF6W0BQKM"];
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-predicting 0x609431df6f28322b1c3b8e723afd0a14bb5603e8df3345ee4e8e842d64eb60cd))
+		(try! (contract-call? .bme022-0-market-gating set-merkle-root-by-principal .bme024-0-market-scalar-pyth 0x609431df6f28322b1c3b8e723afd0a14bb5603e8df3345ee4e8e842d64eb60cd))
 		
 		(try! (contract-call? .bme024-0-market-predicting set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
 		(try! (contract-call? .bme024-0-market-predicting set-dev-fund 'ST16RPMHH96463TP1AFEWZKQ12D7CY57YZGRWJR88))
 		(try! (contract-call? .bme024-0-market-predicting set-dao-treasury .bme006-0-treasury))
-		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.wrapped-stx true))
+		(try! (contract-call? .bme024-0-market-predicting set-creation-gated true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
-		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.wrapped-stx u100000000))
+		(try! (contract-call? .bme024-0-market-predicting set-market-fee-bips-max u1000))
+		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx u100000000))
 		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token u100000000))
 
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-resolution-agent 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-dev-fund 'ST16RPMHH96463TP1AFEWZKQ12D7CY57YZGRWJR88))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-dao-treasury .bme006-0-treasury))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-creation-gated true))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.wrapped-stx true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-market-fee-bips-max u300))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST31A25YBK50KFJ2QS0EQK9FNXEQJD4PR0828789R.wrapped-stx u100))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token u100))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-dev-fee-bips u100))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-dao-fee-bips u150))
-		(try! (contract-call? .bme024-0-market-scalar-pyth set-dispute-window-length u24))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-market-fee-bips-max u1000))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx u100000000))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token u100000000))
 
 		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
@@ -71,7 +70,7 @@
 		(try! (contract-call? .bme000-0-governance-token set-core-team-vesting
 			(list
 				{recipient: sender, start-block: burn-block-height, duration: u105120}
-				{recipient: 'ST15GF59RDTKS7YY8VMKREQ7A0C1CP1NEJE23DMJA, start-block: burn-block-height, duration: u105120} 
+				{recipient: 'ST2MEFKR0BDYC9V8QDMZ13T4B9R7XASKAX24ETX9K, start-block: burn-block-height, duration: u105120} 
 				{recipient: 'ST205A56XSM3F65NQBDBNN9FNZF5J9TBFH1MY1TJ1, start-block: burn-block-height, duration: u105120} 
 				{recipient: 'ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, start-block: burn-block-height, duration: u105120}
 				{recipient: 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, start-block: burn-block-height, duration: u105120}
