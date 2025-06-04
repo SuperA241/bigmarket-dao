@@ -571,7 +571,8 @@
     (treasury (get treasury md))
     (original-sender tx-sender)
 
-    (user-token-list (unwrap! (map-get? token-balances {market-id: market-id, user: tx-sender}) err-user-not-staked))
+    ;; user may have acquired shares via p2p and so have no entry under token-balances
+    (user-token-list (default-to (list u0 u0 u0 u0 u0 u0 u0 u0 u0 u0) (map-get? token-balances {market-id: market-id, user: tx-sender})))
     (user-tokens (unwrap! (element-at? user-token-list index-won) err-user-not-staked))
 
     (user-stake-list (unwrap! (map-get? stake-balances {market-id: market-id, user: tx-sender}) err-user-not-staked))

@@ -1,72 +1,215 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="23" failures="0" errors="0" time="76.608">
-    <testsuite name="tests/gating/account-gating.test.ts" timestamp="2025-05-29T09:34:39.095Z" hostname="Mikes-MacBook-Pro.local" tests="23" failures="0" errors="0" skipped="0" time="2.263">
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; err too few categories" time="0.105">
+<testsuites name="vitest tests" tests="10" failures="0" errors="0" time="1036.351">
+    <testsuite name="tests/cpmm/marketplace.test.ts" timestamp="2025-06-04T10:05:59.360Z" hostname="Mikes-MacBook-Pro.local" tests="10" failures="0" errors="0" skipped="0" time="1.057">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice can create a sell order" time="0.109">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create binary market ok" time="0.093">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice can create two sell orders if first is cancelled" time="0.106">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create ok" time="0.093">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice cant create two sell order" time="0.099">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake not ok on unknown category" time="0.098">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice can create two sell orders if first is cancelled" time="0.102">
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake ok" time="0.097">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; res agent cannot stake" time="0.096">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; create and stake spread ok" time="0.104">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve ok" time="0.103">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.101">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.102">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; resolve undisputed requires window to elapse" time="0.101">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim err-user-not-winner-or-claimed" time="0.103">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim loser ok" time="0.102">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="claiming errors &gt; claim winner ok" time="0.107">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-expecting-merkle-root-for-poll" time="0.092">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; err-unauthorised" time="0.09">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; ensure bme022 is valid extension" time="0.09">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can call set-merkle-root via proposal" time="0.1">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can&apos;t call create-market with invalid merkle lookup key" time="0.103">
-        </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; deployer can create-market if dao bootstrapped" time="0.091">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice sell order cant be fullfilled if her balance too low" time="0.106">
             <system-out>
-bme023-0-market-predicting: 0xa00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m1980n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; alice cannot create-market if dao bootstrapped" time="0.091">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure alice sell order can be fullfilled" time="0.109">
             <system-out>
-bme023-0-market-predicting: 0xa00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1 root= 0x26067618f71da1da6fa33c9b7f8d989b87f71ade892e1c55ce3b46ac79a7e64e
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m1780n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m200n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION" time="0.091">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure bob cant buy non existing order " time="0.1">
+        </testcase>
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure bob can buy after market resolves" time="0.102">
+        </testcase>
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; ensure order cant be filled twice" time="0.109">
             <system-out>
-ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9, ST2MEFKR0BDYC9V8QDMZ13T4B9R7XASKAX24ETX9K, ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY, ST105HCS1RTR7D61EZET8CWNEF24ENEN3V6ARBYBJ, ST3SJD6KV86N90W0MREGRTM1GWXN8Z91PF6W0BQKM, 
-GENERATE TESTNET MERKLE ROOTS FOR MARKET CREATION: ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.bme023-0-market-scalar-pyth: 0xd41a245e29413442ab12d18c93126f20de00e9853520cbfdeb5c2a1603beba13 root= 0x609431df6f28322b1c3b8e723afd0a14bb5603e8df3345ee4e8e842d64eb60cd
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m980n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m1000n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
 
             </system-out>
         </testcase>
-        <testcase classname="tests/gating/account-gating.test.ts" name="gating market  creation &gt; can create-market with valid merkle proof" time="0.108">
+        <testcase classname="tests/cpmm/marketplace.test.ts" name="claiming errors &gt; check bob and alice can both claim after p2p trade" time="0.114">
             <system-out>
-lookupRootKey=a00c6b9d338cdf3792e781e435ed93804033cb7e3fc88a2aa19de46ceb174db1
-RooT=5f24649277af2f6364faf35827dffe12b85f2f1dca5ae92733c72af91455aa64
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
-ddv:  [90mundefined[39m
+get-stake-balances: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
+get-stake-balances: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG {
+  type: [33m11[39m,
+  list: [
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m },
+    { type: [33m1[39m, value: [33m0n[39m }
+  ]
+}
 
             </system-out>
         </testcase>
