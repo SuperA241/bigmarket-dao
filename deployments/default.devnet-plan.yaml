@@ -165,7 +165,7 @@ plan:
         - contract-publish:
             contract-name: bme003-0-core-proposals
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 25940
+            cost: 30210
             path: contracts/extensions/bme003-0-core-proposals.clar
             anchor-block-only: true
             clarity-version: 3
@@ -249,14 +249,14 @@ plan:
         - contract-publish:
             contract-name: bme024-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 282950
+            cost: 285880
             path: contracts/extensions/bme024-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme024-0-market-scalar-pyth
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 309690
+            cost: 313500
             path: contracts/extensions/bme024-0-market-scalar-pyth.clar
             anchor-block-only: true
             clarity-version: 3
@@ -521,7 +521,7 @@ plan:
         - contract-publish:
             contract-name: wrapped-stx
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 8920
+            cost: 8360
             path: contracts/external/wrapped-stx.clar
             anchor-block-only: true
             clarity-version: 3
