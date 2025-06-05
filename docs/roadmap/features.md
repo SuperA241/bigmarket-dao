@@ -38,7 +38,7 @@ Create Telegram Bot that pulls market data and enables in app staking using TON.
 
 Intetration with Stacks Aapplication for wormhole would be a community win. Not sure of the application but expect it would be needed for cross chain staking.
 
-6. Bitcoin
+**6. Bitcoin**
 
 Our Bitcoin contract needs to be updated with CPMM functionality. The best way to manage this is to understand the differences between;
 
