@@ -2,11 +2,14 @@
 
 ### How to get involved <a href="#phase-ii-implementation-suggestions" id="phase-ii-implementation-suggestions"></a>
 
-Bets way to begin the journey and join the BigMarket team is through testing.
+Best way to begin the journey and join the BigMarket team is through testing.
 
-Testing the front end UI application will help become familiar with the features and also in finding bugs.
+#### Bug hunting
 
-Testing in the Clarity layer involves submitting Pull Requests for extending or improving our unit test framework.
+* testing the front end UI application will help become familiar with the features and also in finding bugs
+* testing in the Clarity layer involves submitting Pull Requests for extending or improving our unit test framework
+
+Becoming familiar with the application is of course a necessary first step.
 
 ### Feature Suggestions <a href="#phase-ii-implementation-suggestions" id="phase-ii-implementation-suggestions"></a>
 
