@@ -28,3 +28,7 @@
 * [Clarity Bitcoin](hackathon/clarity-bitcoin.md)
 * [Testnet Faucet](hackathon/testnet-faucet.md)
 * [Catamaran Swaps on Devnet](hackathon/catamaran-swaps-on-devnet.md)
+
+## ROADMAP
+
+* [Features](roadmap/features.md)
