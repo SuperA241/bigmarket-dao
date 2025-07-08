@@ -8,7 +8,7 @@
 ;; of the signal together with the signal strength strong/medium/weak. 
 
 (impl-trait .hedge-trait.hedge-trait)
-;;(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+;;(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 (use-trait ft-velar-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant err-unauthorised (err u32000))
@@ -18,7 +18,8 @@
 (define-constant err-token-incorrect (err u32004))
 (define-constant err-pair-not-found (err u32005))
 
-(define-data-var hedge-market-contract principal .bme024-0-market-scalar-pyth)
+(define-data-var hedge-market-contract principal .bme024-0-market-predicting)
+(define-data-var hedge-scalar-contract principal .bme024-0-market-scalar-pyth)
 (define-data-var hedge-multipliers (list 6 uint) (list u750 u500 u250 u250 u500 u750))
 
 (define-map swap-token-pairs (buff 32) {token-in: principal, token-out: principal, token0: principal, token1: principal})
@@ -44,6 +45,15 @@
     (try! (is-dao-or-extension))
     (var-set hedge-market-contract market-contract)
     (print {event: "hedge-market-contract", market-contract: market-contract})
+    (ok true)
+  )
+)
+
+(define-public (set-hedge-scalar-contract (market-contract principal))
+  (begin
+    (try! (is-dao-or-extension))
+    (var-set hedge-scalar-contract market-contract)
+    (print {event: "hedge-scalar-contract", market-contract: market-contract})
     (ok true)
   )
 )
@@ -88,7 +98,7 @@
 	(map-get? swap-token-pairs feed-id)
 )
 
-(define-public (perform-hedge (market-id uint) (predicted-index uint) (feed-id (buff 32)) (token0 <ft-velar-token>) (token1 <ft-velar-token>) (token-in <ft-velar-token>) (token-out <ft-velar-token>))
+(define-public (perform-swap-hedge (market-id uint) (predicted-index uint) (feed-id (buff 32)) (token0 <ft-velar-token>) (token1 <ft-velar-token>) (token-in <ft-velar-token>) (token-out <ft-velar-token>))
   (let (
     (pair (unwrap! (map-get? swap-token-pairs feed-id) err-pair-not-found))
     (is-bearish (< predicted-index u3))
@@ -98,15 +108,15 @@
   )
     ;; caller must be both an ACTIVE extension and sepecifically the scalar prediction market
     (try! (is-dao-or-extension))
-    (asserts! (is-eq contract-caller (var-get hedge-market-contract)) err-unauthorised)
+    (asserts! (is-eq contract-caller (var-get hedge-scalar-contract)) err-unauthorised)
     ;; Choose direction
-    ;;(try! (contract-call? .bme006-0-treasury swap-tokens
-    ;;  token0
-    ;;  token1
-    ;;  actual-token-in
-    ;;  actual-token-out
-    ;;  (unwrap! (compute-swap-amount actual-token-in predicted-index) err-unauthorised)
-    ;;))
+    (try! (contract-call? .bme006-0-treasury swap-tokens
+      token0
+      token1
+      actual-token-in
+      actual-token-out
+      (unwrap! (compute-swap-amount actual-token-in predicted-index) err-unauthorised)
+    ))
     ;; Store hedge record
     (map-set hedges
       market-id
@@ -115,7 +125,18 @@
         feed-id : feed-id 
       }
     )
-    (print {event: "perform-hedge", market-id: market-id, predicted: predicted-index, feed-id: feed-id})
+    (print {event: "perform-swap-hedge", market-id: market-id, predicted: predicted-index, feed-id: feed-id})
+    (ok true)
+  )
+)
+
+;; can be implemented in later contract
+(define-public (perform-custom-hedge (market-id uint) (predicted-index uint))
+  (begin 
+    ;; caller must be both an ACTIVE extension and sepecifically the scalar prediction market
+    (try! (is-dao-or-extension))
+    (asserts! (is-eq contract-caller (var-get hedge-market-contract)) err-unauthorised)
+    (print {event: "perform-custom-hedge", market-id: market-id, predicted: predicted-index})
     (ok true)
   )
 )

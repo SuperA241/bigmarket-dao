@@ -11,9 +11,15 @@
 
 (impl-trait 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.extension-trait.extension-trait)
 (use-trait prediction-market-trait .prediction-market-trait.prediction-market-trait)
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-velar-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
+
+;; SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-router
 
 (define-constant err-unauthorised (err u3000))
+(define-constant err-invalid-amount (err u3001))
+
+(define-constant slippage-bips u500)
+(define-constant share-fee-to 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to) 
 
 ;; --- Transferable traits
 
@@ -50,6 +56,30 @@
 )
 
 ;; --- Internal DAO functions
+
+(define-public (swap-tokens
+		(token0 <ft-velar-token>)
+		(token1 <ft-velar-token>)
+		(token-in <ft-velar-token>)
+		(token-out <ft-velar-token>)
+		(amount uint)
+	)
+	(let (
+			(min-amount (/ (* amount (- u10000 slippage-bips)) u10000))
+		)
+		;; Auth check: must be DAO or approved extension
+		(try! (is-dao-or-extension))
+
+		(asserts! (> amount u0) err-invalid-amount)
+		(asserts! (> amount min-amount) err-invalid-amount)
+
+		;; Call Velar swap
+		(try! (as-contract (contract-call? .univ2-router swap-exact-tokens-for-tokens u0 token0 token1 token-in token-out share-fee-to amount min-amount)))
+
+		(print {event: "swap-tokens", token-in: token-in, token-out: token-out, amount: amount, min-amount: min-amount})
+		(ok true)
+	)
+)
 
 ;; STX
 
@@ -156,7 +186,7 @@
 	(ok true)
 )
 
-(define-public (claim-for-dao (market <prediction-market-trait>) (market-id uint) (token <ft-token>))
+(define-public (claim-for-dao (market <prediction-market-trait>) (market-id uint) (token <ft-velar-token>))
   (begin
     (as-contract
       (contract-call? market claim-winnings market-id token)

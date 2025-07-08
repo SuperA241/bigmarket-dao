@@ -50,6 +50,8 @@
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token .bme000-0-governance-token true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token .tusdh true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token .tpepe true))
 		(try! (contract-call? .bme024-0-market-predicting set-market-fee-bips-max u1000))
 		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx u100000000))
 		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token u100000000))
@@ -60,6 +62,8 @@
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-creation-gated true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token .tusdh true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token .tpepe true))
 		;; STXUSD
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-price-band-width 0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17 u2000))
 		;; BTCUSD
@@ -88,6 +92,29 @@
 		(try! (contract-call? .bme000-0-governance-token bmg-mint-many
 			(list
 				{amount: (/ (* u1500 token-supply) u10000), recipient: .bme006-0-treasury}
+			)
+		))
+		(try! (contract-call? .tusdh mint-many
+			(list
+				{amount: u1000000000000000, recipient: .univ2-router}
+				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
+				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
+				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
+				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
+				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
+				{amount: u1000000000000000, recipient: 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP}
+			)
+		))
+
+		(try! (contract-call? .tpepe mint-many
+			(list
+				{amount: u1000000000000000, recipient: .univ2-router}
+				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
+				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
+				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
+				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
+				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
+				{amount: u1000000000000000, recipient: 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP}
 			)
 		))
 

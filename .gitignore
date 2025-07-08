@@ -33,5 +33,5 @@ coverage
 costs-reports.json
 node_modules
 docs/**
-reports/**
+reports
 deployments/default.devnet-plan.yaml

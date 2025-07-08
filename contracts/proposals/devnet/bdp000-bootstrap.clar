@@ -52,9 +52,13 @@
 		(try! (contract-call? .bme024-0-market-predicting set-creation-gated true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tusdh true))
+		(try! (contract-call? .bme024-0-market-predicting set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tpepe true))
 		(try! (contract-call? .bme024-0-market-predicting set-market-fee-bips-max u300))
 		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx u100))
 		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc u100))
+		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tpepe u100))
+		(try! (contract-call? .bme024-0-market-predicting set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tusdh u100))
 		(try! (contract-call? .bme024-0-market-predicting set-dev-fee-bips u100))
 		(try! (contract-call? .bme024-0-market-predicting set-dao-fee-bips u150))
 		(try! (contract-call? .bme024-0-market-predicting set-dispute-window-length u24))
@@ -66,9 +70,13 @@
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-creation-gated true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tusdh true))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tpepe true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-market-fee-bips-max u300))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wrapped-stx u100))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc u100))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tpepe u100))
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tusdh u100))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-dev-fee-bips u100))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-dao-fee-bips u150))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-dispute-window-length u24))
@@ -96,9 +104,33 @@
 		;;(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
 		;;(try! (contract-call? .bme024-0-market-predicting set-allowed-token .bme000-0-governance-token true))
-		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc sbtc-mint-many
+		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tusdh mint-many
 			(list
-				{amount: u1000000000000000, recipient: .bme023-0-market-bitcoin}
+				{amount: u1000000000000000, recipient: .univ2-router}
+				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
+				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
+				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
+				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
+				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
+				{amount: u1000000000000000, recipient: 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP}
+			)
+		))
+
+		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.tpepe mint-many
+			(list
+				{amount: u1000000000000000, recipient: .univ2-router}
+				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
+				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
+				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
+				{amount: u1000000000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}
+				{amount: u1000000000000000, recipient: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND}
+				{amount: u1000000000000000, recipient: 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP}
+			)
+		))
+
+		(try! (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sbtc mint-many
+			(list
+				{amount: u1000000000000000, recipient: .univ2-router}
 				{amount: u1000000000000000, recipient: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM}
 				{amount: u1000000000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
 				{amount: u1000000000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
@@ -122,6 +154,7 @@
 		(try! (contract-call? .bme000-0-governance-token bmg-mint-many
 			(list
 				{amount: u1000000000, recipient: sender}
+				;;{amount: u1000000000000000, recipient: .univ2-router}
 				{amount: u1000000000, recipient: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5}
 				{amount: u1000000000, recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG}
 				{amount: u1000000000, recipient: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC}

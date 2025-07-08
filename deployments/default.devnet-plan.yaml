@@ -16,14 +16,6 @@ plan:
             cost: 4680
             path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
             clarity-version: 1
-        - requirement-publish:
-            contract-id: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard
-            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            remap-principals:
-              SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 8400
-            path: ".cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
-            clarity-version: 1
       epoch: "2.0"
     - id: 1
       transactions:
@@ -70,6 +62,30 @@ plan:
       epoch: "2.05"
     - id: 2
       transactions:
+        - requirement-publish:
+            contract-id: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.ft-plus-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 6750
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.ft-plus-trait.clar"
+            clarity-version: 2
+        - requirement-publish:
+            contract-id: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to-trait
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 970
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to-trait.clar"
+            clarity-version: 2
+        - requirement-publish:
+            contract-id: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 8810
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to.clar"
+            clarity-version: 2
         - requirement-publish:
             contract-id: SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F.hk-cursor-v2
             remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -150,9 +166,16 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: univ2-router
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 12050
+            path: contracts/external/velar/univ2-router.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
             contract-name: bme006-0-treasury
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 54330
+            cost: 64130
             path: contracts/extensions/bme006-0-treasury.clar
             anchor-block-only: true
             clarity-version: 3
@@ -208,14 +231,14 @@ plan:
         - contract-publish:
             contract-name: hedge-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 2770
+            cost: 3420
             path: contracts/traits/hedge-trait.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: bme024-0-market-predicting
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 328280
+            cost: 327940
             path: contracts/extensions/bme024-0-market-predicting.clar
             anchor-block-only: true
             clarity-version: 3
@@ -243,21 +266,38 @@ plan:
         - contract-publish:
             contract-name: bme024-0-market-scalar-pyth
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 367240
+            cost: 367290
             path: contracts/extensions/bme024-0-market-scalar-pyth.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: sbtc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 23910
+            cost: 23760
             path: contracts/external/sbtc.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
+            contract-name: tpepe
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 23850
+            path: contracts/external/tpepe.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: tusdh
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 23850
+            path: contracts/external/tusdh.clar
+            anchor-block-only: true
+            clarity-version: 3
+      epoch: "3.0"
+    - id: 4
+      transactions:
+        - contract-publish:
             contract-name: bdp000-bootstrap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 110340
+            cost: 134740
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             anchor-block-only: true
             clarity-version: 3
@@ -275,9 +315,6 @@ plan:
             path: contracts/extensions/bme010-0-token-sale.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 4
-      transactions:
         - contract-publish:
             contract-name: bdp001-advance-stage-1
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -432,6 +469,9 @@ plan:
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-4.clar
             anchor-block-only: true
             clarity-version: 3
+      epoch: "3.0"
+    - id: 5
+      transactions:
         - contract-publish:
             contract-name: bdp001-sft-tokens-5
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -442,7 +482,7 @@ plan:
         - contract-publish:
             contract-name: bme032-0-scalar-strategy-hedge
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49200
+            cost: 57170
             path: contracts/extensions/bme032-0-scalar-strategy-hedge.clar
             anchor-block-only: true
             clarity-version: 3
@@ -453,9 +493,6 @@ plan:
             path: contracts/extensions/bme040-0-shares-marketplace.clar
             anchor-block-only: true
             clarity-version: 3
-      epoch: "3.0"
-    - id: 5
-      transactions:
         - contract-publish:
             contract-name: clarity-bitcoin-lib-v5
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -503,6 +540,13 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 1250
             path: contracts/external/trait-dia-oracle.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: univ2-share-fee-to
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 9220
+            path: contracts/external/velar/univ2-share-fee-to.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:

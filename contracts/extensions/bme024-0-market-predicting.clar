@@ -18,7 +18,7 @@
 ;; function will call the market specific hedge strategy if supplied or the default startegy otherwise.
 ;; The hedge strategy can be switched off by the dao.
 
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 (impl-trait .prediction-market-trait.prediction-market-trait)
 (use-trait hedge-trait .hedge-trait.hedge-trait)
 (use-trait ft-velar-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
@@ -480,18 +480,18 @@
       (stored-hedge-executor (default-to (var-get default-hedge-executor) (get hedge-executor md)))
       (predicted (get-biggest-pool-index (get stakes md)))
     )
+    ;; check hedging allowed
+    (asserts! (var-get hedging-enabled) err-hedging-disabled)
     ;; Ensure caller is the same contract that's stored
     (asserts! (not hedged) err-already-hedged)
     (asserts! (is-eq (contract-of hedge-executor) stored-hedge-executor) err-unauthorised)
-    ;; check hedging allowed
-    (asserts! (var-get hedging-enabled) err-hedging-disabled)
 
     ;; Time window check
     (asserts! (>= burn-block-height market-end) err-market-wrong-state)
     (asserts! (< burn-block-height (+ market-end (get cool-down-period md))) err-market-wrong-state)
 
     ;; Compute crowd-predicted outcome
-    (try! (contract-call? hedge-executor perform-hedge market-id predicted feed-id token0 token1 token-in token-out))
+    (try! (contract-call? hedge-executor perform-custom-hedge market-id predicted))
     (map-set markets market-id (merge md {hedged: true}))
     (print {event: "hedge-action", market-id: market-id, predicted: predicted})
     (ok predicted)

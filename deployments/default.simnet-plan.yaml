@@ -7,43 +7,33 @@ genesis:
     - name: deployer
       address: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_1
       address: ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_2
       address: ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_3
       address: ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_4
       address: ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_5
       address: ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_6
       address: ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_7
       address: ST3PF13W7Z0RRM42A8VZRVFQ75SV1K26RXEP8YGKJ
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_8
       address: ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
     - name: wallet_9
       address: STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
       balance: "100000000000000"
-      sbtc-balance: "1000000000"
   contracts:
     - costs
     - pox
@@ -58,19 +48,12 @@ genesis:
 plan:
   batches:
     - id: 0
-      transactions:
-        - emulated-contract-publish:
-            contract-name: nft-trait
-            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
-            path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
-            clarity-version: 1
-        - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
-            emulated-sender: SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE
-            path: ".cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
-            clarity-version: 1
+      transactions: []
       epoch: "2.0"
     - id: 1
+      transactions: []
+      epoch: "2.05"
+    - id: 2
       transactions:
         - emulated-contract-publish:
             contract-name: extension-trait
@@ -97,9 +80,38 @@ plan:
             emulated-sender: SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4
             path: ".cache/requirements/SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.clar"
             clarity-version: 1
-      epoch: "2.05"
-    - id: 2
+        - emulated-contract-publish:
+            contract-name: nft-trait
+            emulated-sender: SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9
+            path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.clar"
+            clarity-version: 1
+      epoch: "2.1"
+    - id: 3
+      transactions: []
+      epoch: "2.1"
+    - id: 4
+      transactions: []
+      epoch: "2.1"
+    - id: 5
+      transactions: []
+      epoch: "2.1"
+    - id: 6
       transactions:
+        - emulated-contract-publish:
+            contract-name: ft-plus-trait
+            emulated-sender: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.ft-plus-trait.clar"
+            clarity-version: 2
+        - emulated-contract-publish:
+            contract-name: univ2-share-fee-to-trait
+            emulated-sender: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to-trait.clar"
+            clarity-version: 2
+        - emulated-contract-publish:
+            contract-name: univ2-share-fee-to
+            emulated-sender: SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1
+            path: ".cache/requirements/SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to.clar"
+            clarity-version: 2
         - emulated-contract-publish:
             contract-name: hk-cursor-v2
             emulated-sender: SP2J933XB2CP2JQ1A4FGN8JA968BBG3NK3EKZ7Q9F
@@ -116,7 +128,19 @@ plan:
             path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5.clar"
             clarity-version: 2
       epoch: "2.4"
-    - id: 3
+    - id: 7
+      transactions: []
+      epoch: "2.4"
+    - id: 8
+      transactions: []
+      epoch: "2.4"
+    - id: 9
+      transactions: []
+      epoch: "2.4"
+    - id: 10
+      transactions: []
+      epoch: "2.4"
+    - id: 11
       transactions:
         - emulated-contract-publish:
             contract-name: sbtc-registry
@@ -127,11 +151,6 @@ plan:
             contract-name: sbtc-token
             emulated-sender: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4
             path: ".cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token.clar"
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: sbtc-deposit
-            emulated-sender: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4
-            path: ".cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-deposit.clar"
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bigmarket-dao
@@ -152,6 +171,11 @@ plan:
             contract-name: prediction-market-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/prediction-market-trait.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: univ2-router
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/velar/univ2-router.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme006-0-treasury
@@ -229,10 +253,23 @@ plan:
             path: contracts/external/sbtc.clar
             clarity-version: 3
         - emulated-contract-publish:
+            contract-name: tpepe
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/tpepe.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: tusdh
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/tusdh.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: bdp000-bootstrap
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/bdp000-bootstrap.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 12
+      transactions:
         - emulated-contract-publish:
             contract-name: bdp000-core-team-sunset-height
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -243,9 +280,6 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme010-0-token-sale.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 4
-      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-1
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -361,6 +395,9 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 13
+      transactions:
         - emulated-contract-publish:
             contract-name: bme032-0-scalar-strategy-hedge
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -371,9 +408,6 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme040-0-shares-marketplace.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 5
-      transactions:
         - emulated-contract-publish:
             contract-name: clarity-bitcoin-lib-v5
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -410,6 +444,11 @@ plan:
             path: contracts/external/trait-dia-oracle.clar
             clarity-version: 3
         - emulated-contract-publish:
+            contract-name: univ2-share-fee-to
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/velar/univ2-share-fee-to.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: wormhole-traits-v1
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/pyth/wormhole/wormhole-traits-v1.clar
@@ -425,7 +464,37 @@ plan:
             path: contracts/external/wrapped-stx.clar
             clarity-version: 3
       epoch: "3.0"
-    - id: 6
+    - id: 14
+      transactions: []
+      epoch: "3.0"
+    - id: 15
+      transactions: []
+      epoch: "3.0"
+    - id: 16
+      transactions: []
+      epoch: "3.0"
+    - id: 17
+      transactions: []
+      epoch: "3.0"
+    - id: 18
+      transactions: []
+      epoch: "3.0"
+    - id: 19
+      transactions: []
+      epoch: "3.0"
+    - id: 20
+      transactions: []
+      epoch: "3.0"
+    - id: 21
+      transactions: []
+      epoch: "3.0"
+    - id: 22
+      transactions: []
+      epoch: "3.0"
+    - id: 23
+      transactions: []
+      epoch: "3.0"
+    - id: 24
       transactions:
         - emulated-contract-publish:
             contract-name: wormhole-traits-v1
@@ -457,4 +526,16 @@ plan:
             emulated-sender: SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY
             path: ".cache/requirements/SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3.clar"
             clarity-version: 3
+      epoch: "3.1"
+    - id: 25
+      transactions: []
+      epoch: "3.1"
+    - id: 26
+      transactions: []
+      epoch: "3.1"
+    - id: 27
+      transactions: []
+      epoch: "3.1"
+    - id: 28
+      transactions: []
       epoch: "3.1"

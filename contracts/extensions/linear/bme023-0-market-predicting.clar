@@ -16,7 +16,7 @@
 ;; If the dispute window passes without challenge or once the vote concludes the market is fully
 ;; resolved and claims can then be made.
 
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 (impl-trait  .prediction-market-trait.prediction-market-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
