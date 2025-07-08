@@ -1,10 +1,7 @@
 /// <reference types="vitest" />
 
-import { defineConfig } from "vite";
-import {
-  vitestSetupFilePath,
-  getClarinetVitestsArgv,
-} from "@hirosystems/clarinet-sdk/vitest";
+import { defineConfig } from 'vite';
+import { vitestSetupFilePath, getClarinetVitestsArgv } from '@hirosystems/clarinet-sdk/vitest';
 
 /*
   In this file, Vitest is configured so that it works seamlessly with Clarinet and the Simnet.
@@ -22,34 +19,37 @@ import {
 */
 
 export default defineConfig({
-  test: {
-    reporters: ["default", "json", "junit"], // add or remove reporters as needed
-    include: ["./tests/**/*.test.ts"], // Include only Clarinet tests
-    outputFile: {
-      json: "reports/report.json",
-      junit: "reports/report.xml",
-    },
-    test: {
-      sourcemap: true, // Ensure sourcemaps are included
-      fullStack: true, // Enables full stack traces
-    },  
-    silent: false, // if true, suppresses all output
-    watch: true, // enables watch mode
-    environment: "clarinet", // use vitest-environment-clarinet
-    pool: "forks",
-    poolOptions: {
-      threads: { singleThread: true },
-      forks: { singleFork: true },
-    },
-    setupFiles: [
-      vitestSetupFilePath,
-      // custom setup files can be added here
-    ],
-    environmentOptions: {
-      clarinet: {
-        ...getClarinetVitestsArgv(),
-        // add or override options
-      },
-    },
-  },
+	test: {
+		reporters: ['default', 'json', 'junit'], // add or remove reporters as needed
+		include: ['./tests/**/*.test.ts'], // Include only Clarinet tests
+		outputFile: {
+			json: 'reports/report.json',
+			junit: 'reports/report.xml'
+		},
+		chaiConfig: {
+			includeStack: true // <-- show the whole trace
+		},
+		test: {
+			sourcemap: true, // Ensure sourcemaps are included
+			fullStack: true // Enables full stack traces
+		},
+		silent: false, // if true, suppresses all output
+		watch: true, // enables watch mode
+		environment: 'clarinet', // use vitest-environment-clarinet
+		pool: 'forks',
+		poolOptions: {
+			threads: { singleThread: true },
+			forks: { singleFork: true }
+		},
+		setupFiles: [
+			vitestSetupFilePath
+			// custom setup files can be added here
+		],
+		environmentOptions: {
+			clarinet: {
+				...getClarinetVitestsArgv()
+				// add or override options
+			}
+		}
+	}
 });

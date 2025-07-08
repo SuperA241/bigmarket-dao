@@ -22,11 +22,9 @@ export const proposalVoting = 'bme001-0-proposal-voting';
 export const coreProposals = 'bme003-0-core-proposals';
 export const marketVoting = 'bme021-0-market-voting';
 export const marketGating = 'bme022-0-market-gating';
-export const marketPredicting = 'bme023-0-market-predicting';
+export const marketPredicting = 'bme024-0-market-predicting';
 export const marketPredictingCPMM = 'bme024-0-market-predicting';
 export const marketScalingCPMM = 'bme024-0-market-scalar-pyth';
-export const marketScalarDia = 'bme023-0-market-scalar-dia';
-export const marketScalarPyth = 'bme023-0-market-scalar-pyth';
 export const reputationSft = 'bme030-0-reputation-token';
 export const treasury = 'bme006-0-treasury';
 
@@ -75,7 +73,7 @@ export async function assertDataVarNumber(contract: string, varName: string, val
 	let result = Number((simnet.getDataVar(contract, varName) as any).value);
 	expect(result).toEqual(value);
 }
-export async function assertContractBalance(contract: string, value: bigint | undefined) {
+export function assertContractBalance(contract: string, value: bigint | undefined) {
 	let stxBalances = simnet.getAssetsMap().get('STX'); // Replace if contract's principal
 	//console.log('contractBalance : ' + contract + ' : ' + stxBalances?.get(`${deployer}.${contract}`));
 	expect(stxBalances?.get(`${deployer}.${contract}`)).toEqual(value);
@@ -91,7 +89,7 @@ export async function allowMarketCreators(user: string) {
 	const allowedCreators = [alice, bob, tom, betty, wallace];
 	const { tree, root } = generateMerkleTreeUsingStandardPrincipal(allowedCreators);
 	// console.log('Leaves (Tree):', tree.getLeaves().map(bytesToHex));
-	const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme023-0-market-predicting');
+	const lookupRootKey = contractId2Key('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme024-0-market-predicting');
 	console.log('root=' + root);
 	console.log('lookupRootKey=' + lookupRootKey);
 	const proposal = `bdp001-gating`;
@@ -102,7 +100,7 @@ export async function allowMarketCreators(user: string) {
 }
 
 export async function assertStakeBalance(user: string, againstValue: number, forValue: number) {
-	let data = await simnet.callReadOnlyFn('bme023-0-market-predicting', 'get-stake-balances', [Cl.uint(0), Cl.principal(user)], alice);
+	let data = await simnet.callReadOnlyFn('bme024-0-market-predicting', 'get-stake-balances', [Cl.uint(0), Cl.principal(user)], alice);
 	expect(data.result).toEqual(
 		Cl.some(Cl.list([Cl.uint(forValue), Cl.uint(againstValue), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)]))
 	);
@@ -180,7 +178,7 @@ export async function passProposalByCoreVote(proposal: string, errorCode?: numbe
 	// await isValidExtension(`${deployer}.bme006-0-treasury`);
 	// await isValidExtension(`${deployer}.bme022-0-market-gating`);
 	// await isValidExtension(`${deployer}.bme021-0-market-voting`);
-	// await isValidExtension(`${deployer}.bme023-0-market-predicting`);
+	// await isValidExtension(`${deployer}.bme024-0-market-predicting`);
 
 	const coreProposeResponse = await simnet.callPublicFn(
 		coreProposals,

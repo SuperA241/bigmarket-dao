@@ -17,19 +17,21 @@ async function assertBalance(user: string, tier: number, balance: number) {
 
 describe('prediction errors', () => {
 	it("user can't commit more than their balance", async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let response = await createBinaryMarket(0, deployer, stxToken);
-		response = await predictCategory(alice, 0, 'yay', 9007199254740990, 10011);
+		response = await predictCategory(alice, 0, 'yay', 9007199254, 10031);
 	});
 
 	it('err-already-concluded', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let response = await createBinaryMarket(0, deployer, stxToken);
-		assertBalance(deployer, 7, 4);
+		expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
+		await assertBalance(deployer, 0, 0);
 
 		response = await predictCategory(alice, 0, 'yay', 1000000, 1);
 		// conclude
-		response = await simnet.callPublicFn('bme023-0-market-predicting', 'resolve-market', [Cl.uint(0), Cl.stringAscii('yay')], bob);
+		simnet.mineEmptyBlocks(288);
+		response = await simnet.callPublicFn('bme024-0-market-predicting', 'resolve-market', [Cl.uint(0), Cl.stringAscii('yay')], bob);
 		expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
 
 		response = await predictCategory(alice, 0, 'yay', 1000000, 10018);
@@ -39,7 +41,7 @@ describe('prediction errors', () => {
 
 describe('prediction fees and stakes', () => {
 	it('user transfers exact stake', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let balances = simnet.getAssetsMap().get('STX');
 		// console.log("prediction fees and stakes:", balances);
 
@@ -50,13 +52,14 @@ describe('prediction fees and stakes', () => {
 
 		expect(response.result).toEqual(Cl.ok(Cl.uint(1)));
 		response = await predictCategory(bob, 0, 'nay', 10000000, 0);
-		const data = await simnet.callReadOnlyFn('bme023-0-market-predicting', 'get-market-data', [Cl.uint(0)], alice);
-		expect(data.result).toEqual(
+		const data = await simnet.callReadOnlyFn('bme024-0-market-predicting', 'get-market-data', [Cl.uint(0)], alice);
+		expect(data.result).toMatchObject(
 			Cl.some(
 				Cl.tuple({
 					creator: principalCV(deployer),
 					'market-data-hash': bufferFromHex(metadataHash()),
-					stakes: listCV([uintCV(9900000), uintCV(1980000), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+					'stake-tokens': listCV([uintCV(69800000n), uintCV(53960000n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+					stakes: listCV([uintCV(65224267n), uintCV(53669385n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
 					categories: listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
 					outcome: noneCV(),
 					'resolution-burn-height': uintCV(0),
@@ -71,17 +74,18 @@ describe('prediction fees and stakes', () => {
 	});
 
 	it('fees are collected up front from prediction stakes', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let response = await createBinaryMarket(0, deployer, stxToken);
 		response = await predictCategory(alice, 0, 'yay', 2000000, 1);
 		response = await predictCategory(bob, 0, 'nay', 10000000, 0);
-		const data = await simnet.callReadOnlyFn('bme023-0-market-predicting', 'get-market-data', [Cl.uint(0)], alice);
-		expect(data.result).toEqual(
+		const data = await simnet.callReadOnlyFn('bme024-0-market-predicting', 'get-market-data', [Cl.uint(0)], alice);
+		expect(data.result).toMatchObject(
 			Cl.some(
 				Cl.tuple({
 					creator: principalCV(deployer),
 					'market-data-hash': bufferFromHex(metadataHash()),
-					stakes: listCV([uintCV(9900000), uintCV(1980000), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+					'stake-tokens': listCV([uintCV(69800000n), uintCV(53960000n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
+					stakes: listCV([uintCV(65224267n), uintCV(53669385n), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0), uintCV(0)]),
 					categories: listCV([stringAsciiCV('nay'), stringAsciiCV('yay')]),
 					outcome: noneCV(),
 					'resolution-burn-height': uintCV(0),
@@ -96,13 +100,13 @@ describe('prediction fees and stakes', () => {
 	});
 
 	it('alice hedges yes and no', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let response = await createBinaryMarket(0, deployer, stxToken);
 		response = await predictCategory(alice, 0, 'yay', 2000000, 1);
 
 		// check stake
 		let aliceStake = simnet.getMapEntry(
-			'bme023-0-market-predicting',
+			'bme024-0-market-predicting',
 			'stake-balances',
 			Cl.tuple({
 				'market-id': uintCV(0),
@@ -110,13 +114,13 @@ describe('prediction fees and stakes', () => {
 			})
 		);
 		expect(aliceStake).toEqual(
-			Cl.some(Cl.list([Cl.uint(0), Cl.uint(1980000), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)]))
+			Cl.some(Cl.list([Cl.uint(0), Cl.uint(3669385n), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)]))
 		);
 
 		response = await predictCategory(alice, 0, 'nay', 4000000, 0, stxToken);
 
 		aliceStake = simnet.getMapEntry(
-			'bme023-0-market-predicting',
+			'bme024-0-market-predicting',
 			'stake-balances',
 			Cl.tuple({
 				'market-id': uintCV(0),
@@ -124,7 +128,7 @@ describe('prediction fees and stakes', () => {
 			})
 		);
 		expect(aliceStake).toEqual(
-			Cl.some(Cl.list([Cl.uint(3960000), Cl.uint(1980000), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)]))
+			Cl.some(Cl.list([Cl.uint(7338770n), Cl.uint(3669385n), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0), Cl.uint(0)]))
 		);
 	});
 });

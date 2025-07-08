@@ -6,39 +6,39 @@ const simnet = await setupSimnet();
 
 describe('custom majority tests', () => {
 	it('check value set by proposal', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(alice, proposal, 6600);
 		ensureProposalDataMatches(proposal, 0, 0, 6600, alice, false, false);
 	});
 
 	it('check none set by proposal', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(alice, proposal);
 		ensureProposalDataMatches(proposal, 0, 0, -1, alice, false, false);
 	});
 
 	it('check err-not-majority', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(alice, proposal, 80, 3011);
 	});
 
 	it('check err-not-majority for 50%', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(alice, proposal, 5000, 3011);
 	});
 
 	it('check ok for 50.01%', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(alice, proposal, 5001);
 	});
 
 	it('check vote cant conclude before end height', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(deployer, proposal);
 		simnet.mineEmptyBurnBlocks(20);
@@ -50,7 +50,7 @@ describe('custom majority tests', () => {
 	});
 
 	it('check tied vote concludes false', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(deployer, proposal);
 		simnet.mineEmptyBurnBlocks(20);
@@ -63,7 +63,7 @@ describe('custom majority tests', () => {
 	});
 
 	it('check vote less than custom concludes false', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(deployer, proposal, 5001);
 		simnet.mineEmptyBurnBlocks(20);
@@ -76,7 +76,7 @@ describe('custom majority tests', () => {
 	});
 
 	it('check vote equal to custom concludes false', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(deployer, proposal, 5001);
 		simnet.mineEmptyBurnBlocks(20);
@@ -89,7 +89,7 @@ describe('custom majority tests', () => {
 	});
 
 	it('check vote greater than custom concludes true', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		const proposal = 'bdp001-initialise-token-sale';
 		await corePropose(deployer, proposal, 5001);
 		simnet.mineEmptyBurnBlocks(20);

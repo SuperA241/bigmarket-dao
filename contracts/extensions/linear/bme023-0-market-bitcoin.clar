@@ -1,6 +1,6 @@
 ;; Title: BME023 Market bitcoin predictions
 ;; Synopsis:
-;; Implements prediciton markets for bitcoin users (see also bme023-0-market-predicting).
+;; Implements prediciton markets for bitcoin users (see also bme02-0-market-predicting).
 ;; Description:
 ;; Provide binary and categorical prediction markets with 
 ;; bitcoin only transactions - no stx needed for gas. Works with 

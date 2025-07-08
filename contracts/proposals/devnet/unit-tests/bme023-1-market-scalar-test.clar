@@ -1,8 +1,8 @@
 ;; Title: test contrcat for reading pyth price given a feed id
 ;; Synopsis:
-;; Implements scalar prediciton markets (see also bme023-0-market-predicting).
+;; Implements scalar prediciton markets (see also bme024-0-market-predicting).
 ;; Description:
-;; Scalar markets differ from binary/categorical markets (see bme023-0-market-predicting)
+;; Scalar markets differ from binary/categorical markets (see bme024-0-market-predicting)
 ;; in the type of categories and the mechanism for rsolution:
 ;; Firstly, the categories are contiguous ranges of numbers with a min and max value. The winning
 ;; category is decided by the range that the outcome selects. Secondly, scalar market outcomes

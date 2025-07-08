@@ -50,6 +50,15 @@ contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-semi-fungible-tok
 [[project.requirements]]
 contract_id = 'SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait'
 
+[[project.requirements]]
+contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-library'
+
+[[project.requirements]]
+contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-core'
+
+[[project.requirements]]
+contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-router'
+
 [contracts.bdp000-bootstrap]
 path = 'contracts/proposals/testnet/bdp000-bootstrap.clar'
 clarity_version = 3
@@ -115,6 +124,11 @@ path = 'contracts/extensions/bme030-0-reputation-token.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.bme032-0-scalar-strategy-hedge]
+path = 'contracts/extensions/bme032-0-scalar-strategy-hedge.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.governance-token-trait]
 path = 'contracts/traits/governance-token-trait.clar'
 clarity_version = 3
@@ -122,6 +136,11 @@ epoch = 3.0
 
 [contracts.prediction-market-trait]
 path = 'contracts/traits/prediction-market-trait.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.hedge-trait]
+path = 'contracts/traits/hedge-trait.clar'
 clarity_version = 3
 epoch = 3.0
 

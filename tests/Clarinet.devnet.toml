@@ -122,16 +122,6 @@ path = 'contracts/extensions/bme023-0-market-bitcoin.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.bme023-0-market-predicting]
-path = 'contracts/extensions/bme023-0-market-predicting.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.bme023-0-market-scalar-pyth]
-path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
-clarity_version = 3
-epoch = 3.0
-
 [contracts.bdp000-bootstrap]
 path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
 clarity_version = 3

@@ -6,98 +6,107 @@ const simnet = await setupSimnet();
 // bob =
 describe('claiming errors', () => {
 	it('ensure alice can create a sell order', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
 	});
 
 	it('ensure alice can create two sell orders if first is cancelled', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
-		cancelShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await cancelShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
 	});
 
 	it('ensure alice cant create two sell order', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100, 40001);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100, 40001);
 	});
 
 	it('ensure alice can create two sell orders if first is cancelled', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
-		cancelShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await cancelShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
 	});
 
 	it('ensure alice sell order cant be fullfilled if her balance too low', async () => {
-		createCategoricalMarket(0);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 2000, 100);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0, 10013);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
+		await createCategoricalMarket(0);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 2000, 100);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0, 10013);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
 	});
 
 	it('ensure alice sell order can be fullfilled', async () => {
-		createCategoricalMarket(0);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
+		await createCategoricalMarket(0);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
 	});
 
 	it('ensure bob cant buy non existing order ', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		predictCategory(fred, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, fred, 0, 0, 40003);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await predictCategory(fred, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 200, 100);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, fred, 0, 0, 40003);
 	});
 
-	it('ensure bob can buy after market resolves', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
+	it('ensure bob order expires', async () => {
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
 		const result = await resolveMarket(0, 'cheetah', 2);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0, 10020);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0, 40004);
+	});
+
+	it('ensure bob order can buy if expiry pushed', async () => {
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'tiger', 1000, 1);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 1, 1000, 300);
+		//const result = await resolveMarket(0, 'cheetah', 2);
+		//await resolveMarketUndisputed(0);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 1);
 	});
 
 	it('ensure order cant be filled twice', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, fred, alice, 0, 0, 40003);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, fred, alice, 0, 0, 40003);
 	});
 
 	it('check bob and alice can both claim after p2p trade', async () => {
-		createCategoricalMarket(0);
-		predictCategory(alice, 0, 'lion', 1000, 0);
-		createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
-		fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
+		await createCategoricalMarket(0);
+		await predictCategory(alice, 0, 'lion', 1000, 0);
+		await createShareOrder(`${deployer}.${marketPredictingCPMM}`, alice, 0, 0, 1000, 100);
+		await fillShareOrder(`${deployer}.${marketPredictingCPMM}`, bob, alice, 0, 0);
 
 		const result = await resolveMarket(0, 'lion', 0);
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketPredictingCPMM, 100000990n);
 
-		claim(alice, 0, 2939);
-		claim(bob, 0, 2999);
-		claimDao(`${deployer}.bme024-0-market-predicting`, 0, 99995049);
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
+		await claim(alice, 0, 2939);
+		await claim(bob, 0, 2999);
+		await claimDao(`${deployer}.bme024-0-market-predicting`, 0, 99995049);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
 		assertContractBalance(marketPredictingCPMM, 3n);
 	});
 });
@@ -106,8 +115,8 @@ describe('claiming errors', () => {
   The test below is an example. Learn more in the clarinet-sdk readme:
   https://github.com/hirosystems/clarinet/blob/develop/components/clarinet-sdk/README.md
 */
-async function printMarketBalances(marketId: number) {
-	let data = await simnet.callReadOnlyFn('bme024-0-market-predicting', 'get-market-data', [Cl.uint(marketId)], alice);
+async function printMarketBalances(user: string, marketId: number) {
+	let data = await simnet.callReadOnlyFn('bme024-0-market-predicting', 'get-market-data', [Cl.uint(marketId)], user);
 	//console.log("categories", (data.result as any).value.data.categories)
 	//console.log("outcome", (data.result as any).value.data.outcome)
 	//console.log("stakes", (data.result as any).value.data.stakes)
@@ -127,7 +136,11 @@ export async function createBinaryMarketWithGating(marketId: number, proof: any,
 			Cl.principal(token ? token : stxToken),
 			Cl.bufferFromHex(key ? key : metadataHash()),
 			proof,
-			Cl.principal(`${deployer}.bme022-0-market-gating`)
+			Cl.principal(`${deployer}.bme022-0-market-gating`),
+			Cl.none(),
+			Cl.none(),
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -148,7 +161,11 @@ export async function createBinaryMarketWithFees(marketId: number, fee: number, 
 			Cl.principal(token ? token : stxToken),
 			Cl.bufferFromHex(metadataHash()),
 			Cl.list([]),
-			Cl.principal(`${deployer}.bme022-0-market-gating`)
+			Cl.principal(`${deployer}.bme022-0-market-gating`),
+			Cl.none(),
+			Cl.none(),
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -165,7 +182,11 @@ export async function createBinaryMarketWithErrorCode(errorCode: number, fee?: n
 			Cl.principal(token ? token : stxToken),
 			Cl.bufferFromHex(metadataHash()),
 			Cl.list([]),
-			Cl.principal(`${deployer}.bme022-0-market-gating`)
+			Cl.principal(`${deployer}.bme022-0-market-gating`),
+			Cl.none(),
+			Cl.none(),
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -183,7 +204,10 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 			Cl.bufferFromHex(metadataHash()),
 			Cl.list([]),
 			Cl.principal(`${deployer}.bme022-0-market-gating`),
-			Cl.uint(100000000)
+			Cl.none(),
+			Cl.none(),
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -191,7 +215,7 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 	return response;
 }
 async function createCategoricalMarket(marketId: number, creator?: string, token?: string) {
-	constructDao(simnet);
+	await constructDao(simnet);
 	let response = await simnet.callPublicFn(
 		'bme024-0-market-predicting',
 		'create-market',
@@ -202,7 +226,10 @@ async function createCategoricalMarket(marketId: number, creator?: string, token
 			Cl.bufferFromHex(metadataHash()),
 			Cl.list([]),
 			Cl.principal(`${deployer}.bme022-0-market-gating`),
-			Cl.uint(100000000)
+			Cl.none(),
+			Cl.none(),
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -227,6 +254,7 @@ async function predictCategory(user: string, marketId: number, category: string,
 	return response;
 }
 async function resolveMarket(marketId: number, category: string, winner: number, token?: string) {
+	simnet.mineEmptyBlocks(288);
 	let response = await simnet.callPublicFn('bme024-0-market-predicting', 'resolve-market', [Cl.uint(marketId), Cl.stringAscii(category)], bob);
 	expect(response.result).toEqual(Cl.ok(Cl.uint(winner)));
 	return response;

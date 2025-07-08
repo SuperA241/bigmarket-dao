@@ -60,10 +60,19 @@
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-creation-gated true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx true))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-allowed-token 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token true))
+		;; STXUSD
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-price-band-width 0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17 u2000))
+		;; BTCUSD
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-price-band-width 0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43 u100))
+		;; SOLUSD
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-price-band-width 0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d u500))
+		;; ETHUSD
+		(try! (contract-call? .bme024-0-market-scalar-pyth set-price-band-width 0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace u1000))
+		
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-market-fee-bips-max u1000))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9.wrapped-stx u100000000))
 		(try! (contract-call? .bme024-0-market-scalar-pyth set-token-minimum-seed 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token u100000000))
-
+		
 		(try! (contract-call? .bme010-0-token-sale initialize-ido))
 
 		;; core team voting rights unlock over u105120 bitcoin block period 

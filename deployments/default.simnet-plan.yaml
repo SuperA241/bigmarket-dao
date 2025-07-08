@@ -92,6 +92,11 @@ plan:
             emulated-sender: SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V
             path: ".cache/requirements/SPDBEG5X8XD50SPM1JJH0E5CTXGDV5NJTKAKKR5V.sip013-transfer-many-trait.clar"
             clarity-version: 1
+        - emulated-contract-publish:
+            contract-name: sip-010-trait-ft-standard
+            emulated-sender: SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4
+            path: ".cache/requirements/SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.clar"
+            clarity-version: 1
       epoch: "2.05"
     - id: 2
       transactions:
@@ -189,19 +194,14 @@ plan:
             path: contracts/extensions/linear/bme023-0-market-bitcoin.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme023-0-market-predicting
+            contract-name: hedge-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/linear/bme023-0-market-predicting.clar
+            path: contracts/traits/hedge-trait.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: dia-oracle
+            contract-name: bme024-0-market-predicting
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/devnet/unit-tests/dia-oracle.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: bme023-0-market-scalar-dia
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/linear/bme023-0-market-scalar-dia.clar
+            path: contracts/extensions/bme024-0-market-predicting.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: pyth-traits-v1
@@ -219,16 +219,6 @@ plan:
             path: contracts/external/pyth/pyth-storage-v3.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme023-0-market-scalar-pyth
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/linear/bme023-0-market-scalar-pyth.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: bme024-0-market-predicting
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bme024-0-market-predicting.clar
-            clarity-version: 3
-        - emulated-contract-publish:
             contract-name: bme024-0-market-scalar-pyth
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme024-0-market-scalar-pyth.clar
@@ -238,9 +228,6 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/sbtc.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 4
-      transactions:
         - emulated-contract-publish:
             contract-name: bdp000-bootstrap
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -256,6 +243,9 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme010-0-token-sale.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 4
+      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-1
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -366,23 +356,33 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-4.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 5
-      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-sft-tokens-5
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.clar
             clarity-version: 3
         - emulated-contract-publish:
+            contract-name: bme032-0-scalar-strategy-hedge
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme032-0-scalar-strategy-hedge.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: bme040-0-shares-marketplace
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme040-0-shares-marketplace.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 5
+      transactions:
         - emulated-contract-publish:
             contract-name: clarity-bitcoin-lib-v5
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/clarity-bitcoin-lib-v5.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: dia-oracle
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/proposals/devnet/unit-tests/dia-oracle.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: extension-trait
