@@ -1,4 +1,4 @@
-;; Title: pepe test
+;; Title: pepe test for bigmarket oin stacks testnet
 ;; Description:
 ;; simple pepe sip 10 for testing market creation and staking.
 
@@ -12,7 +12,7 @@
 (define-data-var token-name (string-ascii 32) "bm-pepe")
 (define-data-var token-symbol (string-ascii 10) "bm-pepe")
 (define-data-var token-uri (optional (string-utf8 256)) (some u"https://bm-pepe.net"))
-(define-data-var token-decimals uint u8)
+(define-data-var token-decimals uint u6)
 
 ;; --- Authorisation check
 

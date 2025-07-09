@@ -96,6 +96,18 @@ plan:
       transactions: []
       epoch: "2.1"
     - id: 6
+      transactions: []
+      epoch: "2.1"
+    - id: 7
+      transactions: []
+      epoch: "2.1"
+    - id: 8
+      transactions: []
+      epoch: "2.1"
+    - id: 9
+      transactions: []
+      epoch: "2.1"
+    - id: 10
       transactions:
         - emulated-contract-publish:
             contract-name: ft-plus-trait
@@ -128,19 +140,31 @@ plan:
             path: ".cache/requirements/SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.clarity-bitcoin-lib-v5.clar"
             clarity-version: 2
       epoch: "2.4"
-    - id: 7
-      transactions: []
-      epoch: "2.4"
-    - id: 8
-      transactions: []
-      epoch: "2.4"
-    - id: 9
-      transactions: []
-      epoch: "2.4"
-    - id: 10
-      transactions: []
-      epoch: "2.4"
     - id: 11
+      transactions: []
+      epoch: "2.4"
+    - id: 12
+      transactions: []
+      epoch: "2.4"
+    - id: 13
+      transactions: []
+      epoch: "2.4"
+    - id: 14
+      transactions: []
+      epoch: "2.4"
+    - id: 15
+      transactions: []
+      epoch: "2.4"
+    - id: 16
+      transactions: []
+      epoch: "2.4"
+    - id: 17
+      transactions: []
+      epoch: "2.4"
+    - id: 18
+      transactions: []
+      epoch: "2.4"
+    - id: 19
       transactions:
         - emulated-contract-publish:
             contract-name: sbtc-registry
@@ -203,19 +227,14 @@ plan:
             path: contracts/extensions/bme004-0-core-execute.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme021-0-market-voting
+            contract-name: bme010-0-token-sale
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bme021-0-market-voting.clar
+            path: contracts/extensions/bme010-0-token-sale.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme022-0-market-gating
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme022-0-market-gating.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: bme023-0-market-bitcoin
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/linear/bme023-0-market-bitcoin.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: hedge-trait
@@ -248,11 +267,6 @@ plan:
             path: contracts/extensions/bme024-0-market-scalar-pyth.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: sbtc
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/external/sbtc.clar
-            clarity-version: 3
-        - emulated-contract-publish:
             contract-name: tpepe
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/external/tpepe.clar
@@ -265,26 +279,21 @@ plan:
         - emulated-contract-publish:
             contract-name: bdp000-bootstrap
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/proposals/devnet/bdp000-bootstrap.clar
+            path: contracts/proposals/testnet/bdp000-bootstrap.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 12
-      transactions:
         - emulated-contract-publish:
             contract-name: bdp000-core-team-sunset-height
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/bdp000-core-team-sunset-height.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: bme010-0-token-sale
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/extensions/bme010-0-token-sale.clar
-            clarity-version: 3
-        - emulated-contract-publish:
             contract-name: bdp001-advance-stage-1
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/bdp001-advance-stage-1.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 20
+      transactions:
         - emulated-contract-publish:
             contract-name: bdp001-advance-stage-2
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -395,14 +404,24 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/proposals/devnet/unit-tests/reputation/bdp001-sft-tokens-5.clar
             clarity-version: 3
-      epoch: "3.0"
-    - id: 13
-      transactions:
+        - emulated-contract-publish:
+            contract-name: bme021-0-market-voting
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/bme021-0-market-voting.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: bme023-0-market-bitcoin
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/extensions/linear/bme023-0-market-bitcoin.clar
+            clarity-version: 3
         - emulated-contract-publish:
             contract-name: bme032-0-scalar-strategy-hedge
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/extensions/bme032-0-scalar-strategy-hedge.clar
             clarity-version: 3
+      epoch: "3.0"
+    - id: 21
+      transactions:
         - emulated-contract-publish:
             contract-name: bme040-0-shares-marketplace
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
@@ -432,6 +451,11 @@ plan:
             contract-name: nft-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/traits/sips/nft-trait.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: sbtc
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/external/sbtc.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sip-010-trait-ft-standard
@@ -464,30 +488,6 @@ plan:
             path: contracts/external/wrapped-stx.clar
             clarity-version: 3
       epoch: "3.0"
-    - id: 14
-      transactions: []
-      epoch: "3.0"
-    - id: 15
-      transactions: []
-      epoch: "3.0"
-    - id: 16
-      transactions: []
-      epoch: "3.0"
-    - id: 17
-      transactions: []
-      epoch: "3.0"
-    - id: 18
-      transactions: []
-      epoch: "3.0"
-    - id: 19
-      transactions: []
-      epoch: "3.0"
-    - id: 20
-      transactions: []
-      epoch: "3.0"
-    - id: 21
-      transactions: []
-      epoch: "3.0"
     - id: 22
       transactions: []
       epoch: "3.0"
@@ -495,6 +495,66 @@ plan:
       transactions: []
       epoch: "3.0"
     - id: 24
+      transactions: []
+      epoch: "3.0"
+    - id: 25
+      transactions: []
+      epoch: "3.0"
+    - id: 26
+      transactions: []
+      epoch: "3.0"
+    - id: 27
+      transactions: []
+      epoch: "3.0"
+    - id: 28
+      transactions: []
+      epoch: "3.0"
+    - id: 29
+      transactions: []
+      epoch: "3.0"
+    - id: 30
+      transactions: []
+      epoch: "3.0"
+    - id: 31
+      transactions: []
+      epoch: "3.0"
+    - id: 32
+      transactions: []
+      epoch: "3.0"
+    - id: 33
+      transactions: []
+      epoch: "3.0"
+    - id: 34
+      transactions: []
+      epoch: "3.0"
+    - id: 35
+      transactions: []
+      epoch: "3.0"
+    - id: 36
+      transactions: []
+      epoch: "3.0"
+    - id: 37
+      transactions: []
+      epoch: "3.0"
+    - id: 38
+      transactions: []
+      epoch: "3.0"
+    - id: 39
+      transactions: []
+      epoch: "3.0"
+    - id: 40
+      transactions: []
+      epoch: "3.0"
+    - id: 41
+      transactions: []
+      epoch: "3.0"
+    - id: 42
+      transactions: []
+      epoch: "3.0"
+    - id: 43
+      transactions: []
+      epoch: "3.0"
+    - id: 44
       transactions:
         - emulated-contract-publish:
             contract-name: wormhole-traits-v1
@@ -527,15 +587,27 @@ plan:
             path: ".cache/requirements/SP3R4F6C1J3JQWWCVZ3S7FRRYPMYG6ZW6RZK31FXY.pyth-storage-v3.clar"
             clarity-version: 3
       epoch: "3.1"
-    - id: 25
+    - id: 45
       transactions: []
       epoch: "3.1"
-    - id: 26
+    - id: 46
       transactions: []
       epoch: "3.1"
-    - id: 27
+    - id: 47
       transactions: []
       epoch: "3.1"
-    - id: 28
+    - id: 48
+      transactions: []
+      epoch: "3.1"
+    - id: 49
+      transactions: []
+      epoch: "3.1"
+    - id: 50
+      transactions: []
+      epoch: "3.1"
+    - id: 51
+      transactions: []
+      epoch: "3.1"
+    - id: 52
       transactions: []
       epoch: "3.1"

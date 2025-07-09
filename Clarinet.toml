@@ -59,7 +59,7 @@ contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to'
 [[project.requirements]]
 contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to-trait'
 [contracts.bdp000-bootstrap]
-path = 'contracts/proposals/devnet/bdp000-bootstrap.clar'
+path = 'contracts/proposals/testnet/bdp000-bootstrap.clar'
 clarity_version = 3
 epoch = 3.0
 

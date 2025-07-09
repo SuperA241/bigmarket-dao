@@ -1,4 +1,4 @@
-;; Title: usdh test
+;; Title: usdh test for bigmarket oin stacks testnet
 ;; Description:
 ;; simple usdh sip 10 for testing market creation and staking.
 
@@ -12,7 +12,7 @@
 (define-data-var token-name (string-ascii 32) "bm-usdh")
 (define-data-var token-symbol (string-ascii 10) "bm-usdh")
 (define-data-var token-uri (optional (string-utf8 256)) (some u"https://bm-usdh.net"))
-(define-data-var token-decimals uint u8)
+(define-data-var token-decimals uint u6)
 
 ;; --- Authorisation check
 
