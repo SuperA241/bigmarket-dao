@@ -1,16 +1,28 @@
 ;; Title: BME024 CPMM  Scalar Market Predictions
 ;; Synopsis:
-;; Implements CPMM scalar prediciton markets with pyth oracle resolution.
+;; Implements CPMM scalar prediciton markets with pyth oracle resolution and DAO.
 ;; Description:
 ;; Scalar markets differ from binary/categorical markets (see bme024-0-market-predicting)
 ;; in the type of categories and the mechanism for resolution:
 ;; Firstly, the categories are contiguous ranges of numbers with a min and max value. The winning
 ;; category is decided by the range that the outcome selects. Secondly, scalar market outcomes
-;; are determined by on-chain oracles. 
-;; This contract uses the Pyth oracle for selecting from possible outcomes.
+;; are determined by on-chain oracles. This contract uses the Pyth oracle for selecting from possible outcomes.
+;; Market creation can be gated via market proof and a market creator can
+;; set their own fee up to a max fee amount determined by the DAO.
+;; Anyone with the required token can buy shares. Resolution process begins via a call gated 
+;; to the DAO controlled resolution agent address. The resolution can be challenged by anyone with a stake in the market
+;; If a challenge is made the dispute resolution process begins which requires a DAO vote
+;; to resolve - the outcome of the vote resolve the market and sets the outcome. 
+;; If the dispute window passes without challenge or once the vote concludes the market is fully
+;; resolved and claims can then be made.
+;; Optional hedge strategy - the execute-hedge strategy can be run during market cool down period. The execute-hedge
+;; function will call the market specific hedge strategy if supplied or the default startegy otherwise.
+;; The hedge strategy can be switched off by the dao.
 
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 (impl-trait .prediction-market-trait.prediction-market-trait)
+(use-trait hedge-trait .hedge-trait.hedge-trait)
+(use-trait ft-velar-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 ;; Market Types (2 => range based markets)
@@ -61,6 +73,10 @@
 (define-constant err-overbuy (err u10034))
 (define-constant err-token-not-configured (err u10035))
 (define-constant err-seed-too-small (err u10036))
+(define-constant err-already-hedged (err u10037))
+(define-constant err-hedging-disabled (err u10038))
+(define-constant err-oracle (err u10039))
+(define-constant err-band-not-set (err u10040))
 
 (define-constant marketplace .bme040-0-shares-marketplace)
 
@@ -74,6 +90,11 @@
 (define-data-var dao-treasury principal tx-sender)
 (define-data-var creation-gated bool true)
 (define-data-var resolution-timeout uint u1000) ;; 1000 blocks (~9 days)
+(define-data-var default-hedge-executor principal .bme032-0-scalar-strategy-hedge)
+(define-data-var hedging-enabled bool true)
+
+;; e.g. band-bips = 500 => 5.00%
+(define-map price-band-widths {feed-id: (buff 32)} {band-bips: uint})
 
 ;; Data structure for each Market
 ;; outcome: winning category
@@ -86,7 +107,8 @@
     creator: principal,
     market-fee-bips: uint,
     resolution-state: uint, ;; "open", "resolving", "disputed", "concluded"
-    categories: (list 10 {min: uint, max: uint}), ;; Min (inclusive) and Max (exclusive)
+    resolution-burn-height: uint,
+    categories: (list 6 {min: uint, max: uint}), ;; Min (inclusive) and Max (exclusive)
     stakes: (list 10 uint), ;; Total staked per category - shares
     stake-tokens: (list 10 uint), ;; Total staked per category - tokens
     outcome: (optional uint),
@@ -94,6 +116,8 @@
     market-start: uint,
     market-duration: uint,
     cool-down-period: uint,
+    hedge-executor: (optional principal),
+    hedged: bool,
     price-feed-id: (buff 32), ;; Pyth price feed ID
     price-outcome: (optional uint)
   }
@@ -134,6 +158,33 @@
   (begin
     (try! (is-dao-or-extension))
     (var-set dispute-window-length length)
+    (ok true)
+  )
+)
+
+(define-public (set-default-hedge-executor (p principal))
+  (begin
+		(try! (is-dao-or-extension))
+    (var-set default-hedge-executor p)
+		(print {event: "default-hedge-executor", default-hedge-executor: p})
+    (ok true)
+  )
+)
+
+(define-public (set-hedging-enabled (enabled bool))
+  (begin
+		(try! (is-dao-or-extension))
+    (var-set hedging-enabled enabled)
+    (ok enabled)
+  )
+)
+(define-read-only (is-hedging-enabled) (var-get hedging-enabled))
+
+(define-public (set-price-band-width (feed-id (buff 32)) (band-bips uint))
+  (begin
+		(try! (is-dao-or-extension))
+    (map-set price-band-widths {feed-id: feed-id} {band-bips: band-bips})
+		(print {event: "price-band-width", feed-id: feed-id, precent: band-bips})
     (ok true)
   )
 )
@@ -220,23 +271,28 @@
 ;; ---------------- public functions ----------------
 
 (define-public (create-market 
-  (categories (list 10 {min: uint, max: uint})) 
-  (fee-bips (optional uint)) 
-  (token <ft-token>) 
-  (market-data-hash (buff 32)) 
-  (proof (list 10 (tuple (position bool) (hash (buff 32))))) 
-  (treasury principal) 
-  (market-duration (optional uint)) 
-  (cool-down-period (optional uint))
-  (price-feed-id (buff 32))
-  (seed-amount uint))
+    (fee-bips (optional uint)) 
+    (token <ft-token>) 
+    (market-data-hash (buff 32)) 
+    (proof (list 10 (tuple (position bool) (hash (buff 32)))))
+    (treasury principal)
+    (market-duration (optional uint))
+    (cool-down-period (optional uint))
+    (price-feed-id (buff 32))
+    (seed-amount uint)
+    (hedge-executor (optional principal))
+  )
     (let (
-        (sender tx-sender)
+        (creator tx-sender)
         (new-id (var-get market-counter))
         (market-fee-bips (default-to u0 fee-bips))
         (market-duration-final (default-to DEFAULT_MARKET_DURATION market-duration))
         (cool-down-final (default-to DEFAULT_COOL_DOWN_PERIOD cool-down-period))
         (current-block burn-block-height)
+        (start-price (unwrap! (get-current-price price-feed-id) err-oracle))
+        (band-bips (get band-bips (unwrap! (map-get? price-band-widths {feed-id: price-feed-id}) err-band-not-set)))
+        (delta (/ (* start-price band-bips) u10000))
+        (categories (category-bands start-price delta))
         (num-categories (len categories))
         ;; NOTE: seed is evenly divided with rounding error discarded
         (seed (/ seed-amount num-categories))
@@ -258,7 +314,7 @@
       (try! (contract-call? token transfer seed-amount tx-sender (as-contract tx-sender) none))
 
       ;; ensure the user is allowed to create if gating by merkle proof is required
-      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-0-market-gating can-access-by-account sender proof))) true)
+      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-0-market-gating can-access-by-account creator proof))) true)
       
       ;; dao is assigned the seed liquidity - share and tokens 1:1 at kick off
       (map-set stake-balances {market-id: new-id, user: (var-get dao-treasury)} share-list)
@@ -270,9 +326,10 @@
           market-data-hash: market-data-hash,
           token: (contract-of token),
           treasury: treasury,
-          creator: tx-sender,
+          creator: creator,
           market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
+          resolution-burn-height: u0,
           categories: categories,
           stakes: share-list,
           stake-tokens: share-list, ;; they start out the same
@@ -281,6 +338,8 @@
           market-start: current-block,
           market-duration: market-duration-final,
           cool-down-period: cool-down-final,
+          hedge-executor: hedge-executor,
+          hedged: false,
           price-feed-id: price-feed-id,
           price-outcome: none
         }
@@ -392,9 +451,9 @@
 
     ;; --- Update Market State ---
     (let (
-      (updated-stakes (unwrap! (replace-at? stake-list index (+ selected-pool amount-shares)) err-category-not-found))
-      (updated-token-stakes (unwrap! (replace-at? stake-tokens-list index (+ selected-token-pool cost-of-shares)) err-category-not-found))
-    )
+        (updated-stakes (unwrap! (replace-at? stake-list index (+ selected-pool amount-shares)) err-category-not-found))
+        (updated-token-stakes (unwrap! (replace-at? stake-tokens-list index (+ selected-token-pool cost-of-shares)) err-category-not-found))
+      )
       (map-set markets market-id (merge md {stakes: updated-stakes, stake-tokens: updated-token-stakes}))
     )
 
@@ -422,11 +481,9 @@
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found))
       (market-end (+ (get market-start md) (get market-duration md)))
-      (resolution-burn-block (+ market-end (get cool-down-period md)))
+      (market-close (+ market-end (get cool-down-period md)))
       (price-feed-id (get price-feed-id md))
-      (current-block-height burn-block-height)
-      (price-data (unwrap! (contract-call? .pyth-oracle-v3 read-price-feed price-feed-id .pyth-storage-v3) err-category-not-found))
-      (parsed-price (to-uint (get price price-data)))
+      (parsed-price (unwrap! (get-current-price price-feed-id) err-oracle))
       (categories (get categories md))
       (first-category (unwrap! (element-at? categories u0) err-category-not-found))
       (winning-category-index
@@ -446,51 +503,59 @@
         )
       )
     )
-    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
-    (asserts! (>= current-block-height resolution-burn-block) err-market-wrong-state)
+    (asserts! (or (is-eq tx-sender (var-get resolution-agent)) (is-eq tx-sender (get creator md))) err-unauthorised)
+    (asserts! (>= burn-block-height market-close) err-market-wrong-state)
+    (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-wrong-state)
     (asserts! (is-some final-index) err-category-not-found) ;; Ensure category was assigned
 
       ;; Store the result
     (map-set markets market-id
       (merge md
-        { outcome: final-index, price-outcome: (some parsed-price), resolution-state: RESOLUTION_RESOLVING }
+        { outcome: final-index, price-outcome: (some parsed-price), resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market", market-id: market-id, outcome: final-index, resolver: tx-sender, price: parsed-price})
+    (print {event: "resolve-market", market-id: market-id, outcome: final-index, resolver: tx-sender, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height, price: parsed-price})
     (ok final-index)
   )
 )
 
-(define-private (select-winner-pyth 
-      (category (tuple (min uint) (max uint)))
-      (acc {current-index: uint, winning-index: (optional uint), price: uint}))
+(define-public (execute-hedge (market-id uint) (hedge-executor <hedge-trait>) (token0 <ft-velar-token>) (token1 <ft-velar-token>) (token-in <ft-velar-token>) (token-out <ft-velar-token>) )
   (let (
-      (price (get price acc))
-      (min-price (get min category))
-      (max-price (get max category))
-      (current-index (get current-index acc))
+      (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (feed-id (get price-feed-id md))
+      (hedged (get hedged md))
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (stored-hedge-executor (default-to (var-get default-hedge-executor) (get hedge-executor md)))
+      (predicted (get-biggest-pool-index (get stakes md)))
     )
-    ;; Check if the price falls within this category's range
-    (if (and (>= price min-price) (< price max-price) (is-none (get winning-index acc)))
-        {current-index: (+ current-index u1), winning-index: (some current-index), price: price}
-        {current-index: (+ current-index u1), winning-index: (get winning-index acc), price: price}
-    )
+    ;; check hedging allowed
+    (asserts! (var-get hedging-enabled) err-hedging-disabled)
+    ;; Ensure caller is the same contract that's stored
+    (asserts! (not hedged) err-already-hedged)
+    (asserts! (is-eq (contract-of hedge-executor) stored-hedge-executor) err-unauthorised)
+
+    ;; Time window check
+    (asserts! (>= burn-block-height market-end) err-market-wrong-state)
+    (asserts! (< burn-block-height (+ market-end (get cool-down-period md))) err-market-wrong-state)
+
+    ;; Compute crowd-predicted outcome
+    (try! (contract-call? hedge-executor perform-swap-hedge market-id predicted feed-id token0 token1 token-in token-out))
+    (map-set markets market-id (merge md {hedged: true}))
+    (print {event: "hedge-action", market-id: market-id, predicted: predicted})
+    (ok predicted)
   )
 )
 
 (define-public (resolve-market-undisputed (market-id uint))
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found))
-      (market-end (+ (get market-start md) (get market-duration md)))
-      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
-
     )
-    (asserts! (> burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-not-elapsed)
+    (asserts! (> burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-not-elapsed)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-open)
 
     (map-set markets market-id
       (merge md
-        { concluded: true, resolution-state: RESOLUTION_RESOLVED }
+        { concluded: true, resolution-state: RESOLUTION_RESOLVED, resolution-burn-height: burn-block-height }
       )
     )
     (print {event: "resolve-market-undisputed", market-id: market-id, resolution-burn-height: burn-block-height, resolution-state: RESOLUTION_RESOLVED})
@@ -524,16 +589,15 @@
 (define-public (dispute-resolution (market-id uint) (disputer principal) (num-categories uint))
   (let (
       (md (unwrap! (map-get? markets market-id) err-market-not-found)) 
+        ;; ensure user has a stake
       (stake-data (unwrap! (map-get? stake-balances { market-id: market-id, user: disputer }) err-disputer-must-have-stake)) 
-      (market-end (+ (get market-start md) (get market-duration md)))
-      (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
     )
     ;; user call create-market-vote in the voting contract to start a dispute
     (try! (is-dao-or-extension))
 
     (asserts! (is-eq num-categories (len (get categories md))) err-too-few-categories)
     ;; prevent market getting locked in unresolved state
-    (asserts! (<= burn-block-height (+ resolution-burn-block (var-get dispute-window-length))) err-dispute-window-elapsed)
+    (asserts! (<= burn-block-height (+ (get resolution-burn-height md) (var-get dispute-window-length))) err-dispute-window-elapsed)
 
     (asserts! (is-eq (get resolution-state md) RESOLUTION_RESOLVING) err-market-not-resolving) 
 
@@ -546,9 +610,7 @@
 (define-public (force-resolve-market (market-id uint))
   (let (
     (md (unwrap! (map-get? markets market-id) err-market-not-found))
-    (market-end (+ (get market-start md) (get market-duration md)))
-    (resolution-burn-block (+ market-end (get cool-down-period md))) ;; Market resolution block
-    (elapsed (- burn-block-height resolution-burn-block))
+    (elapsed (- burn-block-height (get resolution-burn-height md)))
   )
   (begin
     (asserts! (> elapsed (var-get resolution-timeout)) err-market-wrong-state)
@@ -723,3 +785,58 @@
     (list element-0 element-1 element-2 element-3 element-4 element-5 element-6 element-7 element-8 element-9)
   )
 )
+
+(define-private (get-biggest-pool-index (lst (list 10 uint)))
+  (get index
+    (fold find-max-helper
+          lst
+          { max-val: u0, index: u0, current-index: u0 }))
+)
+
+(define-private (find-max-helper (val uint) (state { max-val: uint, index: uint, current-index: uint }))
+  {
+    max-val: (if (> val (get max-val state)) val (get max-val state)),
+    index: (if (> val (get max-val state)) (get current-index state) (get index state)),
+    current-index: (+ (get current-index state) u1)
+  }
+)
+
+(define-private (category-bands (start-price uint) (delta uint))
+  (let (
+    ;; Symmetric bands around start-price
+    (element-0 {min: u0, max: (- start-price (* delta u2))})                          ;; big loss
+    (element-1 {min: (- start-price (* delta u2)), max: (- start-price delta)})       ;; small loss
+    (element-2 {min: (- start-price delta), max: start-price})                        ;; slight loss
+    (element-3 {min: start-price, max: (+ start-price delta)})                        ;; slight gain
+    (element-4 {min: (+ start-price delta), max: (+ start-price (* delta u2))})       ;; small gain
+    (element-5 {min: (+ start-price (* delta u2)), max: u4294967295})                 ;; big gain
+  )
+    (list element-0 element-1 element-2 element-3 element-4 element-5)
+  )
+)
+
+(define-private (get-current-price (feed-id (buff 32)))
+  (let (
+    (price-data (unwrap! (contract-call? .pyth-oracle-v3 read-price-feed feed-id .pyth-storage-v3) err-oracle))
+  )
+    (ok (to-uint (get price price-data)))
+  )
+)
+
+(define-private (select-winner-pyth 
+      (category (tuple (min uint) (max uint)))
+      (acc {current-index: uint, winning-index: (optional uint), price: uint}))
+  (let (
+      (price (get price acc))
+      (min-price (get min category))
+      (max-price (get max category))
+      (current-index (get current-index acc))
+    )
+    ;; Check if the price falls within this category's range
+    (if (and (>= price min-price) (< price max-price) (is-none (get winning-index acc)))
+        {current-index: (+ current-index u1), winning-index: (some current-index), price: price}
+        {current-index: (+ current-index u1), winning-index: (get winning-index acc), price: price}
+    )
+  )
+)
+

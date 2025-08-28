@@ -1,13 +1,13 @@
 ;; Title: BME023 Market bitcoin predictions
 ;; Synopsis:
-;; Implements prediciton markets for bitcoin users (see also bme023-0-market-predicting).
+;; Implements prediciton markets for bitcoin users (see also bme02-0-market-predicting).
 ;; Description:
 ;; Provide binary and categorical prediction markets with 
 ;; bitcoin only transactions - no stx needed for gas. Works with 
 ;; clarity-bitcoin-lib-v5 for bitcoin catamaran swaps into markets.
 
 (impl-trait  .prediction-market-trait.prediction-market-trait)
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant min-stake u100000) ;; Example: 100,000 satoshis (0.001 BTC)
 

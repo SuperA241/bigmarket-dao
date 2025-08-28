@@ -27,12 +27,12 @@ describe('initial distribution', () => {
 	});
 
 	it('cannot directly initialisate', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		let response = await initialize();
 	});
 
 	it('check initial variables', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		let response = await simnet.getDataVar(`${deployer}.bme010-0-token-sale`, 'current-stage');
 		expect(response).toEqual(Cl.uint(1));
@@ -45,14 +45,14 @@ describe('initial distribution', () => {
 	});
 
 	it('cannot claim before initialisation', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		let response = await simnet.callPublicFn(`${deployer}.bme010-0-token-sale`, 'claim-ido-refund', [], alice);
 		expect(response.result).toEqual(Cl.error(Cl.uint(5007)));
 	});
 
 	it('only dao can advance stage', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		let response = await simnet.callPublicFn(`${deployer}.bme010-0-token-sale`, 'advance-ido-stage', [], alice);
 		expect(response.result).toEqual(Cl.error(Cl.uint(5000)));
@@ -62,7 +62,7 @@ describe('initial distribution', () => {
 	});
 
 	it('cannot advance beyond last stage', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		let response = await simnet.callPublicFn(`${deployer}.bme010-0-token-sale`, 'advance-ido-stage', [], alice);
 		expect(response.result).toEqual(Cl.error(Cl.uint(5000)));
@@ -100,7 +100,7 @@ describe('initial distribution', () => {
 	});
 
 	it('cannot exceed stage limit', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		//let response = await passProposalByCoreVote('bdp001-advance-stage-1')
 		let response1 = await simnet.getDataVar(`${deployer}.bme010-0-token-sale`, 'current-stage');
@@ -116,7 +116,7 @@ describe('initial distribution', () => {
 	});
 
 	it('payout is determined by stage ratio', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		//let response = await passProposalByCoreVote('bdp001-advance-stage-1')
 		let response1 = await simnet.getDataVar(`${deployer}.bme010-0-token-sale`, 'current-stage');
@@ -149,7 +149,7 @@ describe('initial distribution', () => {
 	});
 
 	it('cancel prevent buy', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		//let response = await passProposalByCoreVote('bdp001-advance-stage-1')
 		let response1 = await simnet.getDataVar(`${deployer}.bme010-0-token-sale`, 'current-stage');
@@ -161,7 +161,7 @@ describe('initial distribution', () => {
 	});
 
 	it('cancel enable refund', async () => {
-		constructDao(simnet);
+		await constructDao(simnet);
 		await passProposalByCoreVote('bdp001-initialise-token-sale');
 		//let response = await passProposalByCoreVote('bdp001-advance-stage-1')
 		let response1 = await simnet.getDataVar(`${deployer}.bme010-0-token-sale`, 'current-stage');

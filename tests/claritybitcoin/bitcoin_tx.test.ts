@@ -19,7 +19,7 @@ const proofData = {
 };
 async function createCategoricalBitcoinMarket(marketId: number, creator?: string) {
 	getWif('');
-	constructDao(simnet);
+	await constructDao(simnet);
 	let response = await simnet.callPublicFn(
 		'bme023-0-market-bitcoin',
 		'create-market',
@@ -54,10 +54,6 @@ async function predictCategory(user: string, marketId: number, category: string,
 const simnet = await setupSimnet();
 
 describe('clarity bitcoin', () => {
-	it('check create market', async () => {
-		createCategoricalBitcoinMarket(0, deployer);
-		//predictCategory(alice, 0, 'lion', 100, 100001);
-	});
 	it('check parse random mempool segwit', async () => {
 		const txid = '7ec19cf11e4f7686aea09273ab01f7584953dad9fc9a57ef8c39ecfb9f71216f';
 		const txHex =

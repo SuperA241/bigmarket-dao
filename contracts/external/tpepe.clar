@@ -1,18 +1,18 @@
-;; Title: sbtc test
+;; Title: pepe test for bigmarket oin stacks testnet
 ;; Description:
-;; simple sbtc sip 10 for testing market creation and staking.
+;; simple pepe sip 10 for testing market creation and staking.
 
 (impl-trait 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant err-unauthorised (err u3000))
 (define-constant err-not-token-owner (err u4))
 
-(define-fungible-token sbtc-token)
+(define-fungible-token pepe-token)
 
-(define-data-var token-name (string-ascii 32) "sBTC")
-(define-data-var token-symbol (string-ascii 10) "sBTC")
-(define-data-var token-uri (optional (string-utf8 256)) (some u"https://sbtc.net"))
-(define-data-var token-decimals uint u8)
+(define-data-var token-name (string-ascii 32) "bm-pepe")
+(define-data-var token-symbol (string-ascii 10) "bm-pepe")
+(define-data-var token-uri (optional (string-utf8 256)) (some u"https://bm-pepe.net"))
+(define-data-var token-decimals uint u6)
 
 ;; --- Authorisation check
 
@@ -49,7 +49,7 @@
 )
 
 (define-private (mint-many-iter (item {amount: uint, recipient: principal}))
-	(ft-mint? sbtc-token (get amount item) (get recipient item))
+	(ft-mint? pepe-token (get amount item) (get recipient item))
 )
 
 (define-public (mint-many (recipients (list 200 {amount: uint, recipient: principal})))
@@ -66,7 +66,7 @@
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
 	(begin
 		(asserts! (or (is-eq tx-sender sender) (is-eq contract-caller sender)) err-not-token-owner)
-		(ft-transfer? sbtc-token amount sender recipient)
+		(ft-transfer? pepe-token amount sender recipient)
 	)
 )
 
@@ -83,11 +83,11 @@
 )
 
 (define-read-only (get-balance (who principal))
-	(ok (ft-get-balance sbtc-token who))
+	(ok (ft-get-balance pepe-token who))
 )
 
 (define-read-only (get-total-supply)
-	(ok (ft-get-supply sbtc-token))
+	(ok (ft-get-supply pepe-token))
 )
 
 (define-read-only (get-token-uri)

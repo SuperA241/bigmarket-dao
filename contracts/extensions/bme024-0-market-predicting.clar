@@ -4,8 +4,8 @@
 ;; Description:
 ;; Market creation allows a new binary or categorical market to be set up.
 ;; Off chain market data is verifiable via the markets data hash.
-;; Markets run in a specific token (stx, sbtc, bmg etc) the market is created
-;; with an allowed token. Allowed tokens are controlled by the DAO.
+;; Markets run in a specific token (stx, sbtc, bmg etc) and the market token has 
+;; to be enabled by the DAO.
 ;; Market creation can be gated via market proof and a market creator can
 ;; set their own fee up to a max fee amount determined by the DAO.
 ;; Anyone with the required token can buy shares. Resolution process begins via a call gated 
@@ -14,13 +14,20 @@
 ;; to resolve - the outcome of the vote resolve the market and sets the outcome. 
 ;; If the dispute window passes without challenge or once the vote concludes the market is fully
 ;; resolved and claims can then be made.
+;; Optional hedge strategy - the execute-hedge strategy can be run during market cool down period. The execute-hedge
+;; function will call the market specific hedge strategy if supplied or the default startegy otherwise.
+;; The hedge strategy can be switched off by the dao.
 
-(use-trait ft-token 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
-(impl-trait  .prediction-market-trait.prediction-market-trait)
+(use-trait ft-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
+(impl-trait .prediction-market-trait.prediction-market-trait)
+(use-trait hedge-trait .hedge-trait.hedge-trait)
+(use-trait ft-velar-token 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 
 ;; ---------------- CONSTANTS & TYPES ----------------
 ;; Market Types (1 => categorical market)
 (define-constant MARKET_TYPE u1)
+(define-constant DEFAULT_MARKET_DURATION u144) ;; ~1 day in Bitcoin blocks
+(define-constant DEFAULT_COOL_DOWN_PERIOD u144) ;; ~1 day in Bitcoin blocks
 
 (define-constant RESOLUTION_OPEN u0)
 (define-constant RESOLUTION_RESOLVING u1)
@@ -60,6 +67,8 @@
 (define-constant err-overbuy (err u10034))
 (define-constant err-token-not-configured (err u10035))
 (define-constant err-seed-too-small (err u10036))
+(define-constant err-already-hedged (err u10037))
+(define-constant err-hedging-disabled (err u10038))
 
 (define-constant marketplace .bme040-0-shares-marketplace)
 
@@ -73,6 +82,8 @@
 (define-data-var dao-treasury principal tx-sender)
 (define-data-var creation-gated bool true)
 (define-data-var resolution-timeout uint u1000) ;; 1000 blocks (~9 days)
+(define-data-var default-hedge-executor principal .bme032-0-scalar-strategy-hedge)
+(define-data-var hedging-enabled bool true)
 
 ;; Data structure for each Market
 ;; outcome: winning category
@@ -90,7 +101,12 @@
     stakes: (list 10 uint), ;; Total staked per category - shares
     stake-tokens: (list 10 uint), ;; Total staked per category - tokens
     outcome: (optional uint),
-    concluded: bool
+    concluded: bool,
+    market-start: uint,
+    market-duration: uint,
+    cool-down-period: uint,
+    hedge-executor: (optional principal),
+    hedged: bool,
   }
 )
 ;; defines the minimum liquidity a market creator needs to provide
@@ -132,6 +148,24 @@
     (ok true)
   )
 )
+
+(define-public (set-default-hedge-executor (p principal))
+  (begin
+		(try! (is-dao-or-extension))
+    (var-set default-hedge-executor p)
+		(print {event: "default-hedge-executor", default-hedge-executor: p})
+    (ok true)
+  )
+)
+
+(define-public (set-hedging-enabled (enabled bool))
+  (begin
+		(try! (is-dao-or-extension))
+    (var-set hedging-enabled enabled)
+    (ok enabled)
+  )
+)
+(define-read-only (is-hedging-enabled) (var-get hedging-enabled))
 
 (define-public (set-creation-gated (gated bool))
   (begin
@@ -214,17 +248,34 @@
 
 ;; ---------------- public functions ----------------
 
-(define-public (create-market (categories (list 10 (string-ascii 64))) (fee-bips (optional uint)) (token <ft-token>) (market-data-hash (buff 32)) (proof (list 10 (tuple (position bool) (hash (buff 32))))) (treasury principal) (seed-amount uint))
+(define-public (create-market 
+    (categories (list 10 (string-ascii 64))) 
+    (fee-bips (optional uint)) 
+    (token <ft-token>) 
+    (market-data-hash (buff 32)) 
+    (proof (list 10 (tuple (position bool) (hash (buff 32)))))
+    (treasury principal) 
+    (market-duration (optional uint)) 
+    (cool-down-period (optional uint))
+    (seed-amount uint)
+    (hedge-executor (optional principal))
+  )
     (let (
-        (sender tx-sender)
+        (creator tx-sender)
         (new-id (var-get market-counter))
         (market-fee-bips (default-to u0 fee-bips))
+        (market-duration-final (default-to DEFAULT_MARKET_DURATION market-duration))
+        (cool-down-final (default-to DEFAULT_COOL_DOWN_PERIOD cool-down-period))
+        (current-block burn-block-height)
         (num-categories (len categories))
         ;; NOTE: seed is evenly divided with rounding error discarded
         (seed (/ seed-amount num-categories))
         (user-stake-list (list seed seed seed seed seed seed seed seed seed seed))
         (share-list (zero-after-n user-stake-list num-categories))
       )
+      (asserts! (> market-duration-final u10) err-market-not-found)
+      (asserts! (> cool-down-final u10) err-market-not-found)
+
 		  (asserts! (> (len categories) u1) err-too-few-categories)
 		  (asserts! (<= market-fee-bips (var-get market-fee-bips-max)) err-max-market-fee-bips-exceeded)
       ;; ensure the trading token is allowed 
@@ -237,7 +288,7 @@
       (try! (contract-call? token transfer seed-amount tx-sender (as-contract tx-sender) none))
 
       ;; ensure the user is allowed to create if gating by merkle proof is required
-      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-0-market-gating can-access-by-account sender proof))) true)
+      (if (var-get creation-gated) (try! (as-contract (contract-call? .bme022-0-market-gating can-access-by-account creator proof))) true)
       
       ;; dao is assigned the seed liquidity - share and tokens 1:1 at kick off
       (map-set stake-balances {market-id: new-id, user: (var-get dao-treasury)} share-list)
@@ -249,7 +300,7 @@
           market-data-hash: market-data-hash,
           token: (contract-of token),
           treasury: treasury,
-          creator: tx-sender,
+          creator: creator,
           market-fee-bips: market-fee-bips,
           resolution-state: RESOLUTION_OPEN,
           resolution-burn-height: u0,
@@ -257,7 +308,12 @@
           stakes: share-list,
           stake-tokens: share-list, ;; they start out the same
           outcome: none,
-          concluded: false
+          concluded: false,
+          market-start: current-block,
+          market-duration: market-duration-final,
+          cool-down-period: cool-down-final,
+          hedge-executor: hedge-executor,
+          hedged: false,
         }
       )   
       (var-set market-counter (+ new-id u1))
@@ -343,6 +399,7 @@
         (amount-shares (unwrap! (cpmm-shares selected-pool other-pool cost-of-shares) err-insufficient-balance))
         (max-purchase (if (> other-pool u0) (- other-pool u1) u0))
         (max-cost-of-shares (unwrap! (cpmm-cost selected-pool other-pool max-purchase) err-overbuy))
+        (market-end (+ (get market-start md) (get market-duration md)))
   )
     ;; Validate token and market state
     (asserts! (< index (len categories)) err-category-not-found)
@@ -352,6 +409,7 @@
     (asserts! (>= max-cost u100) err-amount-too-low)
     (asserts! (>= sender-balance max-cost) err-insufficient-balance)
     (asserts! (<= max-cost u50000000000000) err-amount-too-high)
+    (asserts! (< burn-block-height market-end) err-market-not-open)
     ;; ensure the user cannot overpay for shares - this can skew liquidity in other pools
     (asserts! (<= cost-of-shares max-cost-of-shares) err-overbuy)
     (asserts! (< amount-shares other-pool) err-overbuy)
@@ -385,17 +443,7 @@
       (map-set stake-balances {market-id: market-id, user: tx-sender} user-stake-updated)
       (map-set token-balances {market-id: market-id, user: tx-sender} user-token-updated)
       (try! (contract-call? .bme030-0-reputation-token mint tx-sender u4 u3))
-      (print {
-        event: "market-stake",
-        market-id: market-id,
-        index: index,
-        category: category,
-        amount: amount-shares,
-        cost: cost-of-shares,
-        fee: fee,
-        voter: tx-sender,
-        max-cost: max-cost
-      })
+      (print {event: "market-stake", market-id: market-id, index: index, amount: amount-shares, cost: cost-of-shares, fee: fee, voter: tx-sender, max-cost: max-cost}) 
       (ok index)
     )
   )
@@ -404,19 +452,49 @@
 ;; Resolve a market invoked by ai-agent.
 (define-public (resolve-market (market-id uint) (category (string-ascii 64)))
   (let (
-        (md (unwrap! (map-get? markets market-id) err-market-not-found))
-        (index (unwrap! (index-of? (get categories md) category) err-category-not-found))
+      (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (final-index (unwrap! (index-of? (get categories md) category) err-category-not-found))
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (market-close (+ market-end (get cool-down-period md)))
     )
-    (asserts! (is-eq tx-sender (var-get resolution-agent)) err-unauthorised)
+    (asserts! (or (is-eq tx-sender (var-get resolution-agent)) (is-eq tx-sender (get creator md))) err-unauthorised)
+    (asserts! (>= burn-block-height market-close) err-market-wrong-state)
     (asserts! (is-eq (get resolution-state md) RESOLUTION_OPEN) err-market-wrong-state)
 
     (map-set markets market-id
       (merge md
-        { outcome: (some index), resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
+        { outcome: (some final-index), resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height }
       )
     )
-    (print {event: "resolve-market", market-id: market-id, outcome: index, category: category, resolver: tx-sender, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height})
-    (ok index)
+    (print {event: "resolve-market", market-id: market-id, outcome: final-index, resolver: tx-sender, resolution-state: RESOLUTION_RESOLVING, resolution-burn-height: burn-block-height})
+    (ok final-index)
+  )
+)
+
+(define-public (execute-hedge (market-id uint) (hedge-executor <hedge-trait>) (token0 <ft-velar-token>) (token1 <ft-velar-token>) (token-in <ft-velar-token>) (token-out <ft-velar-token>) )
+  (let (
+      (md (unwrap! (map-get? markets market-id) err-market-not-found))
+      (feed-id (get market-data-hash md))
+      (hedged (get hedged md))
+      (market-end (+ (get market-start md) (get market-duration md)))
+      (stored-hedge-executor (default-to (var-get default-hedge-executor) (get hedge-executor md)))
+      (predicted (get-biggest-pool-index (get stakes md)))
+    )
+    ;; check hedging allowed
+    (asserts! (var-get hedging-enabled) err-hedging-disabled)
+    ;; Ensure caller is the same contract that's stored
+    (asserts! (not hedged) err-already-hedged)
+    (asserts! (is-eq (contract-of hedge-executor) stored-hedge-executor) err-unauthorised)
+
+    ;; Time window check
+    (asserts! (>= burn-block-height market-end) err-market-wrong-state)
+    (asserts! (< burn-block-height (+ market-end (get cool-down-period md))) err-market-wrong-state)
+
+    ;; Compute crowd-predicted outcome
+    (try! (contract-call? hedge-executor perform-custom-hedge market-id predicted))
+    (map-set markets market-id (merge md {hedged: true}))
+    (print {event: "hedge-action", market-id: market-id, predicted: predicted})
+    (ok predicted)
   )
 )
 
@@ -659,3 +737,19 @@
     (list element-0 element-1 element-2 element-3 element-4 element-5 element-6 element-7 element-8 element-9)
   )
 )
+
+(define-private (get-biggest-pool-index (lst (list 10 uint)))
+  (get index
+    (fold find-max-helper
+          lst
+          { max-val: u0, index: u0, current-index: u0 }))
+)
+
+(define-private (find-max-helper (val uint) (state { max-val: uint, index: uint, current-index: uint }))
+  {
+    max-val: (if (> val (get max-val state)) val (get max-val state)),
+    index: (if (> val (get max-val state)) (get current-index state) (get index state)),
+    current-index: (+ (get current-index state) u1)
+  }
+)
+

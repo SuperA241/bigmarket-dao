@@ -6,7 +6,7 @@ telemetry = true
 cache_dir = '.cache'
 
 [[project.requirements]]
-contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+contract_id = 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard'
 
 [[project.requirements]]
 contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
@@ -119,16 +119,6 @@ epoch = 3.0
 
 [contracts.bme023-0-market-bitcoin]
 path = 'contracts/extensions/bme023-0-market-bitcoin.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.bme023-0-market-predicting]
-path = 'contracts/extensions/bme023-0-market-predicting.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.bme023-0-market-scalar-pyth]
-path = 'contracts/extensions/bme023-0-market-scalar-pyth.clar'
 clarity_version = 3
 epoch = 3.0
 

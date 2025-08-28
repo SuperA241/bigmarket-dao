@@ -29,231 +29,209 @@ async function assertBalance(user: string, tier: number, balance: number) {
 }
 
 describe('claiming errors', () => {
-	it('err too few categories', async () => {
-		constructDao(simnet);
-		let response = await simnet.callPublicFn(
-			marketScalingCPMM,
-			'create-market',
-			[
-				Cl.list([Cl.tuple({ min: Cl.uint(1), max: Cl.uint(2) })]),
-				Cl.none(),
-				Cl.principal(stxToken),
-				Cl.bufferFromHex(metadataHash()),
-				Cl.list([]),
-				Cl.principal(`${deployer}.bme022-0-market-gating`),
-				Cl.none(),
-				Cl.none(),
-				Cl.bufferFromHex(USD0),
-				Cl.uint(100000000)
-			],
-			deployer
-		);
-		expect(response.result).toEqual(Cl.error(Cl.uint(10024)));
-	});
-
 	it('create binary market ok', async () => {
-		constructDao(simnet);
-		createBinaryMarket(0);
+		await constructDao(simnet);
+		await createBinaryMarket(0);
 	});
 
 	it('create ok', async () => {
-		createScalarMarket(0, USD0);
-		assertBalance(deployer, 6, 4);
+		await createScalarMarket(0, USD0);
+		await assertBalance(deployer, 6, 4);
 	});
 
 	it('create and stake not ok on unknown category', async () => {
-		createScalarMarket(0, USD0);
-		createScalarMarket(1, USD1);
-		assertBalance(deployer, 6, 8);
-		predictCategory(alice, 0, 5, 1000, 10023);
+		await createScalarMarket(0, USD0);
+		await createScalarMarket(1, USD1);
+		await assertBalance(deployer, 6, 8);
+		await predictCategory(alice, 0, 15, 1000, 10023);
 	});
 
 	it('create and stake ok', async () => {
-		createScalarMarket(0, USD0);
-		createScalarMarket(1, USD1);
-		predictCategory(alice, 0, 0, 1000, 0);
+		await createScalarMarket(0, USD0);
+		await createScalarMarket(1, USD1);
+		await predictCategory(alice, 0, 0, 1000, 0);
 	});
 	it('res agent cannot stake', async () => {
-		createScalarMarket(0, USD0);
-		createScalarMarket(1, USD1);
-		predictCategory(tom, 0, 0, 1000, 12);
+		await createScalarMarket(0, USD0);
+		await createScalarMarket(1, USD1);
+		await predictCategory(tom, 0, 0, 1000, 12);
 	});
 
 	it('create and stake spread ok', async () => {
-		createScalarMarket(0, USD0);
-		createScalarMarket(1, USD1);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
+		await createScalarMarket(0, USD0);
+		await createScalarMarket(1, USD1);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
 	});
 
-	it('resolve to category 0 for STX/USD/0', async () => {
-		createScalarMarket(0, USD0);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(144);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(143);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(1);
-		resolveMarket(0, 0);
+	it('resolve to category 5 for STX/USD/0', async () => {
+		await createScalarMarket(0, USD0);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(144);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(143);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(1);
+		await resolveMarket(0, 5);
 	});
 
-	it('resolve to category 1 for STX/USD/1', async () => {
-		createScalarMarket(0, USD1);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(144);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(143);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(1);
-		const response = await resolveMarket(0, 1);
+	it('resolve to category 3 for STX/USD/1', async () => {
+		await createScalarMarket(0, USD1);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(144);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(143);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(1);
+		const response = await resolveMarket(0, 3);
 		printMarketevents(response);
 	});
 
-	it('resolve to category 2 for STX/USD/2', async () => {
-		createScalarMarket(0, USD2);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(144);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(143);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(1);
-		const response = await resolveMarket(0, 2);
+	it('resolve to category 3 for STX/USD/2', async () => {
+		await createScalarMarket(0, USD2);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(144);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(143);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(1);
+		const response = await resolveMarket(0, 3);
 		printMarketevents(response);
 	});
 
-	it('resolve to category 0 for STX/USD (ie 0)', async () => {
-		createScalarMarket(0, USD3);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(144);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(143);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(1);
-		const response = await resolveMarket(0, 2);
+	it('resolve to category 3 for STX/USD (ie 0)', async () => {
+		await createScalarMarket(0, USD3);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(144);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(143);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(1);
+		const response = await resolveMarket(0, 3);
 		printMarketevents(response);
 	});
 
-	it('resolve to category 2 if above range STX/USD/3', async () => {
-		createScalarMarket(0, USD3);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(144);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(143);
-		resolveMarketError(0, 10020);
-		simnet.mineEmptyBlocks(1);
-		const response = await resolveMarket(0, 2);
+	it('resolve to category 3 if above range STX/USD/3', async () => {
+		await createScalarMarket(0, USD3);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(144);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(143);
+		await resolveMarketError(0, 10020);
+		await simnet.mineEmptyBlocks(1);
+		const response = await resolveMarket(0, 3);
 		printMarketevents(response);
 	});
 
 	it('resolve undisputed requires window to elapse', async () => {
-		createScalarMarket(0, USD0);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		resolveMarket(0, 0);
-		simnet.mineEmptyBlocks(20); // set ot 24 in bootstrap prop
-		resolveMarketUndisputed(0, 10019);
-		simnet.mineEmptyBlocks(5);
-		resolveMarketUndisputed(0);
+		await createScalarMarket(0, USD0);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 5);
+		await simnet.mineEmptyBlocks(20); // set ot 24 in bootstrap prop
+		await resolveMarketUndisputed(0, 10019);
+		await simnet.mineEmptyBlocks(5);
+		await resolveMarketUndisputed(0);
 	});
 
 	it('claim err-user-not-winner-or-claimed', async () => {
-		createScalarMarket(0, USD0);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		resolveMarket(0, 0);
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await createScalarMarket(0, USD0);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 5);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketScalingCPMM, 100002970n);
-		claim(fred, 0, 80, 10008);
+		await claim(fred, 0, 80, 10008);
 	});
 
 	it('claim loser 1 ok', async () => {
-		createScalarMarket(0, USD1);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		resolveMarket(0, 1);
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await createScalarMarket(0, USD1);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 3);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketScalingCPMM, 100002970n);
-		claim(alice, 0, 80, 10006);
+		await claim(alice, 0, 80, 10006);
 	});
 
 	it('claim loser 2 ok', async () => {
-		createScalarMarket(0, USD2);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		resolveMarket(0, 2);
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await createScalarMarket(0, USD2);
+		await predictCategory(alice, 0, 0, 1000, 0);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 3);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketScalingCPMM, 100002970n);
-		claim(bob, 0, 80, 10006);
+		await claim(bob, 0, 80, 10006);
 	});
 
 	it('claim winner ok', async () => {
-		createScalarMarket(0, USD0);
-		predictCategory(alice, 0, 0, 1000, 0);
-		predictCategory(bob, 0, 1, 1000, 1);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		await resolveMarket(0, 0);
+		await createScalarMarket(0, USD0);
+		await predictCategory(alice, 0, 5, 1000, 5);
+		await predictCategory(bob, 0, 1, 1000, 1);
+		await predictCategory(betty, 0, 2, 1000, 2);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 5);
 		//console.log("claim winner ok",result.events[0].data.value)
 
-		printMarketBalances(0);
+		await printMarketBalances(alice, 0);
 
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketScalingCPMM, 100002970n);
 		assertDataVarNumber(marketScalingCPMM, 'dev-fee-bips', 100);
 		assertDataVarNumber(marketScalingCPMM, 'dao-fee-bips', 150);
 		assertDataVarNumber(marketScalingCPMM, 'market-fee-bips-max', 300);
 
-		const response = await claim(alice, 0, 5939);
+		const response = await claim(alice, 0, 29692);
 		console.log('claim winner ok', response);
 	});
 
 	it('claim winners ok all staked on winning category', async () => {
-		createScalarMarket(0, USD2);
-		predictCategory(alice, 0, 2, 1000, 2);
-		predictCategory(bob, 0, 2, 1000, 2);
-		predictCategory(betty, 0, 2, 1000, 2);
-		simnet.mineEmptyBlocks(288);
-		await resolveMarket(0, 2);
+		await createScalarMarket(0, USD2);
+		await predictCategory(alice, 0, 3, 1000, 3);
+		await predictCategory(bob, 0, 3, 1000, 3);
+		await predictCategory(betty, 0, 3, 1000, 3);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 3);
 		//console.log("claim winner ok",result.events[0].data.value)
 
-		printMarketBalances(0);
+		await printMarketBalances(alice, 0);
 
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
 		assertContractBalance(marketScalingCPMM, 100002970n);
 
-		let response = await claim(alice, 0, 5939);
-		response = await claim(bob, 0, 5939);
-		response = await claim(betty, 0, 5939);
+		let response = await claim(alice, 0, 29674);
+		response = await claim(bob, 0, 29668);
+		response = await claim(betty, 0, 29656);
 		// console.log('claim winner ok', response);
 	});
 
 	it('assert overbuying throw correct error', async () => {
-		createScalarMarket(0, USD2);
-		predictCategory(alice, 0, 1, 1000000000000, 10031);
+		await createScalarMarket(0, USD2);
+		await predictCategory(alice, 0, 1, 1000000000000, 10031);
 	});
 
 	it('claim winners ok all staked on wrong category', async () => {
@@ -266,7 +244,7 @@ describe('claiming errors', () => {
 				// (map-set test-values "STX/USD/0" { value: u950000000, timestamp: u1739355000 })
 				// (map-set test-values "STX/USD/1" { value: u1050000000, timestamp: u1739355100 })
 				// (map-set test-values "STX/USD/2" { value: u1150000000, timestamp: u1739355200 })
-				Cl.list([Cl.tuple({ min: Cl.uint(90), max: Cl.uint(100) }), Cl.tuple({ min: Cl.uint(100), max: Cl.uint(110) }), Cl.tuple({ min: Cl.uint(110), max: Cl.uint(120) })]),
+				// Cl.list([Cl.tuple({ min: Cl.uint(90), max: Cl.uint(100) }), Cl.tuple({ min: Cl.uint(100), max: Cl.uint(110) }), Cl.tuple({ min: Cl.uint(110), max: Cl.uint(120) })]),
 				Cl.none(),
 				Cl.principal(stxToken),
 				Cl.bufferFromHex(metadataHash()),
@@ -275,35 +253,36 @@ describe('claiming errors', () => {
 				Cl.none(),
 				Cl.none(),
 				Cl.bufferFromHex(USD0),
-				Cl.uint(99000000)
+				Cl.uint(99000000),
+				Cl.none()
 			],
 			deployer
 		);
 		expect(response.result).toEqual(Cl.ok(Cl.uint(0)));
-		predictCategory(alice, 0, 1, 10000000, 1);
-		predictCategory(bob, 0, 1, 10000000, 1);
-		predictCategory(betty, 0, 1, 10000000, 10031);
-		predictCategory(wallace, 0, 0, 10000000, 0);
-		simnet.mineEmptyBlocks(288);
-		await resolveMarket(0, 0);
+		await predictCategory(alice, 0, 1, 10000000, 1);
+		await predictCategory(bob, 0, 1, 10000000, 1);
+		await predictCategory(betty, 0, 1, 10000000, 1);
+		await predictCategory(wallace, 0, 5, 10000000, 5);
+		await simnet.mineEmptyBlocks(288);
+		await resolveMarket(0, 5);
 		//console.log("claim winner ok",result.events[0].data.value)
 
-		printMarketBalances(0);
+		await printMarketBalances(alice, 0);
 
-		printStakeBalances(alice, 0);
-		printStakeBalances(bob, 0);
-		printStakeBalances(betty, 0);
-		printStakeBalances(`${deployer}.${treasury}`, 0);
+		await printMarketBalances(alice, 0);
+		await printMarketBalances(bob, 0);
+		await printMarketBalances(betty, 0);
+		//await printMarketBalances(`${deployer}.${marketScalingCPMM}`, 0);
 
-		simnet.mineEmptyBlocks(25);
-		resolveMarketUndisputed(0);
-		assertContractBalance(marketScalingCPMM, 129000000n);
+		await simnet.mineEmptyBlocks(25);
+		await resolveMarketUndisputed(0);
+		assertContractBalance(marketScalingCPMM, 139000000n);
 
 		response = await claim(alice, 0, 976, 10006);
 		response = await claim(bob, 0, 976, 10006);
-		response = await claim(betty, 0, 976, 10008);
+		response = await claim(betty, 0, 976, 10006);
 		// console.log('claim winner ok', response);
-		assertContractBalance(marketScalingCPMM, 129000000n);
+		assertContractBalance(marketScalingCPMM, 139000000n);
 
 		let data = await projectedWinnings(wallace, 0, 0);
 		console.log('-----------------------------------------------------------------');
@@ -315,8 +294,8 @@ describe('claiming errors', () => {
 		console.log('claim winner ok', data.result.value);
 		console.log('-----------------------------------------------------------------');
 
-		await claim(wallace, 0, 50959879);
-		assertContractBalance(marketScalingCPMM, 78040121n);
+		await claim(wallace, 0, 105813284);
+		assertContractBalance(marketScalingCPMM, 33186716n);
 
 		response = await simnet.callPublicFn(
 			'bme006-0-treasury',
@@ -325,7 +304,7 @@ describe('claiming errors', () => {
 			bob
 		);
 		console.log('claim winner ok', response.events);
-		expect(response.result).toEqual(Cl.ok(Cl.uint(78040120n)));
+		expect(response.result).toEqual(Cl.ok(Cl.uint(33186715n)));
 
 		assertContractBalance(marketScalingCPMM, 1n);
 	});
@@ -348,8 +327,8 @@ async function printMarketevents(response: any) {
 	console.log('response', response.events[0].data.value.data);
 }
 
-async function printMarketBalances(marketId: number) {
-	let data = await simnet.callReadOnlyFn(marketScalingCPMM, 'get-market-data', [Cl.uint(marketId)], alice);
+async function printMarketBalances(user: string, marketId: number) {
+	let data = await simnet.callReadOnlyFn(marketScalingCPMM, 'get-market-data', [Cl.uint(marketId)], user);
 	console.log('categories', (data.result as any).value.data.categories.list[0]);
 	console.log('categories', (data.result as any).value.data.categories.list[1]);
 	console.log('categories', (data.result as any).value.data.categories.list[2]);
@@ -366,7 +345,7 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 		marketScalingCPMM,
 		'create-market',
 		[
-			Cl.list([Cl.tuple({ min: Cl.uint(0), max: Cl.uint(1) }), Cl.tuple({ min: Cl.uint(1), max: Cl.uint(2) })]),
+			// Cl.list([Cl.tuple({ min: Cl.uint(0), max: Cl.uint(1) }), Cl.tuple({ min: Cl.uint(1), max: Cl.uint(2) })]),
 			Cl.none(),
 			Cl.principal(token ? token : stxToken),
 			Cl.bufferFromHex(metadataHash()),
@@ -375,7 +354,8 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 			Cl.none(),
 			Cl.none(),
 			Cl.bufferFromHex(USD0),
-			Cl.uint(100000000)
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
@@ -383,7 +363,7 @@ export async function createBinaryMarket(marketId: number, creator?: string, tok
 	return response;
 }
 async function createScalarMarket(marketId: number, priceFeed: string, creator?: string, token?: string) {
-	constructDao(simnet);
+	await constructDao(simnet);
 	let response = await simnet.callPublicFn(
 		marketScalingCPMM,
 		'create-market',
@@ -391,7 +371,7 @@ async function createScalarMarket(marketId: number, priceFeed: string, creator?:
 			// (map-set test-values "STX/USD/0" { value: u950000000, timestamp: u1739355000 })
 			// (map-set test-values "STX/USD/1" { value: u1050000000, timestamp: u1739355100 })
 			// (map-set test-values "STX/USD/2" { value: u1150000000, timestamp: u1739355200 })
-			Cl.list([Cl.tuple({ min: Cl.uint(90), max: Cl.uint(100) }), Cl.tuple({ min: Cl.uint(100), max: Cl.uint(110) }), Cl.tuple({ min: Cl.uint(110), max: Cl.uint(120) })]),
+			// Cl.list([Cl.tuple({ min: Cl.uint(90), max: Cl.uint(100) }), Cl.tuple({ min: Cl.uint(100), max: Cl.uint(110) }), Cl.tuple({ min: Cl.uint(110), max: Cl.uint(120) })]),
 			Cl.none(),
 			Cl.principal(token ? token : stxToken),
 			Cl.bufferFromHex(metadataHash()),
@@ -400,7 +380,8 @@ async function createScalarMarket(marketId: number, priceFeed: string, creator?:
 			Cl.none(),
 			Cl.none(),
 			Cl.bufferFromHex(priceFeed),
-			Cl.uint(100000000)
+			Cl.uint(100000000),
+			Cl.none()
 		],
 		creator ? creator : deployer
 	);
