@@ -280,14 +280,14 @@ plan:
         - contract-publish:
             contract-name: tpepe
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 23850
+            cost: 24180
             path: contracts/external/tpepe.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: tusdh
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 23850
+            cost: 24180
             path: contracts/external/tusdh.clar
             anchor-block-only: true
             clarity-version: 3
