@@ -218,6 +218,10 @@
   )
 )
 
+(define-read-only (get-token-minimum-seed (seed-token principal))
+  (ok (map-get? token-minimum-seed {token: seed-token}))
+)
+
 (define-public (set-dev-fund (new-dev-fund principal))
   (begin
     (try! (is-dao-or-extension))
