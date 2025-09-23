@@ -13,7 +13,7 @@
 (define-constant err-zero-amount (err u5001))
 
 ;; Contract variables
-(define-data-var stx-to-bigr-rate uint u10) ;; Default: 1 STX = 10 BIGR
+(define-data-var stx-to-bigr-rate uint u1) ;; Default: 1 STX = 1 BIGR
 
 (define-map stx-contributions {who: principal} uint)
 

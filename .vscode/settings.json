@@ -1,4 +1,26 @@
-
 {
-    "deno.enable": true,
+  // Auto format on save
+  "editor.formatOnSave": true,
+
+  // Default formatter = Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // TypeScript formatting
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Svelte formatting
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+
+  // Optional: auto-fix lint errors & clean imports
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  }
 }
