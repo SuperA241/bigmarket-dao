@@ -1,6 +1,6 @@
-;; Title: wrapped stx test
+;; Title: wrapped stx
 ;; Description:
-;; simple wrapped stx sip 10 for testing market creation and staking.
+;; Wrapped STX allows real STX to be treated the same as any other SIP10
 
 (impl-trait 'SP2AKWJYC7BNY18W1XXKPGP0YVEK63QJG4793Z2D4.sip-010-trait-ft-standard.sip-010-trait)
 

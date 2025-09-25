@@ -56,6 +56,12 @@ contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.ft-plus-trait'
 [[project.requirements]]
 contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to'
 
+[contracts.big-play]
+path = 'contracts/external/big-play.clar'
+clarity_version = 3
+epoch = 3.0
+
+
 [[project.requirements]]
 contract_id = 'SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.univ2-share-fee-to-trait'
 [contracts.bdp000-bootstrap]
